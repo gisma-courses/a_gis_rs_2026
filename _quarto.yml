@@ -8,7 +8,7 @@ project:
   
   render:
     - "index.qmd"
-    - "pages/*.qmd"
+    - "pages/**/*.qmd"
     - "slides/*.qmd"
     - "scripts/*.R"
 
@@ -18,8 +18,8 @@ website:
   bread-crumbs: false
   open-graph: true
   page-navigation: true
-  site-url: https://gisma-courses.github.io/harz-warmup
-  repo-url: https://github.com/gisma-courses/harz-warmup
+  site-url: https://gisma-courses.github.io/a_gis_rs_2026
+  repo-url: https://github.com/gisma-courses/a_gis_rs_2026
   repo-actions: [edit, issue]
   repo-branch: main
 
@@ -32,19 +32,17 @@ website:
 
   comments: false
 
-  navbar:
-    logo: /images/logo.png
-    right:
-      - text: "Inhalte"
-        menu:
-          - icon: book
-            href: pages/microclimate_warmup_reader.qmd
-            text: Mikroklima-Warmup Reader
-      - text: "Slides"
-        menu:
-          - icon: easel
-            href: slides/microclimate_warmup_models_revealjs.qmd
-            text: Mikroklima-Warmup Foliensatz
+  # navbar:
+  #   logo: /images/logo.png
+  #   right:
+  #     - text: "AddOns"
+  #       menu:
+  #         - icon: book
+  #           href: pages/microclimate_warmup_reader.qmd
+  #           text: Mikroklima-Warmup Reader
+  #         - icon: easel
+  #           href: slides/microclimate_warmup_models_revealjs.qmd
+  #           text: Mikroklima-Warmup Foliensatz
 
   sidebar:
     - title: "R-spatial in a nutshell"
@@ -57,10 +55,40 @@ website:
         - text: "---"
         - section: "Inhalte"
           contents:
+            - href: pages/
+              text: Kursstruktur
+        - text: "---"
+        - section: "Worksheets"
+          contents:
+            - href: pages/ws/ws-01.qmd
+              text: "Worksheet 01"
+            - href: pages/ws/ws-02.qmd
+              text: "Worksheet 02"
+            - href: pages/ws/ws-03.qmd
+              text: "Worksheet 03"
+            - href: pages/ws/ws-04.qmd
+              text: "Worksheet 04"
+            - href: pages/ws/ws-05.qmd
+              text: "Worksheet 05"
+            - href: pages/ws/ws-06.qmd
+              text: "Worksheet 06"
+            - href: pages/ws/ws-07.qmd
+              text: "Worksheet 07"
+            - href: pages/ws/ws-08.qmd
+              text: "Worksheet 08"
+            - href: pages/ws/ws-09.qmd
+              text: "Worksheet 09"
+            - href: pages/ws/ws-10.qmd
+              text: "Worksheet 10"
+            - href: pages/ws/ws-11.qmd
+              text: "Worksheet 11"
+            - href: pages/ws/ws-12.qmd
+              text: "Worksheet 12"
+        - section: "Reader"
+          contents:
             - href: pages/microclimate_warmup_reader.qmd
               text: Mikroklima-Warmup Reader
-        - text: "---"
-        - section: "Slides"
+        - section: "Materials"
           contents:
             - href: slides/microclimate_warmup_models_revealjs.qmd
               text: Mikroklima-Warmup Foliensatz

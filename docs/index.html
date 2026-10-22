@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R-spatial in a nutshell</title>
+<title>Advanced GI &amp; Fernerkundung – R-spatial in a nutshell</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,9 +42,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7ee1517e378b1eed86ed86c3e4f26a5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-f8252ceb5a557a0beda190312e27ce71.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-7ee1517e378b1eed86ed86c3e4f26a5e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c5ca5c32b214fe74a527b2ba75d794cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-c8e893c45ba768c613f97d88ef0faa80.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c5ca5c32b214fe74a527b2ba75d794cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -90,16 +90,16 @@ background: ../images/placeholder.png;
 </style>
 
 
-<meta property="og:title" content="R-spatial in a nutshell">
-<meta property="og:description" content="R-spatial in a nutshell">
+<meta property="og:title" content="Advanced GI &amp; Fernerkundung – R-spatial in a nutshell">
+<meta property="og:description" content="Räumliche Muster, Regionalisierung und belastbare Auswertungen">
 <meta property="og:site_name" content="R-spatial in a nutshell">
-<meta name="twitter:title" content="R-spatial in a nutshell">
-<meta name="twitter:description" content="R-spatial in a nutshell">
+<meta name="twitter:title" content="Advanced GI &amp; Fernerkundung – R-spatial in a nutshell">
+<meta name="twitter:description" content="Räumliche Muster, Regionalisierung und belastbare Auswertungen">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
 
-<body class="nav-sidebar docked nav-fixed fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar docked fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -265,61 +265,13 @@ background: ../images/placeholder.png;
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/logo.png" alt="" class="navbar-logo light-content">
-    <img src="./images/logo.png" alt="" class="navbar-logo dark-content">
-    </a>
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">R-spatial in a nutshell</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-inhalte" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Inhalte</span>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-inhalte">    
-        <li>
-    <a class="dropdown-item" href="./pages/microclimate_warmup_reader.html"><i class="bi bi-book" role="img">
-</i> 
- <span class="dropdown-text">Mikroklima-Warmup Reader</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Slides</span>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-slides">    
-        <li>
-    <a class="dropdown-item" href="./slides/microclimate_warmup_models_revealjs.html"><i class="bi bi-easel" role="img">
-</i> 
- <span class="dropdown-text">Mikroklima-Warmup Foliensatz</span></a>
-  </li>  
-    </ul>
-  </li>
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">R-spatial in a nutshell</h1>
+          <h1 class="quarto-secondary-nav-title">Advanced GI &amp; Fernerkundung</h1>
         </a>     
     </div>
   </nav>
@@ -328,8 +280,8 @@ background: ../images/placeholder.png;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">R-spatial in a nutshell</h1>
-            <p class="subtitle lead">R-spatial in a nutshell</p>
+      <h1 class="title d-none d-lg-block">Advanced GI &amp; Fernerkundung</h1>
+            <p class="subtitle lead">Räumliche Muster, Regionalisierung und belastbare Auswertungen</p>
                       </div>
   </div>
     
@@ -342,9 +294,17 @@ background: ../images/placeholder.png;
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R-spatial in a nutshell</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -365,8 +325,8 @@ background: ../images/placeholder.png;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/microclimate_warmup_reader.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Mikroklima-Warmup Reader</span></a>
+  <a href="./pages/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
       </ul>
@@ -375,12 +335,112 @@ background: ../images/placeholder.png;
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
- <span class="menu-text">Slides</span></a>
+ <span class="menu-text">Worksheets</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 01</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 02</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 03</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 04</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 05</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 06</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 07</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 08</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 09</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 10</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 11</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/ws/ws-12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Worksheet 12</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reader</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pages/microclimate_warmup_reader.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mikroklima-Warmup Reader</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Materials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./slides/microclimate_warmup_models_revealjs.html" class="sidebar-item-text sidebar-link">
@@ -403,11 +463,152 @@ background: ../images/placeholder.png;
 
 
 
-<p>Dieser Hands-on-Schnellkurs führt in räumliches Arbeiten mit R und Rstudio ein, indem einfache Skripte ausgeführt, gelesen und schrittweise verstanden werden.</p>
-<p>Skripte sind wichtig, weil räumliche Analysen dadurch reproduzierbar bleiben: Daten, Parameter, Zwischenschritte und Karten entstehen nicht als einmaliger Klickweg, sondern als nachvollziehbare Arbeitskette.</p>
-<p>Gerade bei Massendaten, wiederholten Auswertungen und wechselnden Untersuchungsräumen ist dieser Zugang robuster, anpassbarer und besser dokumentierbar als eine rein manuelle Bearbeitung.</p>
+<section id="zielsetzung" class="level2">
+<h2 class="anchored" data-anchor-id="zielsetzung">Zielsetzung</h2>
+<p>Wie beschreiben wir räumliche Muster? Wie bilden wir aus Klimadaten sinnvolle Teilräume? Wo sind räumliche Vorhersagen belastbar, und wann zeigt ein Satellitenbild tatsächlich eine Veränderung?</p>
+<p>In diesem Kurs lernen Sie ausgewählte fortgeschrittene Grundlagen der Geoinformationswissenschaft und Fernerkundung anzuwenden. Sie arbeiten mit realen Daten aus Hessen und Nordrhein-Westfalen, beschaffen diese selbst und bearbeiten überschaubare anwendungsbezogene Fragen. Dabei verbinden Sie die räumliche Kontrolle in QGIS mit reproduzierbaren Auswertungen in R und ausgewählten externen Werkzeugen.</p>
+<p>Sie lernen, vorhandene Skripte gezielt anzupassen, methodische Entscheidungen zu vergleichen und Ergebnisse fachlich zu prüfen. Räumliche Auflösung, Untersuchungsgebiet, zeitlicher Bezug und Übertragbarkeit begleiten alle Themen. Ziel ist, dass Sie einen Analyseweg selbstständig ausführen und seine Aussagekraft begründen können.</p>
+</section>
+<section id="arbeitsweise" class="level2">
+<h2 class="anchored" data-anchor-id="arbeitsweise">Arbeitsweise</h2>
+<p>Die zwölf Sitzungen verbinden kurze fachliche Einführungen mit einem hohen Übungsanteil. Die Arbeitsaufträge finden Sie in den jeweils verlinkten Worksheets.</p>
+<p>Sie nutzen Code aus den Kursmaterialien, Dokumentation und KI-Unterstützung. Dazu gehört, Eingaben und Parameter zu verstehen, Änderungen festzuhalten und Ausgaben zu kontrollieren. Sie müssen keine Algorithmen selbst entwickeln. Sie sollen jedoch erklären können, was Ihr Skript verarbeitet und woran Sie ein plausibles Ergebnis erkennen.</p>
+<p>Im Verlauf des Kurses entsteht ein Projektordner mit Datenquellen, Skripten, Parametern und ausgewählten Ergebnissen. Ihre Interpretationen unterscheiden zwischen Beobachtung, möglicher Erklärung und verbleibender Unsicherheit.</p>
+</section>
+<section id="block-1-daten-beschaffen-und-skripte-nutzen" class="level2">
+<h2 class="anchored" data-anchor-id="block-1-daten-beschaffen-und-skripte-nutzen">Block 1 · Daten beschaffen und Skripte nutzen</h2>
+<p>Sie richten einen reproduzierbaren Arbeitsablauf ein und beschaffen Sentinel-2-Daten für den Burgwald. Sie lernen, eine automatisierte Bildauswahl zu kontrollieren und Vegetationsindizes anhand konkreter Flächen zu interpretieren. Der Vergleich unterschiedlicher Aufnahmetermine zeigt, wie stark Datenqualität und zeitlicher Bezug die Aussage beeinflussen.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sitzung</th>
+<th>Inhalt und Lernziel</th>
+<th>Arbeitsauftrag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 · Skripte handhaben</td>
+<td>Ein vorhandenes Skript übernehmen, Pfade und Parameter anpassen, Fehler mit Dokumentation oder KI bearbeiten und den Ablauf erneut ausführen.</td>
+<td><a href="worksheets/ws-01.qmd">Worksheet 01</a></td>
+</tr>
+<tr class="even">
+<td>2 · Satellitendaten beschaffen</td>
+<td>Sentinel-2-Aufnahmen über den CDSE-Workflow abrufen; Abdeckung, Wolken, Schatten und Aufnahmedaten prüfen.</td>
+<td><a href="worksheets/ws-02.qmd">Worksheet 02</a></td>
+</tr>
+<tr class="odd">
+<td>3 · Vegetationssignale interpretieren</td>
+<td>NDVI und kNDVI an Wald-, Offenland- und auffälligen Vergleichsflächen untersuchen; Unterschiede zwischen Vegetationssignal und Aufnahmebedingungen erkennen.</td>
+<td><a href="worksheets/ws-03.qmd">Worksheet 03</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="block-2-räumliche-muster-und-klimaregionalisierung" class="level2">
+<h2 class="anchored" data-anchor-id="block-2-räumliche-muster-und-klimaregionalisierung">Block 2 · Räumliche Muster und Klimaregionalisierung</h2>
+<p>Sie vergleichen klassische Landschaftsmaße mit informationstheoretischen Ansätzen. Dabei untersuchen Sie, welche Informationen über Zusammensetzung und räumliche Anordnung tatsächlich erfasst werden. Anschließend wechseln Sie von kategorischer Landbedeckung zu kontinuierlichen Klimadaten: Sie segmentieren Temperaturjahresgänge und bewerten, wie Parameter und Rasterauflösung die entstehenden Regionen beeinflussen.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sitzung</th>
+<th>Inhalt und Lernziel</th>
+<th>Arbeitsauftrag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>4 · Muster quantitativ beschreiben</td>
+<td>SHDI und Aggregation Index mit Entropie und relativer gegenseitiger Information vergleichen; den Einfluss räumlicher Anordnung und Fenstergröße untersuchen.</td>
+<td><a href="worksheets/ws-04.qmd">Worksheet 04</a></td>
+</tr>
+<tr class="even">
+<td>5 · Klimadaten segmentieren</td>
+<td>Monatliche Klimadaten selbst beschaffen und mit <code>supercells</code> regionalisieren; Segmentzahl und Kompaktheit kontrolliert variieren.</td>
+<td><a href="worksheets/ws-05.qmd">Worksheet 05</a></td>
+</tr>
+<tr class="odd">
+<td>6 · Regionalisierungen beurteilen</td>
+<td>Homogenität innerhalb der Segmente, Unterschiede benachbarter Jahresgänge und Empfindlichkeit gegenüber gröberer Rasterauflösung bewerten.</td>
+<td><a href="worksheets/ws-06.qmd">Worksheet 06</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="block-3-räumliche-vorhersagen-und-modellgültigkeit" class="level2">
+<h2 class="anchored" data-anchor-id="block-3-räumliche-vorhersagen-und-modellgültigkeit">Block 3 · Räumliche Vorhersagen und Modellgültigkeit</h2>
+<p>Am LAI-Beispiel aus den EON-Materialien verfolgen Sie den Weg von punktuellen Referenzwerten zur flächenhaften Schätzung. Sie prüfen den räumlichen und zeitlichen Bezug der Daten und vergleichen unterschiedliche Validierungsansätze. Mit der Area of Applicability untersuchen Sie anschließend, wo die Prädiktorbedingungen durch die Trainingsdaten abgedeckt sind.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sitzung</th>
+<th>Inhalt und Lernziel</th>
+<th>Arbeitsauftrag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>7 · Referenzdaten und Schätzung</td>
+<td>LAI-Referenzen und Satellitendaten zusammenführen; ein einfaches Modell anwenden und dessen Datengrundlage, Residuen und Voraussetzungen beurteilen.</td>
+<td><a href="worksheets/ws-07.qmd">Worksheet 07</a></td>
+</tr>
+<tr class="even">
+<td>8 · Räumlich validieren</td>
+<td>Einen Random Forest mit zufälligen und räumlichen Prüffaltungen vergleichen; bei gleichen Prädiktoren und Modelleinstellungen die Bedeutung der Prüfsituation erkennen.</td>
+<td><a href="worksheets/ws-08.qmd">Worksheet 08</a></td>
+</tr>
+<tr class="odd">
+<td>9 · Anwendungsbereich prüfen</td>
+<td>Vorhersage und AOA gemeinsam interpretieren; untersuchen, wie eine Änderung der Prädiktorauswahl Modellgüte und Anwendungsbereich beeinflusst.</td>
+<td><a href="worksheets/ws-09.qmd">Worksheet 09</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="block-4-veränderungen-werkzeugverknüpfung-und-transfer" class="level2">
+<h2 class="anchored" data-anchor-id="block-4-veränderungen-werkzeugverknüpfung-und-transfer">Block 4 · Veränderungen, Werkzeugverknüpfung und Transfer</h2>
+<p>Sie greifen die Sentinel-Daten erneut auf und untersuchen zeitliche Veränderungen. Zusätzliche Beobachtungen helfen, auffällige Signale zu überprüfen. An einem begrenzten R–OTB-Beispiel lernen Sie, einen Verarbeitungsschritt über Werkzeuggrenzen hinweg nachzuvollziehen. Abschließend übertragen Sie einen erprobten Ansatz auf eine eigene räumliche Frage.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sitzung</th>
+<th>Inhalt und Lernziel</th>
+<th>Arbeitsauftrag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>10 · Veränderungen untersuchen</td>
+<td>Sommeraufnahmen mehrerer Jahre vergleichen; Veränderungskandidaten anhand der Originalbilder und einer zusätzlichen Aufnahme prüfen.</td>
+<td><a href="worksheets/ws-10.qmd">Worksheet 10</a></td>
+</tr>
+<tr class="even">
+<td>11 · Werkzeuge verbinden</td>
+<td>Eine bandweise Standardisierung über R, <code>link2GI</code> und OTB ausführen; Werte, Georeferenzierung und Übergabe zwischen den Werkzeugen kontrollieren.</td>
+<td><a href="worksheets/ws-11.qmd">Worksheet 11</a></td>
+</tr>
+<tr class="odd">
+<td>12 · Eigenständig übertragen</td>
+<td>Eine begrenzte Frage zu Landschaftsmustern, Klimaregionalisierung oder zeitlicher Veränderung für einen eigenen Ausschnitt bearbeiten und den Ablauf durch eine andere Gruppe nachvollziehen lassen.</td>
+<td><a href="worksheets/ws-12.qmd">Worksheet 12</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="was-sie-am-ende-können-sollen" class="level2">
+<h2 class="anchored" data-anchor-id="was-sie-am-ende-können-sollen">Was Sie am Ende können sollen</h2>
+<p>Sie können zu einer räumlichen Frage geeignete Daten beschaffen, einen vorhandenen Analyseweg anpassen und dessen Ergebnisse kritisch beurteilen. Sie begründen die Wahl von Parametern und Maßstäben, erkennen Grenzen von Validierung und Übertragbarkeit und dokumentieren Ihren Ablauf so, dass andere ihn erneut ausführen können.</p>
+</section>
+<section id="materialgrundlage" class="level2">
+<h2 class="anchored" data-anchor-id="materialgrundlage">Materialgrundlage</h2>
+<ul>
+<li><a href="https://gisma-courses.github.io/LV-19-d19-006-24/">Advanced GIS and Remote Sensing 2024 – Methoden, Reader und Worksheets</a></li>
+<li><a href="https://github.com/gisma/LV-19-d19-006-25-R">Aktuelle R-Workflows – LV-19-d19-006-25-R</a></li>
+<li><a href="https://github.com/earth-observation-network/EON2026">EON2026 – Machine Learning, räumliche Validierung und AOA</a></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -496,7 +697,7 @@ background: ../images/placeholder.png;
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/gisma-courses\.github\.io\/harz-warmup");
+        var filterRegex = new RegExp("https:\/\/gisma-courses\.github\.io\/a_gis_rs_2026");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -833,4 +1034,4 @@ background: ../images/placeholder.png;
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/gisma-courses/harz-warmup/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/gisma-courses/harz-warmup/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/gisma-courses/a_gis_rs_2026/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/gisma-courses/a_gis_rs_2026/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

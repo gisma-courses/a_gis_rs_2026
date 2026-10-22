@@ -1,1 +1,1 @@
-Sitemap: https://gisma-courses.github.io/harz-warmup/sitemap.xml
+Sitemap: https://gisma-courses.github.io/a_gis_rs_2026/sitemap.xml
