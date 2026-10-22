@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 01 – R-spatial in a nutshell</title>
+<title>Worksheet 01 · Ein kleines R-Projekt – R-spatial in a nutshell</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -91,9 +126,11 @@ background: ../../images/placeholder.png;
 </style>
 
 
-<meta property="og:title" content="Worksheet 01 – R-spatial in a nutshell">
+<meta property="og:title" content="Worksheet 01 · Ein kleines R-Projekt – R-spatial in a nutshell">
+<meta property="og:description" content="Verzeichnisse, Skriptstruktur und kontrollierte Änderungen">
 <meta property="og:site_name" content="R-spatial in a nutshell">
-<meta name="twitter:title" content="Worksheet 01 – R-spatial in a nutshell">
+<meta name="twitter:title" content="Worksheet 01 · Ein kleines R-Projekt – R-spatial in a nutshell">
+<meta name="twitter:description" content="Verzeichnisse, Skriptstruktur und kontrollierte Änderungen">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
@@ -270,7 +307,7 @@ background: ../../images/placeholder.png;
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Worksheet 01</h1>
+          <h1 class="quarto-secondary-nav-title">Worksheet 01 · Ein kleines R-Projekt</h1>
         </a>     
     </div>
   </nav>
@@ -279,7 +316,8 @@ background: ../../images/placeholder.png;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 01</h1>
+      <h1 class="title d-none d-lg-block">Worksheet 01 · Ein kleines R-Projekt</h1>
+            <p class="subtitle lead">Verzeichnisse, Skriptstruktur und kontrollierte Änderungen</p>
                       </div>
   </div>
     
@@ -462,8 +500,157 @@ background: ../../images/placeholder.png;
 
 
 
+<section id="ziel" class="level2">
+<h2 class="anchored" data-anchor-id="ziel">Ziel</h2>
+<p>Sie richten ein kleines R-Projekt ein, trennen Eingangsdaten, Skripte und Ergebnisse und führen einen überschaubaren Analyseablauf aus. Anschließend verändern Sie einen Parameter und prüfen die Wirkung. Sie nutzen dabei relative Pfade, einen aussagekräftigen Skriptkopf und kurze Kommentare.</p>
+<p><strong>Beispiel:</strong> Sie laden die Gebietsgrenze des Burgwalds, erzeugen einen Puffer und speichern eine Karte sowie die berechnete Geometrie. Die Daten stammen aus dem <a href="https://github.com/gisma/LV-19-d19-006-25-R">Kursrepository LV-19-d19-006-25-R</a>. Die Pufferberechnung dient hier als einfache Übung zur Skriptnutzung.</p>
+</section>
+<section id="das-projekt-anlegen" class="level2">
+<h2 class="anchored" data-anchor-id="das-projekt-anlegen">1 · Das Projekt anlegen</h2>
+<p>Öffnen Sie in RStudio <strong>File → New Project → New Directory → New Project</strong>. Nennen Sie das Projekt <code>burgwald-mini</code> und wählen Sie einen Speicherort. Öffnen Sie es künftig über <code>burgwald-mini.Rproj</code>.</p>
+<p>Legen Sie über den Reiter <strong>Files → New Folder</strong> drei Unterordner an:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ort im Projekt</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>burgwald-mini.Rproj</code></td>
+<td>Öffnet das Projekt mit dem Projektordner als Arbeitsverzeichnis.</td>
+</tr>
+<tr class="even">
+<td><code>data/</code></td>
+<td>Heruntergeladene Eingangsdaten; diese werden nicht überschrieben.</td>
+</tr>
+<tr class="odd">
+<td><code>scripts/</code></td>
+<td>Ihre R-Skripte.</td>
+</tr>
+<tr class="even">
+<td><code>output/</code></td>
+<td>Berechnete Daten und Abbildungen; diese lassen sich erneut erzeugen.</td>
+</tr>
+</tbody>
+</table>
+<p>Prüfen Sie in der <strong>Konsole</strong>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Das Arbeitsverzeichnis muss Ihr Ordner <code>burgwald-mini</code> sein. Die drei Unterordner und die Projektdatei sollten angezeigt werden. Alle folgenden Pfade beziehen sich auf diesen Projektordner, auch wenn das Skript in <code>scripts/</code> liegt. Ein zusätzliches <code>setwd()</code> ist nicht erforderlich.</p>
+<p>Installieren Sie das benötigte Paket einmalig in der Konsole, falls es noch fehlt:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"sf"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="ein-übersichtliches-skript-anlegen" class="level2">
+<h2 class="anchored" data-anchor-id="ein-übersichtliches-skript-anlegen">2 · Ein übersichtliches Skript anlegen</h2>
+<p>Erstellen Sie über <strong>File → New File → R Script</strong> ein Skript und speichern Sie es als <code>scripts/01_burgwald_puffer.R</code>. Übernehmen Sie den folgenden Code und ergänzen Sie Name und Datum im Kopf.</p>
+<p>Der Aufbau bleibt einfach: <strong>Header → Paket → Einstellungen → Daten → Verarbeitung → Ausgabe → Kontrolle.</strong> Änderungen an Pfaden oder Parametern erfolgen gesammelt im Abschnitt „Einstellungen“.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Titel:   Burgwald – Gebietsgrenze puffern</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Autor:   Ihr Name</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Datum:   JJJJ-MM-TT</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Zweck:   Gebietsgrenze laden, puffern und Ergebnisse speichern</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Quelle:  https://github.com/gisma/LV-19-d19-006-25-R</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Eingabe: data/burgwald_hull.GPKG</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Ausgabe: Puffer als GeoPackage und Karte unter output/</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Start:   RStudio-Projekt burgwald-mini.Rproj öffnen</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Paket ---------------------------------------------------</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Einstellungen -------------------------------------------</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>puffer_m <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>daten_url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"gisma/LV-19-d19-006-25-R/main/burgwald_hull.GPKG"</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>eingabe <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"burgwald_hull.GPKG"</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>ausgabe <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"output"</span>, <span class="fu">paste0</span>(<span class="st">"puffer_"</span>, puffer_m, <span class="st">"m"</span>))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Daten laden ---------------------------------------------</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Der Download erfolgt nur, wenn die Eingabedatei noch fehlt.</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(eingabe)) {</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(daten_url, <span class="at">destfile =</span> eingabe, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>gebiet <span class="ot">&lt;-</span> <span class="fu">st_read</span>(eingabe, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Verarbeiten ---------------------------------------------</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># UTM 32N verwendet Meter: Der Pufferabstand ist damit eindeutig.</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>gebiet <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(gebiet, <span class="dv">25832</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>puffer <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(gebiet, <span class="at">dist =</span> puffer_m)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Ergebnisse speichern ------------------------------------</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Nur die gleichnamige Ergebnisdatei wird beim Wiederholen ersetzt.</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(puffer, <span class="fu">paste0</span>(ausgabe, <span class="st">".gpkg"</span>),</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">delete_dsn =</span> <span class="cn">TRUE</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="fu">paste0</span>(ausgabe, <span class="st">".png"</span>), <span class="at">width =</span> <span class="dv">1000</span>, <span class="at">height =</span> <span class="dv">800</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(puffer), <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Burgwald – Puffer"</span>, puffer_m, <span class="st">"m"</span>))</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(gebiet), <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Gebiet"</span>, <span class="st">"Puffer"</span>),</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="fu">c</span>(<span class="st">"darkgreen"</span>, <span class="st">"lightblue"</span>), <span class="at">bty =</span> <span class="st">"n"</span>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Kontrollieren -------------------------------------------</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">st_crs</span>(gebiet)<span class="sc">$</span>epsg)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">gebiet_km2 =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(gebiet)) <span class="sc">/</span> <span class="fl">1e6</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">puffer_km2 =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(puffer)) <span class="sc">/</span> <span class="fl">1e6</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">list.files</span>(<span class="st">"output"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Führen Sie das Skript zunächst abschnittsweise mit <strong>Ctrl+Enter</strong> aus. Prüfen Sie anschließend die PNG-Datei im Ordner <code>output</code>. Öffnen Sie das erzeugte GeoPackage in QGIS und vergleichen Sie es mit der Eingabedatei.</p>
+<p><strong>Kontrolle:</strong> Liegt das Gebiet innerhalb seines Puffers? Ist die Pufferfläche größer als die Ausgangsfläche? Welche Dateien wurden erzeugt und wo liegen sie?</p>
+</section>
+<section id="einen-parameter-gezielt-ändern" class="level2">
+<h2 class="anchored" data-anchor-id="einen-parameter-gezielt-ändern">3 · Einen Parameter gezielt ändern</h2>
+<p>Ändern Sie ausschließlich <code>puffer_m &lt;- 100</code> zu <code>puffer_m &lt;- 500</code>. Schreiben Sie davor einen kurzen Kommentar, warum Sie den Parameter verändern. Führen Sie das gesamte Skript mit <strong>Source</strong> erneut aus.</p>
+<p>Vergleichen Sie die beiden Karten und die ausgegebenen Flächen. Prüfen Sie außerdem, ob beide Ergebnisvarianten unter <code>output/</code> liegen und die Eingabedatei unter <code>data/</code> unverändert geblieben ist.</p>
+<p><strong>Notieren Sie:</strong> Was steuert der Parameter? In welcher Einheit? Warum entsteht durch seine Änderung auch ein anderer Ausgabename?</p>
+</section>
+<section id="einen-pfadfehler-verstehen" class="level2">
+<h2 class="anchored" data-anchor-id="einen-pfadfehler-verstehen">4 · Einen Pfadfehler verstehen</h2>
+<p>Ändern Sie vorübergehend die Definition von <code>eingabe</code> zu:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>eingabe <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"daten"</span>, <span class="st">"burgwald_hull.GPKG"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Führen Sie das Skript erneut aus. Lesen Sie die Fehlermeldung und prüfen Sie mit <code>getwd()</code> und <code>dir.exists("daten")</code>, worauf der Pfad verweist. Stellen Sie anschließend den richtigen Pfad wieder her.</p>
+<p>Nutzen Sie bei Bedarf die Dokumentation oder KI. Ein passender Auftrag lautet:</p>
+<blockquote class="blockquote">
+<p>Mein RStudio-Projekt enthält die Ordner data, scripts und output. Erkläre diese Fehlermeldung und nenne die kleinste notwendige Korrektur. Ändere keine weiteren Teile des Skripts: [Fehlermeldung und betroffene Codezeilen einfügen].</p>
+</blockquote>
+<p>Halten Sie in einem Kommentar fest, was falsch war und wie Sie die Korrektur geprüft haben. Kommentare sollen den Zweck oder eine Entscheidung erklären, beispielsweise die Wahl eines metrischen Koordinatensystems.</p>
+</section>
+<section id="ohne-gespeicherte-objekte-erneut-ausführen" class="level2">
+<h2 class="anchored" data-anchor-id="ohne-gespeicherte-objekte-erneut-ausführen">5 · Ohne gespeicherte Objekte erneut ausführen</h2>
+<p>Starten Sie R über <strong>Session → Restart R</strong> neu. Führen Sie das Skript anschließend vollständig mit <strong>Source</strong> aus. Es muss seine Daten selbst einlesen und alle benötigten Objekte erneut erzeugen können.</p>
+</section>
+<section id="ergebnis" class="level2">
+<h2 class="anchored" data-anchor-id="ergebnis">Ergebnis</h2>
+<p>Geben Sie Ihren Projektordner mit dem kommentierten Skript und den beiden Ergebnisvarianten weiter. Ergänzen Sie eine kurze Datei <code>README.md</code> im Projektordner mit vier Angaben:</p>
+<ul>
+<li>Projektdatei öffnen und anschließend <code>scripts/01_burgwald_puffer.R</code> ausführen.</li>
+<li>Benötigtes Paket: <code>sf</code>; Internetzugang für den ersten Datenabruf.</li>
+<li>Datenquelle und eigenes Abrufdatum.</li>
+<li>Ihre Änderung, deren beobachtete Wirkung und gegebenenfalls verwendete KI-Hilfe.</li>
+</ul>
+<p><strong>Erfolgskriterium:</strong> Eine andere Person erkennt, welche Dateien Eingangsdaten, Skripte und Ergebnisse sind, und kann den Ablauf aus einer frischen R-Sitzung erneut ausführen.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
