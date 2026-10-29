@@ -1,9 +1,9 @@
 ---
-title: "Worksheet 03"
+title: "Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe"
+subtitle: "Zwei Exkurse mit den Ergebnissen aus Worksheet 02"
 order: 3
 title-block-banner: ../../images/placeholder.png
 title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
@@ -14,8 +14,119 @@ format:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
+  eval: false
+  echo: true
   warning: false
   message: false
 ---
 
+## Hausaufgabe
+
+Bearbeiten Sie nach [Worksheet 02](ws-02.qmd) die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.
+
+**Reihenfolge:** zuerst die Pixelzählung mit Skript 05, dann die Zeitreihenanalyse mit Skript 04. Die Nummern der Skripte entsprechen ihrer Ergänzung zum Projekt; beide lesen ihre Eingaben selbst ein.
+
+Gezählt und analysiert werden die **fünf ausgewählten Sommertermine**. Die Ergebnisse beschreiben diese Auswahl. Daraus ergibt sich keine allgemeine Wolkenhäufigkeit über den Burgwald.
+
+::: {.callout-note title="Exkurs 1 · Wie oft ist ein Pixel gültig oder bewölkt?" collapse="true"}
+
+Laden Sie [05_pixel_counts.R](../../scripts/05_pixel_counts.R){download="05_pixel_counts.R"} in `scripts/` und führen Sie es aus. Es verwendet die abgerufenen Bänder SCL und dataMask sowie die Rot-/NIR-Werte. Ein Pixel wird an jedem Termin genau einer der folgenden Kategorien zugeordnet:
+
+| Ausgabeband | Zählregel pro Termin |
+|---|---|
+| `n_valid` | Verfügbare Daten, SCL 4, 5, 6 oder 7 und ein positiver Rot-plus-NIR-Nenner: gültig nach der NDVI-Maske aus WS02. |
+| `n_cloudy` | Verfügbare Daten und SCL 8, 9 oder 10: mittlere/hohe Wolkenwahrscheinlichkeit oder dünner Cirrus. |
+| `n_shadow` | Verfügbare Daten und SCL 3: Wolkenschatten. |
+| `n_other` | Verfügbare Daten, die in keine der obigen Kategorien fallen, etwa Schnee/Eis, dunkle Flächen oder weitere ungültige Werte. |
+| `n_missing` | Keine verfügbaren Daten laut dataMask beziehungsweise SCL 0 oder fehlende SCL. |
+
+**Wichtig:** `n_cloudy` ist nicht gleich fünf minus `n_valid`. Auch Schatten, sonstige ausgeschlossene Werte und fehlende Daten können einen NDVI ausschließen. Die SCL ist eine automatische Klassifikation; die Zählung übernimmt deren Zuordnungen.
+
+### Arbeitsauftrag
+
+1. Öffnen Sie `output/pixel_counts/beobachtungs_counts.tif` in QGIS. Stellen Sie zuerst Band 1 (`n_valid`), dann Band 2 (`n_cloudy`) jeweils mit festen Grenzen **0 bis 5** dar. Null ist ein gültiges Zählergebnis; außerhalb Ihrer Untersuchungsfläche bleibt NoData.
+2. Verwenden Sie das Werkzeug **Objekte abfragen**, um die Bandwerte an drei Stellen zu vergleichen: hohe Verfügbarkeit, niedrige Verfügbarkeit und möglichst hohe Wolkenzahl. Falls Ihre Auswahl keine bewölkten Pixel enthält, dokumentieren Sie genau diesen Befund.
+3. Prüfen Sie jeweils die Summe aller fünf Zähler: Sie muss fünf ergeben. Sehen Sie eine auffällige Stelle in den Tagesbildern und deren SCL-Band nach.
+4. Bestimmen Sie mithilfe von `haeufigkeit_valid.csv`, welcher Anteil der AOI-Pixel an allen fünf Terminen gültig ist: Zellzahl bei Wert 5 geteilt durch die Summe der Zellzahlen. Fehlt die Kategorie 5, beträgt dieser Anteil null.
+
+Zusätzlich erzeugt `beobachtungs_anteile.tif` zwei Prozentwerte mit unterschiedlichen Bezugsgrößen:
+
+- **Gültigkeitsanteil:** `n_valid / 5 × 100`.
+- **Wolkenanteil unter verfügbaren Beobachtungen:** `n_cloudy / (5 − n_missing) × 100`. Ohne verfügbare Beobachtungen bleibt der Wert NoData.
+
+**Interpretation:** Wo ist die zeitliche Vergleichbarkeit gut gestützt? Wo fehlen Beobachtungen, und welche Ursache weist die Klassifikation dafür aus? Behalten Sie beim Vergleich die gröbere ursprüngliche Auflösung der SCL im Blick.
+
+:::
+
+::: {.callout-note title="Exkurs 2 · Die Sommerreihe analysieren" collapse="true"}
+
+
+**Leitfrage:** Zeigt Ihre Fläche eine gleichgerichtete Veränderung, einen einzelnen auffälligen Termin oder einen wechselnden Verlauf?
+
+Nutzen Sie die bereits berechneten NDVI-Raster. Falls Exkurs 1 keine an allen Terminen gültigen Pixel ergibt, dokumentieren Sie diese Einschränkung; die gemeinsame Zeitreihenanalyse kann dann mit dieser Auswahl nicht berechnet werden. Die fünf geladenen Sommertage sind die Beobachtungen dieser Analyse. Die weiteren Treffer des STAC-Katalogs sind zunächst nur Metadaten und werden hier nicht als zusätzliche Beobachtungen verwendet.
+
+Laden Sie [04_zeitreihe_addon.R](../../scripts/04_zeitreihe_addon.R){download="04_zeitreihe_addon.R"} in Ihren Ordner `scripts/`. Das Skript liest die Ergebnisse aus Worksheet 02 selbst ein. Führen Sie es abschnittsweise aus.
+
+### 1 · Änderungen zwischen den Beobachtungen untersuchen
+
+Das Skript verwendet ausschließlich Pixel, die an allen Terminen gültig sind. Öffnen Sie `output/zeitreihe/zeitreihe_kennwerte.csv`.
+
+| Spalte | Bedeutung |
+|---|---|
+| `datum`, `tag_im_jahr` | Tatsächlicher Aufnahmetermin und seine Lage innerhalb des Jahres. |
+| `ndvi` | Räumlicher Mittelwert über die gemeinsamen gültigen Pixel. |
+| `delta_vorher` | NDVI des aktuellen Termins minus NDVI des vorherigen Termins. |
+| `delta_pro_jahr` | Diese Differenz geteilt durch den tatsächlichen Zeitabstand in Jahren. |
+| `abweichung_start` | Differenz zur ersten Aufnahme; diese ist eine Referenz, kein nachgewiesener Normalzustand. |
+| `trend`, `residuum` | Wert der angepassten Geraden und Abweichung der Beobachtung davon. |
+
+**Auftrag:** Bestimmen Sie den größten Rückgang und die größte Zunahme, sofern beide auftreten. Nennen Sie jeweils die beiden verglichenen Daten. Prüfen Sie anhand der Originalbilder und der Aufnahmetage, ob die Unterschiede plausibel sind. Differenzen werden in NDVI-Einheiten angegeben, nicht als prozentuale Änderung der Vegetation.
+
+### 2 · Einen Trend beschreiben und hinterfragen
+
+Das Skript passt eine Gerade an die mittleren NDVI-Werte an. Die Zeitvariable berücksichtigt die tatsächlichen Abstände zwischen den Aufnahmen:
+
+```r
+modell <- lm(ndvi ~ jahre_seit_start, data = d)
+```
+
+Die Steigung beschreibt die lineare Änderung in **NDVI-Einheiten pro Jahr**. Öffnen Sie `output/zeitreihe/zeitreihenanalyse.png`. Passt die Gerade zum beobachteten Verlauf, oder verdeckt sie einen Einbruch und eine anschließende Zunahme?
+
+Anschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in `sensitivitaet.csv` mit der Steigung der vollständigen Reihe. Bleibt deren Vorzeichen bestehen? Welcher Termin verändert die Aussage am stärksten?
+
+**Diese Prüfung untersucht die Empfindlichkeit gegenüber einzelnen Beobachtungen.** Sie ist keine unabhängige Validierung. Fünf ausgewählte Sommertage erlauben hier eine beschreibende Auswertung; saisonale Zerlegung, Bruchpunkterkennung und Zukunftsprognose sind nicht Gegenstand des Add-ons.
+
+### 3 · Den räumlichen Mittelwert überprüfen
+
+Öffnen Sie `output/zeitreihe/differenz_ende_start.tif` in QGIS. Verwenden Sie eine divergierende Farbskala mit null als Mitte und gleich großen positiven und negativen Darstellungsgrenzen.
+
+- Negative Werte: niedrigerer NDVI am letzten gegenüber dem ersten Termin.
+- Positive Werte: höherer NDVI am letzten gegenüber dem ersten Termin.
+- NoData: keine gemeinsame gültige Beobachtung über die gesamte Reihe.
+
+**Auftrag:** Zeigt die gesamte Fläche eine ähnliche Änderung, oder gleichen sich räumlich getrennte Zu- und Abnahmen im Mittelwert teilweise aus? Kontrollieren Sie je eine auffällige Fläche in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.
+
+### Interpretation
+
+Ergänzen Sie die Verlaufsgrafik um die Differenzkarte und eine kurze Interpretation:
+
+1. Welche Veränderung ist in den Beobachtungen sichtbar?
+2. Wie empfindlich ist die lineare Beschreibung gegenüber einzelnen Terminen?
+3. Welche räumlichen Unterschiede verdeckt der Mittelwert?
+4. Welche zusätzliche Aufnahme würden Sie zur Prüfung Ihrer Erklärung beschaffen?
+
+Speichern Sie den untersuchten Stand der `data/auswahl.csv` zusammen mit Ihrer Auswertung. Nach einer Änderung der Bildauswahl führen Sie zuerst Skript 03 und anschließend das Add-on erneut aus.
+
+:::
+
+## Abgabe der Hausaufgabe
+
+Geben Sie eine kurze Auswertung mit folgenden Bestandteilen ab:
+
+- zwei vergleichbar dargestellte Karten: Anzahl gültiger und Anzahl bewölkter Beobachtungen;
+- Anteil der Pixel, die an allen fünf Terminen gültig sind;
+- Zeitverlauf mit beschreibender Trendgerade und Sensitivitätsprüfung, soweit die gemeinsame Datenabdeckung dies erlaubt;
+- eine Differenzkarte zwischen letzter und erster Aufnahme;
+- eine halbe Seite Interpretation: Datenabdeckung, beobachtete Veränderungen und Grenzen Ihrer Aussage.
+
+Legen Sie die verwendete `auswahl.csv` und Ihre kommentierten Skripte bei. Falls Sie die Aufnahmekombination ändern, müssen die NDVI-Reihe und beide Exkurse mit derselben neuen Auswahl erneut berechnet werden.

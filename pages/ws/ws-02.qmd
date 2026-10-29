@@ -1,6 +1,6 @@
 ---
 title: "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen"
-subtitle: "Datensouveränitat - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse"
+subtitle: "Datensouveränität - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse"
 order: 2
 title-block-banner: ../../images/placeholder.png
 title-block-banner-color: black
@@ -118,7 +118,7 @@ Die Menüfolge und die Hinweise zum Secret sind in der [offiziellen CDSE-Anleitu
 
 :::
 
-## 1 · Eine eigene Untersuchungsfläche festlegen 
+## 1 · Eine eigene Untersuchungsfläche festlegen
 
 Öffnen Sie die Burgwald-Gebietsgrenze aus Worksheet 01 in QGIS. Wählen Sie anhand einer Hintergrundkarte eine kleine Waldfläche, für die Sie den sommerlichen Verlauf untersuchen möchten. Ein Gebiet mit ungefähr 1–2 km Kantenlänge reicht; die maximale Kantenlänge dieser Übung beträgt 5 km.
 
@@ -146,7 +146,7 @@ Zeichnen Sie das Polygon, speichern Sie die Bearbeitung und beenden Sie den Bear
 
 **Ihre Entscheidung:** Notieren Sie in `README.md`, welche Fläche Sie gewählt haben und warum. Formulieren Sie eine vorläufige Erwartung: eher ähnliches sommerliches Signal oder erkennbare Unterschiede? Das ist eine zu prüfende Erwartung, noch kein Ergebnis.
 
-## 2 · Aufnahmen suchen und eine Auswahl treffen 
+## 2 · Aufnahmen suchen und eine Auswahl treffen
 
 Öffnen Sie `02_sentinel_abruf.R`. Ergänzen Sie den Skriptkopf. Führen Sie zunächst nur die Abschnitte 1–3 aus.
 
@@ -172,7 +172,7 @@ Prüfen Sie die fünf vorgeschlagenen Daten. Liegen sie ungefähr in derselben P
 
 Die Auswahl-Datei wird beim erneuten Ausführen nicht überschrieben. Für eine neue Suche mit geändertem Gebiet oder Zeitraum archivieren Sie die alte Auswahl und lassen eine neue erzeugen.
 
-## 3 · Einen Abruf prüfen, dann die Reihe laden 
+## 3 · Einen Abruf prüfen, dann die Reihe laden
 
 Führen Sie im Abrufskript die Abschnitte 4–6 aus. Mit `anzahl_abrufe <- 1` wird zunächst nur der erste ausgewählte Tag geladen.
 
@@ -213,7 +213,7 @@ Das Skript berechnet einen NDVI pro Datum, begrenzt ihn auf Ihr Polygon und schr
 
 **Prüfung:** Öffnen Sie zwei NDVI-Raster in QGIS. Verwenden Sie dieselbe Farbskala von −1 bis 1. Prüfen Sie auffällige Stellen im ursprünglichen RGB-Bild. Fehlende Werte sind keine NDVI-Werte von null.
 
-## 5 · Einen belastbaren Verlauf darstellen 
+## 5 · Einen belastbaren Verlauf darstellen
 
 Führen Sie die Abschnitte 3 und 4 aus. Das Skript erzeugt eine Tabelle und eine Grafik mit:
 
@@ -229,7 +229,7 @@ Der zweite Verlauf macht sichtbar, ob wechselnde räumliche Abdeckung den Vergle
 2. Bleibt dieser Unterschied bestehen, wenn dieselben Pixel verglichen werden?
 3. Welche zusätzliche Aufnahme wäre hilfreich, um Vegetationsveränderung von unterschiedlicher sommerlicher Entwicklung oder Bildstörungen zu unterscheiden?
 
-## 6 · Eine Entscheidung überprüfen 
+## 6 · Eine Entscheidung überprüfen
 
 Wählen Sie für ein Jahr einen zweiten geeigneten Sommertag aus der Kandidatentabelle. Sichern Sie die bisherigen Ergebnisdateien in einem Unterordner `output/vergleich_1/`. Ersetzen Sie den entsprechenden Eintrag in `data/auswahl.csv`, laden Sie den neuen Tag und berechnen Sie die Reihe erneut.
 
@@ -237,7 +237,7 @@ Vergleichen Sie den betroffenen NDVI-Wert, die Datenabdeckung und Ihre ursprüng
 
 Bei technischen Problemen können Sie Dokumentation oder KI nutzen. Geben Sie den betroffenen Abschnitt und die Fehlermeldung an, verlangen Sie eine begrenzte Korrektur und überprüfen Sie danach Datum, Rastergitter und Werte. Halten Sie wesentliche Änderungen im Skript fest.
 
-## Ergebnis der Sitzung 
+## Ergebnis der Sitzung
 
 Ihr Projekt enthält die selbst gewählte Fläche, die Aufnahmekandidaten, Ihre dokumentierte Auswahl, die abgerufenen Raster und die berechnete NDVI-Reihe. Ergänzen Sie in `README.md`:
 
@@ -249,4 +249,4 @@ Ihr Projekt enthält die selbst gewählte Fläche, die Aufnahmekandidaten, Ihre 
 
 **Abgabe:** eine Verlaufsgrafik, die zugehörige CSV und fünf bis acht Sätze zur Aussagekraft der Reihe. Eine beobachtete Abnahme wird zunächst als verändertes Vegetationssignal beschrieben. Ihre Ursache muss anhand weiterer Beobachtungen geprüft werden.
 
-Die Ergebnisse werden in Worksheet 03 für den Vergleich von Vegetationssignalen weiterverwendet.
+Die weiterführende Auswertung bearbeiten Sie als **Hausaufgabe in [Worksheet 03](ws-03.qmd)**: Pixelverfügbarkeit und Zeitreihenanalyse.

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 03 – R-spatial in a nutshell</title>
+<title>Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe – R-spatial in a nutshell</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -92,9 +127,11 @@ background: ../../images/placeholder.png;
 </style>
 
 
-<meta property="og:title" content="Worksheet 03 – R-spatial in a nutshell">
+<meta property="og:title" content="Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe – R-spatial in a nutshell">
+<meta property="og:description" content="Zwei Exkurse mit den Ergebnissen aus Worksheet 02">
 <meta property="og:site_name" content="R-spatial in a nutshell">
-<meta name="twitter:title" content="Worksheet 03 – R-spatial in a nutshell">
+<meta name="twitter:title" content="Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe – R-spatial in a nutshell">
+<meta name="twitter:description" content="Zwei Exkurse mit den Ergebnissen aus Worksheet 02">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
@@ -271,7 +308,7 @@ background: ../../images/placeholder.png;
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Worksheet 03</h1>
+          <h1 class="quarto-secondary-nav-title">Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe</h1>
         </a>     
     </div>
   </nav>
@@ -280,7 +317,8 @@ background: ../../images/placeholder.png;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 03</h1>
+      <h1 class="title d-none d-lg-block">Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe</h1>
+            <p class="subtitle lead">Zwei Exkurse mit den Ergebnissen aus Worksheet 02</p>
                       </div>
   </div>
     
@@ -463,8 +501,182 @@ background: ../../images/placeholder.png;
 
 
 
+<section id="hausaufgabe" class="level2">
+<h2 class="anchored" data-anchor-id="hausaufgabe">Hausaufgabe</h2>
+<p>Bearbeiten Sie nach <a href="../../pages/ws/ws-02.html">Worksheet 02</a> die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.</p>
+<p><strong>Reihenfolge:</strong> zuerst die Pixelzählung mit Skript 05, dann die Zeitreihenanalyse mit Skript 04. Die Nummern der Skripte entsprechen ihrer Ergänzung zum Projekt; beide lesen ihre Eingaben selbst ein.</p>
+<p>Gezählt und analysiert werden die <strong>fünf ausgewählten Sommertermine</strong>. Die Ergebnisse beschreiben diese Auswahl. Daraus ergibt sich keine allgemeine Wolkenhäufigkeit über den Burgwald.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Exkurs 1 · Wie oft ist ein Pixel gültig oder bewölkt?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exkurs 1 · Wie oft ist ein Pixel gültig oder bewölkt?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Laden Sie <a href="../../scripts/05_pixel_counts.R" download="05_pixel_counts.R">05_pixel_counts.R</a> in <code>scripts/</code> und führen Sie es aus. Es verwendet die abgerufenen Bänder SCL und dataMask sowie die Rot-/NIR-Werte. Ein Pixel wird an jedem Termin genau einer der folgenden Kategorien zugeordnet:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ausgabeband</th>
+<th>Zählregel pro Termin</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>n_valid</code></td>
+<td>Verfügbare Daten, SCL 4, 5, 6 oder 7 und ein positiver Rot-plus-NIR-Nenner: gültig nach der NDVI-Maske aus WS02.</td>
+</tr>
+<tr class="even">
+<td><code>n_cloudy</code></td>
+<td>Verfügbare Daten und SCL 8, 9 oder 10: mittlere/hohe Wolkenwahrscheinlichkeit oder dünner Cirrus.</td>
+</tr>
+<tr class="odd">
+<td><code>n_shadow</code></td>
+<td>Verfügbare Daten und SCL 3: Wolkenschatten.</td>
+</tr>
+<tr class="even">
+<td><code>n_other</code></td>
+<td>Verfügbare Daten, die in keine der obigen Kategorien fallen, etwa Schnee/Eis, dunkle Flächen oder weitere ungültige Werte.</td>
+</tr>
+<tr class="odd">
+<td><code>n_missing</code></td>
+<td>Keine verfügbaren Daten laut dataMask beziehungsweise SCL 0 oder fehlende SCL.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Wichtig:</strong> <code>n_cloudy</code> ist nicht gleich fünf minus <code>n_valid</code>. Auch Schatten, sonstige ausgeschlossene Werte und fehlende Daten können einen NDVI ausschließen. Die SCL ist eine automatische Klassifikation; die Zählung übernimmt deren Zuordnungen.</p>
+<section id="arbeitsauftrag" class="level3">
+<h3 class="anchored" data-anchor-id="arbeitsauftrag">Arbeitsauftrag</h3>
+<ol type="1">
+<li>Öffnen Sie <code>output/pixel_counts/beobachtungs_counts.tif</code> in QGIS. Stellen Sie zuerst Band 1 (<code>n_valid</code>), dann Band 2 (<code>n_cloudy</code>) jeweils mit festen Grenzen <strong>0 bis 5</strong> dar. Null ist ein gültiges Zählergebnis; außerhalb Ihrer Untersuchungsfläche bleibt NoData.</li>
+<li>Verwenden Sie das Werkzeug <strong>Objekte abfragen</strong>, um die Bandwerte an drei Stellen zu vergleichen: hohe Verfügbarkeit, niedrige Verfügbarkeit und möglichst hohe Wolkenzahl. Falls Ihre Auswahl keine bewölkten Pixel enthält, dokumentieren Sie genau diesen Befund.</li>
+<li>Prüfen Sie jeweils die Summe aller fünf Zähler: Sie muss fünf ergeben. Sehen Sie eine auffällige Stelle in den Tagesbildern und deren SCL-Band nach.</li>
+<li>Bestimmen Sie mithilfe von <code>haeufigkeit_valid.csv</code>, welcher Anteil der AOI-Pixel an allen fünf Terminen gültig ist: Zellzahl bei Wert 5 geteilt durch die Summe der Zellzahlen. Fehlt die Kategorie 5, beträgt dieser Anteil null.</li>
+</ol>
+<p>Zusätzlich erzeugt <code>beobachtungs_anteile.tif</code> zwei Prozentwerte mit unterschiedlichen Bezugsgrößen:</p>
+<ul>
+<li><strong>Gültigkeitsanteil:</strong> <code>n_valid / 5 × 100</code>.</li>
+<li><strong>Wolkenanteil unter verfügbaren Beobachtungen:</strong> <code>n_cloudy / (5 − n_missing) × 100</code>. Ohne verfügbare Beobachtungen bleibt der Wert NoData.</li>
+</ul>
+<p><strong>Interpretation:</strong> Wo ist die zeitliche Vergleichbarkeit gut gestützt? Wo fehlen Beobachtungen, und welche Ursache weist die Klassifikation dafür aus? Behalten Sie beim Vergleich die gröbere ursprüngliche Auflösung der SCL im Blick.</p>
+</section>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Exkurs 2 · Die Sommerreihe analysieren">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exkurs 2 · Die Sommerreihe analysieren
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Leitfrage:</strong> Zeigt Ihre Fläche eine gleichgerichtete Veränderung, einen einzelnen auffälligen Termin oder einen wechselnden Verlauf?</p>
+<p>Nutzen Sie die bereits berechneten NDVI-Raster. Falls Exkurs 1 keine an allen Terminen gültigen Pixel ergibt, dokumentieren Sie diese Einschränkung; die gemeinsame Zeitreihenanalyse kann dann mit dieser Auswahl nicht berechnet werden. Die fünf geladenen Sommertage sind die Beobachtungen dieser Analyse. Die weiteren Treffer des STAC-Katalogs sind zunächst nur Metadaten und werden hier nicht als zusätzliche Beobachtungen verwendet.</p>
+<p>Laden Sie <a href="../../scripts/04_zeitreihe_addon.R" download="04_zeitreihe_addon.R">04_zeitreihe_addon.R</a> in Ihren Ordner <code>scripts/</code>. Das Skript liest die Ergebnisse aus Worksheet 02 selbst ein. Führen Sie es abschnittsweise aus.</p>
+<section id="änderungen-zwischen-den-beobachtungen-untersuchen" class="level3">
+<h3 class="anchored" data-anchor-id="änderungen-zwischen-den-beobachtungen-untersuchen">1 · Änderungen zwischen den Beobachtungen untersuchen</h3>
+<p>Das Skript verwendet ausschließlich Pixel, die an allen Terminen gültig sind. Öffnen Sie <code>output/zeitreihe/zeitreihe_kennwerte.csv</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Spalte</th>
+<th>Bedeutung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>datum</code>, <code>tag_im_jahr</code></td>
+<td>Tatsächlicher Aufnahmetermin und seine Lage innerhalb des Jahres.</td>
+</tr>
+<tr class="even">
+<td><code>ndvi</code></td>
+<td>Räumlicher Mittelwert über die gemeinsamen gültigen Pixel.</td>
+</tr>
+<tr class="odd">
+<td><code>delta_vorher</code></td>
+<td>NDVI des aktuellen Termins minus NDVI des vorherigen Termins.</td>
+</tr>
+<tr class="even">
+<td><code>delta_pro_jahr</code></td>
+<td>Diese Differenz geteilt durch den tatsächlichen Zeitabstand in Jahren.</td>
+</tr>
+<tr class="odd">
+<td><code>abweichung_start</code></td>
+<td>Differenz zur ersten Aufnahme; diese ist eine Referenz, kein nachgewiesener Normalzustand.</td>
+</tr>
+<tr class="even">
+<td><code>trend</code>, <code>residuum</code></td>
+<td>Wert der angepassten Geraden und Abweichung der Beobachtung davon.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Auftrag:</strong> Bestimmen Sie den größten Rückgang und die größte Zunahme, sofern beide auftreten. Nennen Sie jeweils die beiden verglichenen Daten. Prüfen Sie anhand der Originalbilder und der Aufnahmetage, ob die Unterschiede plausibel sind. Differenzen werden in NDVI-Einheiten angegeben, nicht als prozentuale Änderung der Vegetation.</p>
+</section>
+<section id="einen-trend-beschreiben-und-hinterfragen" class="level3">
+<h3 class="anchored" data-anchor-id="einen-trend-beschreiben-und-hinterfragen">2 · Einen Trend beschreiben und hinterfragen</h3>
+<p>Das Skript passt eine Gerade an die mittleren NDVI-Werte an. Die Zeitvariable berücksichtigt die tatsächlichen Abstände zwischen den Aufnahmen:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>modell <span class="ot">&lt;-</span> <span class="fu">lm</span>(ndvi <span class="sc">~</span> jahre_seit_start, <span class="at">data =</span> d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Die Steigung beschreibt die lineare Änderung in <strong>NDVI-Einheiten pro Jahr</strong>. Öffnen Sie <code>output/zeitreihe/zeitreihenanalyse.png</code>. Passt die Gerade zum beobachteten Verlauf, oder verdeckt sie einen Einbruch und eine anschließende Zunahme?</p>
+<p>Anschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in <code>sensitivitaet.csv</code> mit der Steigung der vollständigen Reihe. Bleibt deren Vorzeichen bestehen? Welcher Termin verändert die Aussage am stärksten?</p>
+<p><strong>Diese Prüfung untersucht die Empfindlichkeit gegenüber einzelnen Beobachtungen.</strong> Sie ist keine unabhängige Validierung. Fünf ausgewählte Sommertage erlauben hier eine beschreibende Auswertung; saisonale Zerlegung, Bruchpunkterkennung und Zukunftsprognose sind nicht Gegenstand des Add-ons.</p>
+</section>
+<section id="den-räumlichen-mittelwert-überprüfen" class="level3">
+<h3 class="anchored" data-anchor-id="den-räumlichen-mittelwert-überprüfen">3 · Den räumlichen Mittelwert überprüfen</h3>
+<p>Öffnen Sie <code>output/zeitreihe/differenz_ende_start.tif</code> in QGIS. Verwenden Sie eine divergierende Farbskala mit null als Mitte und gleich großen positiven und negativen Darstellungsgrenzen.</p>
+<ul>
+<li>Negative Werte: niedrigerer NDVI am letzten gegenüber dem ersten Termin.</li>
+<li>Positive Werte: höherer NDVI am letzten gegenüber dem ersten Termin.</li>
+<li>NoData: keine gemeinsame gültige Beobachtung über die gesamte Reihe.</li>
+</ul>
+<p><strong>Auftrag:</strong> Zeigt die gesamte Fläche eine ähnliche Änderung, oder gleichen sich räumlich getrennte Zu- und Abnahmen im Mittelwert teilweise aus? Kontrollieren Sie je eine auffällige Fläche in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.</p>
+</section>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
+<p>Ergänzen Sie die Verlaufsgrafik um die Differenzkarte und eine kurze Interpretation:</p>
+<ol type="1">
+<li>Welche Veränderung ist in den Beobachtungen sichtbar?</li>
+<li>Wie empfindlich ist die lineare Beschreibung gegenüber einzelnen Terminen?</li>
+<li>Welche räumlichen Unterschiede verdeckt der Mittelwert?</li>
+<li>Welche zusätzliche Aufnahme würden Sie zur Prüfung Ihrer Erklärung beschaffen?</li>
+</ol>
+<p>Speichern Sie den untersuchten Stand der <code>data/auswahl.csv</code> zusammen mit Ihrer Auswertung. Nach einer Änderung der Bildauswahl führen Sie zuerst Skript 03 und anschließend das Add-on erneut aus.</p>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section id="abgabe-der-hausaufgabe" class="level2">
+<h2 class="anchored" data-anchor-id="abgabe-der-hausaufgabe">Abgabe der Hausaufgabe</h2>
+<p>Geben Sie eine kurze Auswertung mit folgenden Bestandteilen ab:</p>
+<ul>
+<li>zwei vergleichbar dargestellte Karten: Anzahl gültiger und Anzahl bewölkter Beobachtungen;</li>
+<li>Anteil der Pixel, die an allen fünf Terminen gültig sind;</li>
+<li>Zeitverlauf mit beschreibender Trendgerade und Sensitivitätsprüfung, soweit die gemeinsame Datenabdeckung dies erlaubt;</li>
+<li>eine Differenzkarte zwischen letzter und erster Aufnahme;</li>
+<li>eine halbe Seite Interpretation: Datenabdeckung, beobachtete Veränderungen und Grenzen Ihrer Aussage.</li>
+</ul>
+<p>Legen Sie die verwendete <code>auswahl.csv</code> und Ihre kommentierten Skripte bei. Falls Sie die Aufnahmekombination ändern, müssen die NDVI-Reihe und beide Exkurse mit derselben neuen Auswahl erneut berechnet werden.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
