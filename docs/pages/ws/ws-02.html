@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 02 – R-spatial in a nutshell</title>
+<title>Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen – R-spatial in a nutshell</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -91,10 +126,41 @@ background: ../../images/placeholder.png;
       }
 </style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<meta property="og:title" content="Worksheet 02 – R-spatial in a nutshell">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen – R-spatial in a nutshell">
+<meta property="og:description" content="Datensouveränitat - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse">
 <meta property="og:site_name" content="R-spatial in a nutshell">
-<meta name="twitter:title" content="Worksheet 02 – R-spatial in a nutshell">
+<meta name="twitter:title" content="Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen – R-spatial in a nutshell">
+<meta name="twitter:description" content="Datensouveränitat - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
@@ -271,7 +337,7 @@ background: ../../images/placeholder.png;
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Worksheet 02</h1>
+          <h1 class="quarto-secondary-nav-title">Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen</h1>
         </a>     
     </div>
   </nav>
@@ -280,7 +346,8 @@ background: ../../images/placeholder.png;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 02</h1>
+      <h1 class="title d-none d-lg-block">Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen</h1>
+            <p class="subtitle lead">Datensouveränitat - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse</p>
                       </div>
   </div>
     
@@ -463,8 +530,257 @@ background: ../../images/placeholder.png;
 
 
 
+<section id="auftrag" class="level2">
+<h2 class="anchored" data-anchor-id="auftrag">Auftrag</h2>
+<p><strong>Wie verändert sich das sommerliche Vegetationssignal einer selbst gewählten Waldfläche im Burgwald zwischen 2018 und 2022?</strong></p>
+<p>Sie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.</p>
+<p>Aus den Warm-ups kennen Sie Projektordner, relative Pfade, blockweises Ausführen und die Kontrolle von Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.</p>
+<p>Am Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus <strong>einer ausgewählten Sommerbeobachtung pro Jahr</strong>. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.</p>
+</section>
+<section id="material-und-vorbereitung" class="level2">
+<h2 class="anchored" data-anchor-id="material-und-vorbereitung">Material und Vorbereitung</h2>
+<p>Die technische Grundlage ist der <a href="https://github.com/gisma/LV-19-d19-006-25-R/blob/main/src/S1_observation/01-2_get_cdse-sentinel-data.R">CDSE-Abruf aus dem aktuellen Kursrepository</a>. Die Lehrfassung übernimmt STAC-Suche und CDSE-Abruf, verwendet Ihr eigenes Gebiet und berechnet den NDVI anschließend lokal. Der große Projekt-Setup des Repositories wird dafür nicht benötigt.</p>
+<p>Laden Sie beide Skripte in den Ordner <code>scripts/</code> Ihres bestehenden RStudio-Projekts:</p>
+<ul>
+<li><a href="../../scripts/02_sentinel_abruf.R" download="02_sentinel_abruf.R">02_sentinel_abruf.R</a></li>
+<li><a href="../../scripts/03_ndvi_reihe.R" download="03_ndvi_reihe.R">03_ndvi_reihe.R</a></li>
+</ul>
+<p>Benötigt werden QGIS, RStudio und die R-Pakete <code>sf</code>, <code>terra</code>, <code>rstac</code>, <code>dplyr</code> und <code>CDSE</code>. Installieren Sie fehlende Pakete vor der Sitzung über die Konsole:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"sf"</span>, <span class="st">"terra"</span>, <span class="st">"rstac"</span>, <span class="st">"dplyr"</span>, <span class="st">"CDSE"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Für den Rasterabruf richten Sie einmalig Ihren persönlichen CDSE-Zugang und die Anmeldung des R-Skripts ein. Die einzelnen Schritte stehen im folgenden Exkurs.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Exkurs · CDSE-Konto, OAuth-Client und Zugang in R einrichten">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exkurs · CDSE-Konto, OAuth-Client und Zugang in R einrichten
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="was-wird-benötigt" class="level3">
+<h3 class="anchored" data-anchor-id="was-wird-benötigt">Was wird benötigt?</h3>
+<p>Ihr <strong>CDSE-Konto</strong> dient zur Anmeldung im Browser. Ein <strong>OAuth-Client</strong> ermöglicht dem Skript den Zugriff: Er besitzt eine <strong>Client-ID</strong> und ein <strong>Client-Secret</strong>. Diese sind nicht Ihre E-Mail-Adresse und Ihr Kontopasswort. Aus den beiden Werten kann das R-Paket einen zeitlich begrenzten Zugriffstoken beziehen.</p>
+</section>
+<section id="konto-anlegen-und-anmelden" class="level3">
+<h3 class="anchored" data-anchor-id="konto-anlegen-und-anmelden">1. Konto anlegen und anmelden</h3>
+<p>Öffnen Sie <a href="https://dataspace.copernicus.eu/">Copernicus Data Space</a>, registrieren Sie sich und schließen Sie die Bestätigung Ihrer E-Mail-Adresse ab. Falls Sie bereits ein Konto besitzen, verwenden Sie dieses. Öffnen Sie anschließend das <a href="https://shapps.dataspace.copernicus.eu/dashboard/">Sentinel-Hub-Dashboard für CDSE</a> und melden Sie sich mit diesem Konto an.</p>
+</section>
+<section id="oauth-client-erstellen" class="level3">
+<h3 class="anchored" data-anchor-id="oauth-client-erstellen">2. OAuth-Client erstellen</h3>
+<ol type="1">
+<li>Öffnen Sie im Dashboard <strong>User Settings</strong>.</li>
+<li>Suchen Sie den Bereich <strong>OAuth clients</strong> und klicken Sie auf <strong>Create</strong>.</li>
+<li>Vergeben Sie einen Namen, beispielsweise <code>GI-Kurs-Sentinel</code>.</li>
+<li>Wählen Sie ein Ablaufdatum nach dem vorgesehenen Kursende.</li>
+<li>Lassen Sie die Option für eine <strong>Single-page application (SPA)</strong> ausgeschaltet: Wir verwenden ein lokales R-Skript.</li>
+<li>Bestätigen Sie mit <strong>Create</strong>.</li>
+<li>Kopieren Sie <strong>Client ID</strong> und <strong>Client Secret</strong> direkt in die im nächsten Schritt beschriebene Datei. Das Secret ist nach dem Schließen des Dialogs nicht erneut abrufbar. Falls es verloren geht, erstellen Sie einen neuen Client.</li>
+</ol>
+</section>
+<section id="werte-in-r-hinterlegen" class="level3">
+<h3 class="anchored" data-anchor-id="werte-in-r-hinterlegen">3. Werte in R hinterlegen</h3>
+<p>Öffnen Sie in der RStudio-Konsole Ihre persönliche Umgebungsdatei:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(<span class="fu">path.expand</span>(<span class="st">"~/.Renviron"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ergänzen Sie die folgenden beiden Zeilen. Ersetzen Sie die Platzhalter durch die kopierten Werte; vorhandene andere Einträge bleiben erhalten.</p>
+<pre class="text"><code>CDSE_ID=Ihre_Client_ID
+CDSE_SECRET=Ihr_Client_Secret</code></pre>
+<p>Diese Zeilen gehören <strong>in die Datei</strong>, nicht in die R-Konsole. Speichern Sie die Datei als <code>.Renviron</code>, ohne zusätzliche Endung <code>.txt</code>. Fügen Sie nach der letzten Zeile einen Zeilenumbruch ein. Starten Sie R anschließend über <strong>Session → Restart R</strong> neu.</p>
+</section>
+<section id="prüfen-ob-r-die-werte-eingelesen-hat" class="level3">
+<h3 class="anchored" data-anchor-id="prüfen-ob-r-die-werte-eingelesen-hat">4. Prüfen, ob R die Werte eingelesen hat</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nzchar</span>(<span class="fu">Sys.getenv</span>(<span class="st">"CDSE_ID"</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nzchar</span>(<span class="fu">Sys.getenv</span>(<span class="st">"CDSE_SECRET"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Beide Ausgaben müssen <code>TRUE</code> lauten. Damit ist zunächst nur geprüft, ob Werte vorhanden sind. Ihre Gültigkeit wird beim authentifizierten Zugriff geprüft.</p>
+<p>Falls <code>FALSE</code> erscheint, kontrollieren Sie Dateiname, Schreibweise der Variablen und Speicherung. Sie können die persönliche Datei auch ausdrücklich einlesen und die Prüfung wiederholen:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">readRenviron</span>(<span class="fu">path.expand</span>(<span class="st">"~/.Renviron"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="verbindung-im-abrufskript-verwenden" class="level3">
+<h3 class="anchored" data-anchor-id="verbindung-im-abrufskript-verwenden">5. Verbindung im Abrufskript verwenden</h3>
+<p>Der folgende Abschnitt ist bereits in <code>02_sentinel_abruf.R</code> enthalten:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>client <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetOAuthClient</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">Sys.getenv</span>(<span class="st">"CDSE_ID"</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">secret =</span> <span class="fu">Sys.getenv</span>(<span class="st">"CDSE_SECRET"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Das Objekt <code>client</code> wird anschließend an <code>CDSE::GetImage()</code> übergeben. Führen Sie zunächst den vorgesehenen Einzelabruf aus. Bei einer Meldung wie <code>invalid_client</code> prüfen Sie, ob ID und Secret zum selben aktiven Client gehören und vollständig kopiert wurden.</p>
+<p><strong>Vertraulich behandeln:</strong> Geben Sie Secret, Zugriffstoken und persönliche <code>.Renviron</code> nicht weiter. Sie gehören nicht in das Projektarchiv, ein Git-Repository, Screenshots oder KI-Prompts.</p>
+<p>Die Menüfolge und die Hinweise zum Secret sind in der <a href="https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Overview/Authentication.html#registering-oauth-client">offiziellen CDSE-Anleitung zur OAuth-Registrierung</a> beschrieben.</p>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section id="eine-eigene-untersuchungsfläche-festlegen" class="level2">
+<h2 class="anchored" data-anchor-id="eine-eigene-untersuchungsfläche-festlegen">1 · Eine eigene Untersuchungsfläche festlegen</h2>
+<p>Öffnen Sie die Burgwald-Gebietsgrenze aus Worksheet 01 in QGIS. Wählen Sie anhand einer Hintergrundkarte eine kleine Waldfläche, für die Sie den sommerlichen Verlauf untersuchen möchten. Ein Gebiet mit ungefähr 1–2 km Kantenlänge reicht; die maximale Kantenlänge dieser Übung beträgt 5 km.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Legen Sie einen neuen GeoPackage-Layer an:">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Legen Sie einen neuen GeoPackage-Layer an:
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Erstellen Sie die Untersuchungsfläche in QGIS:</p>
+<ol type="1">
+<li>Öffnen Sie Layer → Layer erstellen → Neuer GeoPackage-Layer.</li>
+<li>Wählen Sie als Datei data/aoi.gpkg in Ihrem RStudio-Projekt, als Tabellennamen aoi, als Geometrietyp Polygon und als Koordinatensystem EPSG:32632 – WGS 84 / UTM zone 32N.</li>
+<li>Bestätigen Sie mit OK und markieren Sie den neuen Layer.</li>
+<li>Aktivieren Sie den Bearbeitungsmodus über das Stiftsymbol. Wählen Sie Polygonobjekt hinzufügen.</li>
+<li>Setzen Sie mit Linksklicks die Eckpunkte Ihrer Untersuchungsfläche. Ein Rechtsklick schließt die Erfassung ab; bestätigen Sie den Attributdialog mit OK.</li>
+<li>Speichern Sie die Layeränderungen und beenden Sie den Bearbeitungsmodus.</li>
+</ol>
+<p>Zeichnen Sie genau ein Polygon. Diese Fläche wird für alle Aufnahmetermine verwendet.</p>
+</div>
+</div>
+</div>
+<ul>
+<li>Datei: <code>data/aoi.gpkg</code> im RStudio-Projekt;</li>
+<li>Geometrietyp: Polygon;</li>
+<li>Koordinatensystem: EPSG:32632;</li>
+<li>genau ein Polygon als Untersuchungsfläche.</li>
+</ul>
+<p>Zeichnen Sie das Polygon, speichern Sie die Bearbeitung und beenden Sie den Bearbeitungsmodus. Verwenden Sie über die gesamte Reihe dieselbe Fläche.</p>
+<p><strong>Ihre Entscheidung:</strong> Notieren Sie in <code>README.md</code>, welche Fläche Sie gewählt haben und warum. Formulieren Sie eine vorläufige Erwartung: eher ähnliches sommerliches Signal oder erkennbare Unterschiede? Das ist eine zu prüfende Erwartung, noch kein Ergebnis.</p>
+</section>
+<section id="aufnahmen-suchen-und-eine-auswahl-treffen" class="level2">
+<h2 class="anchored" data-anchor-id="aufnahmen-suchen-und-eine-auswahl-treffen">2 · Aufnahmen suchen und eine Auswahl treffen</h2>
+<p>Öffnen Sie <code>02_sentinel_abruf.R</code>. Ergänzen Sie den Skriptkopf. Führen Sie zunächst nur die Abschnitte 1–3 aus.</p>
+<p>Die Einstellungen lauten:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>jahre <span class="ot">&lt;-</span> <span class="dv">2018</span><span class="sc">:</span><span class="dv">2022</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>monate <span class="ot">&lt;-</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>anzahl_abrufe <span class="ot">&lt;-</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Die Suche liefert Metadaten der Sentinel-2-L2A-Aufnahmen, die Ihr Gebiet schneiden. Sie erzeugt:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Datei</th>
+<th>Bedeutung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data/stac_treffer.rds</code></td>
+<td>Gespeicherte Antwort des Katalogs.</td>
+</tr>
+<tr class="even">
+<td><code>output/aufnahmekandidaten.csv</code></td>
+<td>Verfügbare Sommertage mit Szenenzahl und mittlerer Szenenbewölkung.</td>
+</tr>
+<tr class="odd">
+<td><code>data/auswahl.csv</code></td>
+<td>Ihr Arbeitsstand: ein ausgewählter Aufnahmetag je Jahr.</td>
+</tr>
+</tbody>
+</table>
+<p>Der erste Vorschlag wählt pro Jahr den Tag mit der geringsten mittleren Szenenbewölkung. <strong>Diese Prozentangabe bezieht sich auf die gefundenen Szenen, nicht auf Ihre kleine Untersuchungsfläche.</strong> Ein solcher Tag kann über Ihrem Gebiet trotzdem bewölkt sein.</p>
+<p>Prüfen Sie die fünf vorgeschlagenen Daten. Liegen sie ungefähr in derselben Phase des Sommers? Sehen Sie die Aufnahmen bei Bedarf im <a href="https://browser.dataspace.copernicus.eu/">Copernicus Browser</a> an. Wenn Sie einen anderen Tag auswählen, übernehmen Sie die vollständige zugehörige Zeile aus der Kandidatentabelle in <code>data/auswahl.csv</code>.</p>
+<p>Die Auswahl-Datei wird beim erneuten Ausführen nicht überschrieben. Für eine neue Suche mit geändertem Gebiet oder Zeitraum archivieren Sie die alte Auswahl und lassen eine neue erzeugen.</p>
+</section>
+<section id="einen-abruf-prüfen-dann-die-reihe-laden" class="level2">
+<h2 class="anchored" data-anchor-id="einen-abruf-prüfen-dann-die-reihe-laden">3 · Einen Abruf prüfen, dann die Reihe laden</h2>
+<p>Führen Sie im Abrufskript die Abschnitte 4–6 aus. Mit <code>anzahl_abrufe &lt;- 1</code> wird zunächst nur der erste ausgewählte Tag geladen.</p>
+<p>Öffnen Sie die erzeugte TIFF-Datei aus <code>data/sentinel/</code> in QGIS. Die Bänder sind fest angeordnet:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Band</th>
+<th>Inhalt</th>
+<th>Verwendung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1–3</td>
+<td>B02, B03, B04</td>
+<td>Blau, Grün, Rot; Echtfarbdarstellung mit Rot = Band 3, Grün = Band 2, Blau = Band 1.</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>B08</td>
+<td>Nahes Infrarot; zusammen mit B04 für NDVI.</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>SCL</td>
+<td>Szenenklassifikation zur Qualitätsmaskierung.</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>dataMask</td>
+<td>Kennzeichnet verfügbare Bilddaten.</td>
+</tr>
+</tbody>
+</table>
+<p>Kontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und Schatten. Die SCL wird auf das Ausgabegitter gebracht; sie besitzt dadurch keine zusätzliche ursprüngliche Detailinformation.</p>
+<p>Wenn der erste Abruf stimmt, setzen Sie <code>anzahl_abrufe &lt;- Inf</code> und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden übersprungen. Kontrollieren Sie auch die übrigen Aufnahmen.</p>
+<p><strong>Zwischenergebnis:</strong> Für jedes ausgewählte Datum existiert eine lokale TIFF-Datei. Ungeeignete Tage ersetzen Sie durch einen anderen Kandidaten und rufen diesen nach. Alte Dateien dürfen zur Dokumentation liegen bleiben; die Auswertung verwendet ausschließlich die aktuelle Auswahl-Datei.</p>
+<p>Der Abruf verwendet jeweils einen Tag. Überlappende Kacheln können dabei zu einem Bild mosaikiert werden; eine einzelne Produkt-ID wird damit nicht festgeschrieben.</p>
+</section>
+<section id="aus-den-aufnahmen-eine-ndvi-reihe-berechnen" class="level2">
+<h2 class="anchored" data-anchor-id="aus-den-aufnahmen-eine-ndvi-reihe-berechnen">4 · Aus den Aufnahmen eine NDVI-Reihe berechnen</h2>
+<p>Öffnen Sie <code>03_ndvi_reihe.R</code>. Führen Sie die Abschnitte 1 und 2 aus. Das Skript prüft, ob alle ausgewählten Aufnahmen vorhanden sind und dasselbe Rastergitter besitzen.</p>
+<p>Die Berechnung lautet:</p>
+<p><span class="math display">\[
+NDVI = \frac{B08-B04}{B08+B04}
+\]</span></p>
+<p>Vor der Auswertung werden ungültige Daten und bestimmte SCL-Klassen ausgeschlossen. In der Vorlage bleiben Vegetation, unbewachsene Flächen, Wasser und unklassifizierte Pixel erhalten; Wolken, Wolkenschatten, Schnee und weitere ausgeschlossene Klassen werden zu <code>NA</code>. Diese Maske ist eine dokumentierte Arbeitsentscheidung und ersetzt die visuelle Prüfung nicht.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>scl_behalten <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Das Skript berechnet einen NDVI pro Datum, begrenzt ihn auf Ihr Polygon und schreibt die Ergebnisse nach <code>output/ndvi/</code>. Zusätzlich entstehen <code>output/ndvi_reihe.tif</code> und <code>output/ndvi_banddaten.csv</code>. Die CSV ordnet jedem Band sein tatsächliches Aufnahmedatum zu.</p>
+<p><strong>Prüfung:</strong> Öffnen Sie zwei NDVI-Raster in QGIS. Verwenden Sie dieselbe Farbskala von −1 bis 1. Prüfen Sie auffällige Stellen im ursprünglichen RGB-Bild. Fehlende Werte sind keine NDVI-Werte von null.</p>
+</section>
+<section id="einen-belastbaren-verlauf-darstellen" class="level2">
+<h2 class="anchored" data-anchor-id="einen-belastbaren-verlauf-darstellen">5 · Einen belastbaren Verlauf darstellen</h2>
+<p>Führen Sie die Abschnitte 3 und 4 aus. Das Skript erzeugt eine Tabelle und eine Grafik mit:</p>
+<ul>
+<li>mittlerem NDVI über die an jedem Termin gültigen Pixel;</li>
+<li>Anteil gültiger Pixel innerhalb Ihrer Untersuchungsfläche;</li>
+<li>einem zweiten Verlauf ausschließlich für die Pixel, die an <strong>allen</strong> ausgewählten Terminen gültig sind.</li>
+</ul>
+<p>Der zweite Verlauf macht sichtbar, ob wechselnde räumliche Abdeckung den Vergleich beeinflusst. Bleiben nur sehr wenige gemeinsame Pixel, ist auch dieser Vergleich räumlich schwach gestützt. Prüfen Sie dann die Bildauswahl. Die Grafik verbindet einzelne Beobachtungstage; über den Verlauf zwischen ihnen liegen keine Aussagen vor.</p>
+<p><strong>Bearbeiten Sie drei konkrete Fragen:</strong></p>
+<ol type="1">
+<li>Zwischen welchen Aufnahmetagen ist der größte Unterschied sichtbar?</li>
+<li>Bleibt dieser Unterschied bestehen, wenn dieselben Pixel verglichen werden?</li>
+<li>Welche zusätzliche Aufnahme wäre hilfreich, um Vegetationsveränderung von unterschiedlicher sommerlicher Entwicklung oder Bildstörungen zu unterscheiden?</li>
+</ol>
+</section>
+<section id="eine-entscheidung-überprüfen" class="level2">
+<h2 class="anchored" data-anchor-id="eine-entscheidung-überprüfen">6 · Eine Entscheidung überprüfen</h2>
+<p>Wählen Sie für ein Jahr einen zweiten geeigneten Sommertag aus der Kandidatentabelle. Sichern Sie die bisherigen Ergebnisdateien in einem Unterordner <code>output/vergleich_1/</code>. Ersetzen Sie den entsprechenden Eintrag in <code>data/auswahl.csv</code>, laden Sie den neuen Tag und berechnen Sie die Reihe erneut.</p>
+<p>Vergleichen Sie den betroffenen NDVI-Wert, die Datenabdeckung und Ihre ursprüngliche Interpretation. Dokumentieren Sie, welche Tagesauswahl Sie für die weitere Arbeit verwenden und warum.</p>
+<p>Bei technischen Problemen können Sie Dokumentation oder KI nutzen. Geben Sie den betroffenen Abschnitt und die Fehlermeldung an, verlangen Sie eine begrenzte Korrektur und überprüfen Sie danach Datum, Rastergitter und Werte. Halten Sie wesentliche Änderungen im Skript fest.</p>
+</section>
+<section id="ergebnis-der-sitzung" class="level2">
+<h2 class="anchored" data-anchor-id="ergebnis-der-sitzung">Ergebnis der Sitzung</h2>
+<p>Ihr Projekt enthält die selbst gewählte Fläche, die Aufnahmekandidaten, Ihre dokumentierte Auswahl, die abgerufenen Raster und die berechnete NDVI-Reihe. Ergänzen Sie in <code>README.md</code>:</p>
+<ul>
+<li>Fragestellung und Begründung der Untersuchungsfläche;</li>
+<li>gewählte Aufnahmetage, Auswahlgründe und Abrufdatum;</li>
+<li>verwendete Qualitätsmaske;</li>
+<li>beobachteten Unterschied und Ergebnis des zweiten Tagesvergleichs;</li>
+<li>Ausführungsreihenfolge der beiden Skripte.</li>
+</ul>
+<p><strong>Abgabe:</strong> eine Verlaufsgrafik, die zugehörige CSV und fünf bis acht Sätze zur Aussagekraft der Reihe. Eine beobachtete Abnahme wird zunächst als verändertes Vegetationssignal beschrieben. Ihre Ursache muss anhand weiterer Beobachtungen geprüft werden.</p>
+<p>Die Ergebnisse werden in Worksheet 03 für den Vergleich von Vegetationssignalen weiterverwendet.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
