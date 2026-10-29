@@ -13,7 +13,7 @@ project:
     - "scripts/*.R"
 
 website:
-  title: "R-spatial in a nutshell"
+  title: ""
   favicon: /images/logo.png
   bread-crumbs: false
   open-graph: true
@@ -45,7 +45,7 @@ website:
   #           text: Mikroklima-Warmup Foliensatz
 
   sidebar:
-    - title: "R-spatial in a nutshell"
+    - title: " Advanced GI & Fernerkundung"
       style: "docked"
       collapse-level: 1
       pinned: true
