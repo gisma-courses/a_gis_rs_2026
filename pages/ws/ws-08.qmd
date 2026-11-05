@@ -1,21 +1,33 @@
 ---
-title: "Worksheet 08"
+title: "Worksheet 08 · Räumlich validieren"
+subtitle: "Random Forest mit zufälligen und räumlichen Prüffaltungen"
 order: 8
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Vergleich vorbereiten
+
+Verwenden Sie die vollständigen LAI-/Prädiktorpaare aus [Worksheet 07](ws-07.qmd) und den Abschnitt **The machine learning way** der [EON-Vorlage](https://github.com/earth-observation-network/EON2026/blob/main/block4_machineLearning/ML_AOA.qmd). Übernehmen Sie daraus die räumliche Faltung mit `CAST::knndm()`. Die Zahl der Faltungen beträgt in beiden Prüfungen drei.
+
+Für diesen Vergleich wird keine Variablenauswahl ausgeführt: Ersetzen Sie die `ffs()`-Modellierung der Vorlage durch `caret::train(..., method = "rf")`. Legen Sie die Prädiktornamen ausdrücklich fest; `ID`, Koordinatenkennungen und LAI dürfen nicht versehentlich in den Prädiktorsatz gelangen.
+
+## Zwei Prüfungen ausführen
+
+1. Erzeugen Sie mit `set.seed(42)` drei zufällige Faltungen, beispielsweise mit `caret::createFolds()`, und die drei räumlichen Faltungen mit `CAST::knndm()`. Speichern Sie die jeweiligen Trainings- und Testindizes und stellen Sie die Testzuordnung an den Referenzorten dar.
+2. Trainieren Sie mit beiden Faltungssätzen denselben Random Forest: gleiche Prädiktoren, `ntree = 500`, genau ein festes `mtry` und dieselben sonstigen Einstellungen. Verwenden Sie `trainControl(index = ..., indexOut = ..., savePredictions = "final", method = "cv")` und ein einzeiliges `tuneGrid`. Setzen Sie den Zufallsstart vor jedem Training erneut.
+3. Berechnen Sie aus den zurückgehaltenen Vorhersagen RMSE, MAE und mittleren Fehler als `mean(pred - obs)`. Jede Referenz soll pro Prüfverfahren genau einmal getestet werden. Berechnen Sie zusätzlich Kennwerte pro Faltung.
+4. Vergleichen Sie die Trainings-Test-Abstände anhand von `CAST::geodist()` und stellen Sie die räumliche Prüfsituation den Abständen zwischen Trainingspunkten und Vorhersagegebiet gegenüber.
+
+## Ergebnis
+
+Geben Sie Faltungskarten, die Tabelle der zurückgehaltenen Vorhersagen und einen Kennwertvergleich ab. Geben Sie an, für welche räumliche Entfernungssituation die jeweiligen Fehler stehen. Nennen Sie die zahlenmäßige Fehlerdifferenz; ein größerer räumlicher Fehler wird nicht vorausgesetzt. Bewahren Sie das räumlich geprüfte Modell mit seinen Faltungen für [Worksheet 09](ws-09.qmd) auf.

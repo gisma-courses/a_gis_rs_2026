@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 05</title>
+<title>Worksheet 05 · Klimadaten segmentieren</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -31,7 +66,6 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="../../">
 <link href="../../pages/ws/ws-06.html" rel="next">
 <link href="../../pages/ws/ws-04.html" rel="prev">
-<link href="../..//images/logo.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -73,27 +107,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../../images/placeholder.png;
-      }
-</style>
 
 
-<meta property="og:title" content="Worksheet 05">
-<meta name="twitter:title" content="Worksheet 05">
+<meta property="og:title" content="Worksheet 05 · Klimadaten segmentieren">
+<meta property="og:description" content="Segmentzahl und Kompaktheit bei gleichem Temperaturjahresgang variieren">
+<meta name="twitter:title" content="Worksheet 05 · Klimadaten segmentieren">
+<meta name="twitter:description" content="Segmentzahl und Kompaktheit bei gleichem Temperaturjahresgang variieren">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
@@ -263,36 +282,20 @@ background: ../../images/placeholder.png;
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Worksheet 05</h1>
+          <h1 class="quarto-secondary-nav-title">Worksheet 05 · Klimadaten segmentieren</h1>
         </a>     
     </div>
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 05</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -323,7 +326,7 @@ background: ../../images/placeholder.png;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../pages/" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
@@ -455,15 +458,57 @@ background: ../../images/placeholder.png;
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-05.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-05.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Worksheet 05 · Klimadaten segmentieren</h1>
+<p class="subtitle lead">Segmentzahl und Kompaktheit bei gleichem Temperaturjahresgang variieren</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
 
 
 
+</header>
 
+
+<section id="klimadaten-beschaffen" class="level2">
+<h2 class="anchored" data-anchor-id="klimadaten-beschaffen">Klimadaten beschaffen</h2>
+<p>Verwenden Sie zwölf monatliche Temperaturmittel aus <a href="https://www.worldclim.org/data/worldclim21.html">WorldClim 2.1</a>. Diese beschreiben Klimanormalwerte für 1970–2000, keine zwölf Beobachtungen eines einzelnen Jahres. Laden Sie die Deutschlanddaten mit <code>geodata::worldclim_country(country = "DEU", var = "tavg", path = "data")</code>. Prüfen Sie Einheiten und Skalierung anhand der Produktangaben und der Metadaten; halten Sie das Abrufdatum fest.</p>
+<p>Schneiden Sie in QGIS oder R einen zusammenhängenden Ausschnitt in Hessen oder Nordrhein-Westfalen mit ungefähr 100 km Kantenlänge aus. Projizieren Sie die zwölf Bänder gemeinsam auf ein metrisches Gitter mit 1 km Rasterweite, bilinearer Interpolation und identischer Ausdehnung. Speichern Sie <code>data/temperatur_monate.tif</code>; die Bandreihenfolge muss Januar bis Dezember sein. Die Reprojektion erzeugt keine zusätzliche Klimainformation.</p>
+</section>
+<section id="drei-segmentierungen-berechnen" class="level2">
+<h2 class="anchored" data-anchor-id="drei-segmentierungen-berechnen">Drei Segmentierungen berechnen</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(supercells)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"data/temperatur_monate.tif"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nlyr</span>(x) <span class="sc">==</span> <span class="dv">12</span>, <span class="sc">!</span><span class="fu">is.lonlat</span>(x))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">supercells</span>(x, <span class="at">k =</span> <span class="dv">50</span>, <span class="at">compactness =</span> <span class="dv">1</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">supercells</span>(x, <span class="at">k =</span> <span class="dv">100</span>, <span class="at">compactness =</span> <span class="dv">1</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">supercells</span>(x, <span class="at">k =</span> <span class="dv">50</span>, <span class="at">compactness =</span> <span class="dv">5</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"output/klima"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(a, <span class="st">"output/klima/k50_c1.gpkg"</span>, <span class="at">delete_dsn =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(b, <span class="st">"output/klima/k100_c1.gpkg"</span>, <span class="at">delete_dsn =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(c, <span class="st">"output/klima/k50_c5.gpkg"</span>, <span class="at">delete_dsn =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Alle Varianten verwenden dieselben zwölf unstandardisierten Temperaturbänder und dieselbe Distanzfunktion. <code>k</code> ist die angestrebte Segmentzahl; zählen Sie auch die tatsächlich erzeugten Segmente. Kompaktheitswerte sind von der Skalierung der Eingabewerte abhängig. Ändern Sie zwischen den Varianten keine weiteren Einstellungen.</p>
+</section>
+<section id="ergebnis" class="level2">
+<h2 class="anchored" data-anchor-id="ergebnis">Ergebnis</h2>
+<p>Geben Sie drei Grenzkarten auf derselben Temperaturkarte und eine Parametertabelle mit <code>k</code>, Kompaktheit, tatsächlicher Segmentzahl sowie minimaler, medianer und maximaler Segmentfläche ab. Markieren Sie einen Bereich, in dem eine Parameteränderung Grenzen deutlich verschiebt. Speichern Sie die zwölf Eingangsbänder und Segmentierungen für <a href="../../pages/ws/ws-06.html">Worksheet 06</a>.</p>
+<p><strong>Methode:</strong> <a href="https://jakubnowosad.com/supercells/">supercells – multiband raster segmentation</a>.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -1,21 +1,59 @@
 ---
-title: "Worksheet 11"
+title: "Worksheet 11 · R und OTB verbinden"
+subtitle: "Bandweise Standardisierung und Kontrolle der Werkzeugübergabe"
 order: 11
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Verarbeitung vorbereiten
+
+Verwenden Sie eine Sentinel-Aufnahme aus Worksheet 02. Installieren Sie [OTB](https://www.orfeo-toolbox.org/CookBook/Installation.html) und das R-Paket `link2GI`. Prüfen Sie mit `link2GI::linkOTB()`, ob die Installation gefunden wird. Verwenden Sie die vier Reflexionsbänder; SCL und dataMask werden nicht standardisiert.
+
+Maskieren Sie in R NoData und die in Worksheet 02 ausgeschlossenen SCL-Klassen. Schreiben Sie für diese Übung nur einen kleinen rechteckigen Ausschnitt, in dem alle Zellen der vier Reflexionsbänder gültig sind, als `output/otb/eingabe.tif`. So benötigt die folgende Übergabe keine zusätzliche NoData-Konvention. Verwenden Sie dieselbe Zellmenge für alle Bandstatistiken.
+
+## Standardisierung ausführen
+
+Berechnen Sie pro Band Mittelwert und Stichprobenstandardabweichung. Für jedes Band gilt `z = (x - mittelwert) / standardabweichung`; konstante Bänder werden vor der Übergabe ausgeschlossen. Erzeugen Sie in R eine Referenzausgabe.
+
+```r
+library(terra)
+library(link2GI)
+x <- rast("output/otb/eingabe.tif")
+stopifnot(nlyr(x) == 4, all(is.finite(values(x))))
+mu <- global(x, "mean")[, 1]
+s <- global(x, "sd")[, 1]
+stopifnot(all(is.finite(s) & s > 0))
+z_r <- (x - mu) / s
+writeRaster(z_r, "output/otb/referenz_r.tif", overwrite = TRUE)
+# OTB-Ausdrücke verwenden einen Dezimalpunkt unabhängig von R-Ländereinstellungen.
+zahl <- function(v) format(v, digits = 17, scientific = TRUE, trim = TRUE, decimal.mark = ".")
+terme <- paste0("(im1b", seq_len(nlyr(x)), "-", zahl(mu), ")/", zahl(s))
+expr <- paste0("{", paste(terme, collapse = ","), "}")
+gili <- linkOTB()
+stopifnot(isTRUE(gili$exist))
+cmd <- parseOTBFunction(algo = "BandMathX", gili = gili)
+cmd$help <- NULL
+cmd$il <- normalizePath("output/otb/eingabe.tif")
+cmd$out <- c(file.path(normalizePath("output/otb"), "standardisiert.tif"), "float")
+cmd$exp <- expr
+runOTB(cmd, gili = gili)
+z_otb <- rast("output/otb/standardisiert.tif")
+stopifnot(compareGeom(z_r, z_otb))
+global(abs(z_r - z_otb), "max", na.rm = TRUE)
+```
+
+**Werkzeugreferenzen:** [BandMathX](https://www.orfeo-toolbox.org/CookBook/Applications/app_BandMathX.html), [link2GI](https://r-spatial.github.io/link2GI/).
+
+## Ergebnis
+
+Speichern Sie Eingabedatei, Bandstatistiken, OTB-Ausdruck und die beiden Ausgaben. Vergleichen Sie CRS, Ausdehnung, Rasterweite, Bandzahl sowie den maximalen absoluten Wertunterschied pro Band. Die standardisierten Bänder sollen näherungsweise Mittelwert null und Standardabweichung eins haben. Kleine Unterschiede durch die Float-Ausgabe sind möglich; dokumentieren Sie die tatsächlich gemessene Abweichung.

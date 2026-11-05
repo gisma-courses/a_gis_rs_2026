@@ -207,14 +207,16 @@ write.csv(benchmark, file.path(sum_dir, "benchmark_methods.csv"), row.names = FA
 smooth_dem <- function(r, radius_m) {
   zellgroesse <- mean(terra::res(r))
   n <- max(3, 2 * ceiling(radius_m / zellgroesse) + 1)
-  terra::focal(r, w = matrix(1, n, n), fun = mean, na.policy = "omit", fillvalue = NA)
+  out <- terra::focal(r, w = matrix(1, n, n), fun = mean, na.policy = "omit", fillvalue = NA)
+  names(out) <- names(r)
+  out
 }
 
 R_werte <- c(20, 40, 80, 120)
 R_test <- lapply(R_werte, function(R) {
   dem_R <- smooth_dem(dem_20m, R)
   train_R <- train
-  train_R$altitude <- terra::extract(dem_R, terra::vect(stations_sf))[[1]][match(train_R$stationid, stations$stationid)]
+  train_R$altitude <- terra::extract(dem_R, terra::vect(stations_sf))[["altitude"]][match(train_R$stationid, stations$stationid)]
   data.frame(R = R, RMSE = loocv(train_R, "trend"))
 }) |>
   dplyr::bind_rows()
@@ -225,11 +227,10 @@ write.csv(R_test, file.path(sum_dir, "R_tuning_results.csv"), row.names = FALSE)
 # 10 Abbildungen ---------------------------------------------------------------
 
 karten_df <- dplyr::bind_rows(
-  cbind(terra::as.data.frame(r_idw,   xy = TRUE), methode = "IDW"),
-  cbind(terra::as.data.frame(r_trend, xy = TRUE), methode = "Trend: Höhe"),
-  cbind(terra::as.data.frame(r_ked,   xy = TRUE), methode = "KED einfach")
+  cbind(setNames(terra::as.data.frame(r_idw, xy = TRUE), c("x", "y", "temperature")), methode = "IDW"),
+  cbind(setNames(terra::as.data.frame(r_trend, xy = TRUE), c("x", "y", "temperature")), methode = "Trend: Höhe"),
+  cbind(setNames(terra::as.data.frame(r_ked, xy = TRUE), c("x", "y", "temperature")), methode = "Höhentrend + IDW-Residuen")
 )
-names(karten_df)[3] <- "temperature"
 
 p1 <- ggplot(karten_df, aes(x, y, fill = temperature)) +
   geom_raster() +

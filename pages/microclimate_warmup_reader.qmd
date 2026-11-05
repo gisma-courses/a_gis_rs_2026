@@ -2,8 +2,6 @@
 title: "Mikroklima-Warmup"
 subtitle: "Messpunkte, Raumfüllung und einfache Modellkritik"
 order: 10
-title-block-banner: ../images/placeholder.png
-title-block-banner-color: black
 #page-layout: full
 format-links: [html, pdf, docx]
 format:
@@ -22,17 +20,11 @@ execute:
 
 # Worum es geht
 
-Dieser Reader begleitet einen Hands-on-Einstieg in räumliches Arbeiten mit R und RStudio. Im Mittelpunkt steht ein basales Skript: Es wird geöffnet, blockweise ausgeführt und so gelesen, dass nachvollziehbar wird, welche Daten eingelesen werden, welche räumlichen Operationen stattfinden und welche Ergebnisdatensätze daraus entstehen. Die SuS sollen hier nicht selbst einen vollständigen Forschungsworkflow entwickeln, sondern trainieren, ein vorhandenes Skript kontrolliert zu nutzen, seine Zwischenschritte zu verstehen und die Ergebnisse fachlich zu lesen.
+Dieser Reader begleitet das Warmup für Studierende ohne Programmiererfahrung. Öffnen Sie das Projekt und führen Sie das vorhandene Skript abschnittsweise aus. Im Mittelpunkt steht ein basales Skript: Es wird geöffnet, blockweise ausgeführt und so gelesen, dass nachvollziehbar wird, welche Daten eingelesen werden, welche räumlichen Operationen stattfinden und welche Ergebnisdatensätze daraus entstehen. Die Studierenden sollen hier nicht selbst einen vollständigen Forschungsworkflow entwickeln, sondern trainieren, ein vorhandenes Skript kontrolliert zu nutzen, seine Zwischenschritte zu verstehen und die Ergebnisse fachlich zu lesen.
 
-Fachlich geht es um ein typisches Problem der Geoinformatik und physischen Geographie: Messungen liegen punktuell vor, die Fragestellung richtet sich aber auf eine Fläche. Das ist die normale Ausgangslage vieler Messkampagnen. Man hat Stationen, Logger oder einzelne Messpunkte, aber die eigentliche Frage lautet nicht nur: Was wurde genau an diesen Punkten gemessen? Sie lautet: Wie können wir aus diesen Punkten eine begrenzte, nachvollziehbare räumliche Aussage ableiten?
+Die Messungen liegen an einzelnen Stationen vor. Das Skript liest Stationen und Höhenraster ein, wählt eine Temperaturspalte und berechnet vier flächenhafte Schätzungen: Voronoi, IDW, ein lineares Höhenmodell und Random Forest. Karten und Leave-One-Out-Fehler dienen zum Vergleich der Verfahren.
 
-Die Übung ist deshalb zugleich technisch und inhaltlich angelegt. Technisch geht es darum, mit RStudio ein Skript auszuführen, einfache räumliche Datenobjekte zu verarbeiten, Ergebnisraster zu erzeugen und diese am Ende auch interaktiv in einer Leaflet-Karte zu betrachten. Inhaltlich geht es darum zu verstehen, dass jede flächenhafte Darstellung aus Punktdaten eine Annahme darüber enthält, wie Werte zwischen Messpunkten in den Raum übertragen werden.
-
-Die zentrale Frage lautet:
-
-> Wir haben wie üblich nur einzelne Messpunkte. Wie gehen wir vor, wenn wir daraus trotzdem eine räumliche Aussage zur Temperaturverteilung ableiten wollen?
-
-Die Übung fragt also methodisch: Was tun wir, wenn die Beobachtung punktuell ist, die Frage aber flächenhaft gestellt wird?
+Führen Sie zuerst das unveränderte Skript aus. Prüfen Sie danach eine andere Temperaturspalte. Sie müssen dafür keinen Algorithmus schreiben. Für die weitere Kursarbeit üben Sie hier das Laden von Daten, relative Pfade, blockweises Ausführen und die Kontrolle von Rasterergebnissen.
 
 # Projekt herunterladen und öffnen
 
@@ -60,6 +52,8 @@ library(terra)
 library(gstat)
 library(randomForest)
 library(leaflet)
+
+set.seed(42)
 
 m   <- readRDS("data/climdata.rds")
 dem <- rast("data/DEM1.tif")
@@ -215,7 +209,11 @@ rmse <- data.frame(
 # Alle Ergebnisraster werden mit gleicher Farbskala und Messpunkten dargestellt.
 
 maps <- c(map_vor, map_idw, map_lm, map_rf)
-z <- range(c(pts$temp - 1, pts$temp + 1), na.rm = TRUE)
+z <- range(c(pts$temp,
+             global(maps, "min", na.rm = TRUE)[, 1],
+             global(maps, "max", na.rm = TRUE)[, 1]), na.rm = TRUE)
+# Kleine Reserve für Rundung bei der Kartenprojektion.
+z <- z + c(-0.01, 0.01)
 
 par(mfrow = c(2, 2))
 
@@ -294,7 +292,7 @@ leaflet_map
 
 Mikroklima beschreibt kleinräumige Unterschiede in Temperatur, Feuchte, Wind, Strahlung oder thermischer Belastung. Solche Unterschiede entstehen nicht zufällig. Sie hängen unter anderem mit Geländeform, Höhe, Hanglage, Vegetation, Verschattung, Bodenbedeckung, Bebauung, Kaltluftbildung und Luftaustausch zusammen.
 
-Für diese Übung ist Mikroklima der fachliche Anlass für die methodische Frage: Wie arbeitet man weiter, wenn nur punktuelle Messungen vorliegen, die gewünschte Aussage aber räumlich ist?
+Die Übung überträgt die Stationswerte mit vier unterschiedlichen Modellannahmen auf ein Höhenraster.
 
 Zwischen Höhe, Luftdruck und Temperatur besteht ein grundlegender physikalischer Zusammenhang: Mit zunehmender Höhe nimmt der Luftdruck ab, Luft dehnt sich bei Aufstieg aus und kühlt dabei in der Regel ab. Deshalb ist Höhe häufig ein sinnvoller erster Prädiktor für räumliche Temperaturunterschiede.
 
@@ -377,10 +375,6 @@ Das Modell schätzt eine lineare Beziehung zwischen Stationshöhe und Temperatur
 
 Dieses Modell ist methodisch anders als Voronoi und IDW. Es füllt den Raum nicht über Stationsnachbarschaft, sondern über eine erklärende Variable. Wenn Höhe fachlich relevant ist, kann das sinnvoll sein. Wenn die gemessenen Temperaturunterschiede stärker durch Schatten, Vegetation oder lokale Kaltluft geprägt sind, kann ein reines Höhenmodell zu kurz greifen.
 
-Ja, der Abschnitt verschiebt die Aufmerksamkeit zu stark auf `x/y/altitude` und sagt zu wenig klar: **RF sagt weiterhin Temperatur vorher**. Die Koordinaten und die Höhe sind nur die Eingangsvariablen, mit denen RF versucht, die gemessene Temperatur zu rekonstruieren.
-
-Ersetze den Abschnitt durch diese Fassung:
-
 ::: {.callout-note title="Code-Snippet: LM altitude" collapse="true"}
 ```r
 fit_lm <- lm(temp ~ altitude, data = st_drop_geometry(pts))
@@ -407,7 +401,7 @@ y
 altitude
 ```
 
-Damit kann RF Temperaturunterschiede aus räumlicher Position und Höhe ableiten. Das Modell fragt nicht direkt nach einem physikalischen Prozess wie Kaltluft, Verschattung oder Vegetationswirkung. Es sucht in den vorhandenen Trainingsdaten nach Mustern: Welche Kombinationen aus Lage und Höhe treten zusammen mit höheren oder niedrigeren Temperaturen auf?
+Damit kann RF Temperaturunterschiede aus räumlicher Position und Höhe ableiten. Das Modell fragt nicht direkt nach einem physikalischen Prozess wie Kaltluft, Verschattung oder Vegetationswirkung. Es schätzt die Temperatur anhand der Kombinationen aus Lage und Höhe in den Trainingsdaten.
 
 Kurzlogik:
 
@@ -485,7 +479,7 @@ Für die Interpretation des flächenhaften Ergebnisses reicht das aber nicht. De
 
 # Technische Minimalleistung des basalen Skripts
 
-Das Skript ersetzt keinen vollständigen Forschungsworkflow. Es zeigt die kleinste sinnvolle Kette, mit der aus Messpunkten, einem Höhenraster und einfachen Modellannahmen räumliche Ergebnisdatensätze entstehen. Genau deshalb eignet es sich als Trainingsskript: Die SuS können den Arbeitsweg nachvollziehen, ohne dass Rohdatenimport, Paketmanagement, Fehlerbehandlung oder ein vollständiger Analyseviewer den Kern überdecken.
+Das Skript ersetzt keinen vollständigen Forschungsworkflow. Es zeigt die kleinste sinnvolle Kette, mit der aus Messpunkten, einem Höhenraster und einfachen Modellannahmen räumliche Ergebnisdatensätze entstehen. Genau deshalb eignet es sich als Trainingsskript: Die Studierenden können den Arbeitsweg nachvollziehen, ohne dass Rohdatenimport, Paketmanagement, Fehlerbehandlung oder ein vollständiger Analyseviewer den Kern überdecken.
 
 ## 1. Daten laden
 
@@ -685,7 +679,11 @@ Die vier Ergebnisraster werden zunächst nebeneinander als statische Plots darge
 ::: {.callout-note title="Code-Snippet: Ergebnisraster darstellen" collapse="true"}
 ```r
 maps <- c(map_vor, map_idw, map_lm, map_rf)
-z <- range(c(pts$temp - 1, pts$temp + 1), na.rm = TRUE)
+z <- range(c(pts$temp,
+             global(maps, "min", na.rm = TRUE)[, 1],
+             global(maps, "max", na.rm = TRUE)[, 1]), na.rm = TRUE)
+# Kleine Reserve für Rundung bei der Kartenprojektion.
+z <- z + c(-0.01, 0.01)
 
 par(mfrow = c(2, 2))
 
@@ -702,7 +700,7 @@ print(rmse)
 
 ## 11. Ergebnisse als Leaflet-Karte darstellen
 
-Am Ende werden die gleichen Ergebnisraster zusätzlich in eine interaktive Leaflet-Karte eingebunden. Die Karte ersetzt die statischen Plots nicht, sondern ergänzt sie: Die SuS können zwischen den Modellannahmen umschalten, die Messpunkte sichtbar lassen und dadurch prüfen, wie stark sich die räumliche Aussage je nach Verfahren verändert.
+Am Ende werden die gleichen Ergebnisraster zusätzlich in eine interaktive Leaflet-Karte eingebunden. Die Karte ersetzt die statischen Plots nicht, sondern ergänzt sie: Die Studierenden können zwischen den Modellannahmen umschalten, die Messpunkte sichtbar lassen und dadurch prüfen, wie stark sich die räumliche Aussage je nach Verfahren verändert.
 
 ::: {.callout-note title="Code-Snippet: Leaflet-Karte" collapse="true"}
 ```r
@@ -786,20 +784,8 @@ Batch-Verarbeitung aller Zeitpunkte
 
 Diese Elemente können später wichtig werden. Für diesen Warmup würden sie den Kern verdecken: Punktdaten, Raster, Aussagefläche, Interpolation, Modellannahme und erste Validierung.
 
-# Leitfragen zur Auswertung
+# Ergebnisse sichern
 
-Nach dem Ausführen des Skripts sollen die Ergebnisse nicht nur betrachtet, sondern methodisch gelesen werden.
+Das heruntergeladene Skript schreibt `output/warmup/temperatur_modelle.tif` und `output/warmup/loocv_rmse.csv`. Öffnen Sie das Raster in QGIS und stellen Sie die vier Bänder mit derselben Temperaturskala dar.
 
-Leitfragen:
-
-1. Welches Ergebnis zeigt harte Stationsbereiche?
-2. Welches Ergebnis zeigt lokale Nachbarschaft?
-3. Welches Ergebnis folgt vor allem der Höhe?
-4. Welches Ergebnis wirkt rechnerisch gut, ist aber fachlich riskant?
-5. Welche Rolle spielt die Begrenzung auf die Convex-Hull-Fläche?
-6. Was wird in der Leaflet-Karte leichter erkennbar als in den statischen Plots?
-7. Warum reicht ein niedriger RMSE nicht als alleinige Begründung?
-
-Die wichtigste Schlussfolgerung lautet:
-
-> Eine räumliche Ergebnisfläche aus Messpunkten ist immer eine modellierte Aussage. Sie muss zur Datenlage, zur fachlichen Fragestellung, zur räumlichen Gültigkeitsfläche und zur gewählten Modellannahme passen. Das basale Skript zeigt dafür den kleinsten nachvollziehbaren Arbeitsweg: von Punkten über Raster und Modellannahme zur statischen und interaktiven Ergebnisdarstellung.
+Notieren Sie die verwendete Temperaturspalte und die Zahl gültiger Stationen. Ordnen Sie die vier Bänder den Verfahren Voronoi, IDW, Höhenmodell und Random Forest zu. Vergleichen Sie an einem Stationsort und zwischen zwei Stationen die vorhergesagten Werte. Die RMSE-Tabelle enthält Leave-One-Out-Fehler an Stationsorten; eine unabhängige Flächenvalidierung liegt hier nicht vor.

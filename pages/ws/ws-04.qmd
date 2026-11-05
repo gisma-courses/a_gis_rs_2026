@@ -1,21 +1,44 @@
 ---
-title: "Worksheet 04"
+title: "Worksheet 04 · Räumliche Muster quantitativ beschreiben"
+subtitle: "Zusammensetzung, Anordnung und Fenstergröße getrennt variieren"
 order: 4
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Daten und Methode
+
+Verwenden Sie einen kategorischen Landbedeckungsausschnitt aus Hessen oder Nordrhein-Westfalen, beispielsweise [CORINE Land Cover 2018](https://land.copernicus.eu/en/products/corine-land-cover/clc2018). Laden Sie die Rasterdaten beim Anbieter, schneiden Sie in QGIS einen begrenzten Ausschnitt zu und speichern Sie ihn als `data/landbedeckung.tif`. Verwenden Sie ein metrisches CRS und ganzzahlige Klassenwerte; NoData ist keine zusätzliche Landbedeckungsklasse. Notieren Sie Produkt, Bezugsjahr, Rasterweite und Klassensystem.
+
+Berechnen Sie mit `landscapemetrics` auf demselben Ausschnitt:
+
+```r
+library(terra)
+library(landscapemetrics)
+lc <- rast("data/landbedeckung.tif")
+lsm_l_shdi(lc)
+lsm_l_ai(lc, directions = 4)
+lsm_l_ent(lc)
+lsm_l_relmutinf(lc)
+```
+
+Die Funktionsdokumentation legt Nachbarschaft und Logarithmusbasis fest: [SHDI](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_shdi.html), [AI](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_ai.html), [Entropie](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_ent.html), [relative gegenseitige Information](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_relmutinf.html). SHDI und Entropie messen die Klassenzusammensetzung; vergleichen Sie ihre Zahlenwerte erst nach Angleichung der Logarithmusbasis.
+
+## Kontrollierter Vergleich
+
+1. Erzeugen Sie mit `set.seed(42)` eine zweite Rastervariante, indem Sie nur die gültigen Zellwerte zufällig umordnen. Rastergitter, NoData-Maske und Klassenhäufigkeiten bleiben gleich. Berechnen Sie alle vier Maße erneut.
+2. Vergleichen Sie Original und Umordnung: SHDI und Entropie müssen bei gleicher Zusammensetzung gleich bleiben; AI und relative gegenseitige Information können sich verändern. Tragen Sie tatsächliche Werte und Differenzen in eine Tabelle ein.
+3. Schneiden Sie um denselben Mittelpunkt quadratische Fenster mit 2, 4 und 8 km Kantenlänge aus dem Original. Halten Sie Rasterweite, Klassen und Nachbarschaft konstant. Berechnen Sie pro Fenster Klassenanteile und dieselben vier Maße.
+
+## Ergebnis
+
+Geben Sie zwei Karten mit gemeinsamer Klassenlegende und eine Tabelle mit Variante, Fenstergröße, Zellzahl, Klassenanteilen und vier Maßwerten ab. Belegen Sie die Wirkung räumlicher Umordnung und die Wirkung der Fenstergröße jeweils mit einem Zahlenpaar. Fenstervergleiche können Zusammensetzung und Anordnung zugleich verändern; die Umordnung isoliert dagegen die Anordnung.

@@ -1,9 +1,7 @@
 ---
 title: "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen"
-subtitle: "Eigene Untersuchungsfläche, geprüfte Aufnahmen und nachvollziehbare Ergebnisse"
+subtitle: "Datensouveränität - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse"
 order: 2
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
 format-links: [html, pdf, docx]
 format:
   html:
@@ -26,7 +24,7 @@ execute:
 
 Sie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.
 
-Aus den Warm-ups kennen Sie Projektordner, relative Pfade, blockweises Ausführen und die Kontrolle von Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.
+Aus Worksheet 01 kennen Sie Projektordner, relative Pfade und blockweises Ausführen. Das optionale Mikroklima-Warmup bietet zusätzliche Übung mit Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.
 
 Am Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus **einer ausgewählten Sommerbeobachtung pro Jahr**. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.
 
@@ -49,7 +47,7 @@ Für den Rasterabruf richten Sie einmalig Ihren persönlichen CDSE-Zugang und di
 
 ::: {.callout-note title="Exkurs · CDSE-Konto, OAuth-Client und Zugang in R einrichten" collapse="true"}
 
-### Was wird benötigt?
+### Zugangsdaten
 
 Ihr **CDSE-Konto** dient zur Anmeldung im Browser. Ein **OAuth-Client** ermöglicht dem Skript den Zugriff: Er besitzt eine **Client-ID** und ein **Client-Secret**. Diese sind nicht Ihre E-Mail-Adresse und Ihr Kontopasswort. Aus den beiden Werten kann das R-Paket einen zeitlich begrenzten Zugriffstoken beziehen.
 
@@ -118,11 +116,24 @@ Die Menüfolge und die Hinweise zum Secret sind in der [offiziellen CDSE-Anleitu
 
 :::
 
-## 1 · Eine eigene Untersuchungsfläche festlegen · ca. 20 Minuten
+## 1 · Eine eigene Untersuchungsfläche festlegen
 
 Öffnen Sie die Burgwald-Gebietsgrenze aus Worksheet 01 in QGIS. Wählen Sie anhand einer Hintergrundkarte eine kleine Waldfläche, für die Sie den sommerlichen Verlauf untersuchen möchten. Ein Gebiet mit ungefähr 1–2 km Kantenlänge reicht; die maximale Kantenlänge dieser Übung beträgt 5 km.
 
-Legen Sie einen neuen GeoPackage-Layer an:
+::: {.callout-note title="Legen Sie einen neuen GeoPackage-Layer an:" collapse="true"}
+
+Erstellen Sie die Untersuchungsfläche in QGIS:
+
+1. Öffnen Sie Layer → Layer erstellen → Neuer GeoPackage-Layer.
+2. Wählen Sie als Datei data/aoi.gpkg in Ihrem RStudio-Projekt, als Tabellennamen aoi, als Geometrietyp Polygon und als Koordinatensystem EPSG:32632 – WGS 84 / UTM zone 32N.
+3. Bestätigen Sie mit OK und markieren Sie den neuen Layer.
+4. Aktivieren Sie den Bearbeitungsmodus über das Stiftsymbol. Wählen Sie Polygonobjekt hinzufügen.
+5. Setzen Sie mit Linksklicks die Eckpunkte Ihrer Untersuchungsfläche. Ein Rechtsklick schließt die Erfassung ab; bestätigen Sie den Attributdialog mit OK.
+6. Speichern Sie die Layeränderungen und beenden Sie den Bearbeitungsmodus.
+
+Zeichnen Sie genau ein Polygon. Diese Fläche wird für alle Aufnahmetermine verwendet.
+
+:::
 
 - Datei: `data/aoi.gpkg` im RStudio-Projekt;
 - Geometrietyp: Polygon;
@@ -131,9 +142,9 @@ Legen Sie einen neuen GeoPackage-Layer an:
 
 Zeichnen Sie das Polygon, speichern Sie die Bearbeitung und beenden Sie den Bearbeitungsmodus. Verwenden Sie über die gesamte Reihe dieselbe Fläche.
 
-**Ihre Entscheidung:** Notieren Sie in `README.md`, welche Fläche Sie gewählt haben und warum. Formulieren Sie eine vorläufige Erwartung: eher ähnliches sommerliches Signal oder erkennbare Unterschiede? Das ist eine zu prüfende Erwartung, noch kein Ergebnis.
+**Dokumentation:** Halten Sie in `README.md` Lage, Größe und erkennbare Landbedeckung der gewählten Fläche fest.
 
-## 2 · Aufnahmen suchen und eine Auswahl treffen · ca. 30 Minuten
+## 2 · Aufnahmen suchen und eine Auswahl treffen
 
 Öffnen Sie `02_sentinel_abruf.R`. Ergänzen Sie den Skriptkopf. Führen Sie zunächst nur die Abschnitte 1–3 aus.
 
@@ -155,11 +166,11 @@ Die Suche liefert Metadaten der Sentinel-2-L2A-Aufnahmen, die Ihr Gebiet schneid
 
 Der erste Vorschlag wählt pro Jahr den Tag mit der geringsten mittleren Szenenbewölkung. **Diese Prozentangabe bezieht sich auf die gefundenen Szenen, nicht auf Ihre kleine Untersuchungsfläche.** Ein solcher Tag kann über Ihrem Gebiet trotzdem bewölkt sein.
 
-Prüfen Sie die fünf vorgeschlagenen Daten. Liegen sie ungefähr in derselben Phase des Sommers? Sehen Sie die Aufnahmen bei Bedarf im [Copernicus Browser](https://browser.dataspace.copernicus.eu/) an. Wenn Sie einen anderen Tag auswählen, übernehmen Sie die vollständige zugehörige Zeile aus der Kandidatentabelle in `data/auswahl.csv`.
+Vergleichen Sie die fünf vorgeschlagenen Aufnahmetage nach ihrer Lage innerhalb des Sommers. Sehen Sie die Aufnahmen bei Bedarf im [Copernicus Browser](https://browser.dataspace.copernicus.eu/) an. Wenn Sie einen anderen Tag auswählen, übernehmen Sie die vollständige zugehörige Zeile aus der Kandidatentabelle in `data/auswahl.csv`.
 
 Die Auswahl-Datei wird beim erneuten Ausführen nicht überschrieben. Für eine neue Suche mit geändertem Gebiet oder Zeitraum archivieren Sie die alte Auswahl und lassen eine neue erzeugen.
 
-## 3 · Einen Abruf prüfen, dann die Reihe laden · ca. 35 Minuten
+## 3 · Einen Abruf prüfen, dann die Reihe laden
 
 Führen Sie im Abrufskript die Abschnitte 4–6 aus. Mit `anzahl_abrufe <- 1` wird zunächst nur der erste ausgewählte Tag geladen.
 
@@ -172,15 +183,15 @@ Führen Sie im Abrufskript die Abschnitte 4–6 aus. Mit `anzahl_abrufe <- 1` wi
 | 5 | SCL | Szenenklassifikation zur Qualitätsmaskierung. |
 | 6 | dataMask | Kennzeichnet verfügbare Bilddaten. |
 
-Kontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und Schatten. Die SCL wird auf das Ausgabegitter gebracht; sie besitzt dadurch keine zusätzliche ursprüngliche Detailinformation.
+Kontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und Schatten. Alle Termine liegen auf demselben 10-m-UTM-Gitter. Reflexionen werden bilinear, SCL und dataMask mit dem nächsten Nachbarn übertragen. Die SCL besitzt dadurch keine zusätzliche ursprüngliche Detailinformation. Für die AOI-Auswertung zählen Zellen, deren Mittelpunkt innerhalb des Polygons liegt.
 
-Wenn der erste Abruf stimmt, setzen Sie `anzahl_abrufe <- Inf` und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden übersprungen. Kontrollieren Sie auch die übrigen Aufnahmen.
+Wenn der erste Abruf stimmt, setzen Sie `anzahl_abrufe <- Inf` und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden nur bei passender AOI und passenden Abrufeinstellungen übersprungen. Zu jedem TIFF wird ein Abrufmanifest `.tif.rds` gespeichert. Ältere TIFFs ohne Manifest oder mit geänderten Einstellungen archivieren Sie zusammen mit dem bisherigen Ordner `data/sentinel/` und laden die ausgewählten Tage erneut. Kontrollieren Sie auch die übrigen Aufnahmen.
 
 **Zwischenergebnis:** Für jedes ausgewählte Datum existiert eine lokale TIFF-Datei. Ungeeignete Tage ersetzen Sie durch einen anderen Kandidaten und rufen diesen nach. Alte Dateien dürfen zur Dokumentation liegen bleiben; die Auswertung verwendet ausschließlich die aktuelle Auswahl-Datei.
 
 Der Abruf verwendet jeweils einen Tag. Überlappende Kacheln können dabei zu einem Bild mosaikiert werden; eine einzelne Produkt-ID wird damit nicht festgeschrieben.
 
-## 4 · Aus den Aufnahmen eine NDVI-Reihe berechnen · ca. 30 Minuten
+## 4 · Aus den Aufnahmen eine NDVI-Reihe berechnen
 
 Öffnen Sie `03_ndvi_reihe.R`. Führen Sie die Abschnitte 1 und 2 aus. Das Skript prüft, ob alle ausgewählten Aufnahmen vorhanden sind und dasselbe Rastergitter besitzen.
 
@@ -200,7 +211,7 @@ Das Skript berechnet einen NDVI pro Datum, begrenzt ihn auf Ihr Polygon und schr
 
 **Prüfung:** Öffnen Sie zwei NDVI-Raster in QGIS. Verwenden Sie dieselbe Farbskala von −1 bis 1. Prüfen Sie auffällige Stellen im ursprünglichen RGB-Bild. Fehlende Werte sind keine NDVI-Werte von null.
 
-## 5 · Einen belastbaren Verlauf darstellen · ca. 30 Minuten
+## 5 · Einen belastbaren Verlauf darstellen
 
 Führen Sie die Abschnitte 3 und 4 aus. Das Skript erzeugt eine Tabelle und eine Grafik mit:
 
@@ -210,13 +221,9 @@ Führen Sie die Abschnitte 3 und 4 aus. Das Skript erzeugt eine Tabelle und eine
 
 Der zweite Verlauf macht sichtbar, ob wechselnde räumliche Abdeckung den Vergleich beeinflusst. Bleiben nur sehr wenige gemeinsame Pixel, ist auch dieser Vergleich räumlich schwach gestützt. Prüfen Sie dann die Bildauswahl. Die Grafik verbindet einzelne Beobachtungstage; über den Verlauf zwischen ihnen liegen keine Aussagen vor.
 
-**Bearbeiten Sie drei konkrete Fragen:**
+**Ergebnis:** Nennen Sie das Datumspaar mit dem größten Unterschied und geben Sie die NDVI-Differenz für beide räumlichen Bezugsflächen an. Legen Sie einen zusätzlichen Aufnahmetermin fest, mit dem Sie Vegetationsveränderung, sommerliche Entwicklung oder Bildstörungen unterscheiden können.
 
-1. Zwischen welchen Aufnahmetagen ist der größte Unterschied sichtbar?
-2. Bleibt dieser Unterschied bestehen, wenn dieselben Pixel verglichen werden?
-3. Welche zusätzliche Aufnahme wäre hilfreich, um Vegetationsveränderung von unterschiedlicher sommerlicher Entwicklung oder Bildstörungen zu unterscheiden?
-
-## 6 · Eine Entscheidung überprüfen · ca. 20 Minuten
+## 6 · Eine Entscheidung überprüfen
 
 Wählen Sie für ein Jahr einen zweiten geeigneten Sommertag aus der Kandidatentabelle. Sichern Sie die bisherigen Ergebnisdateien in einem Unterordner `output/vergleich_1/`. Ersetzen Sie den entsprechenden Eintrag in `data/auswahl.csv`, laden Sie den neuen Tag und berechnen Sie die Reihe erneut.
 
@@ -224,7 +231,7 @@ Vergleichen Sie den betroffenen NDVI-Wert, die Datenabdeckung und Ihre ursprüng
 
 Bei technischen Problemen können Sie Dokumentation oder KI nutzen. Geben Sie den betroffenen Abschnitt und die Fehlermeldung an, verlangen Sie eine begrenzte Korrektur und überprüfen Sie danach Datum, Rastergitter und Werte. Halten Sie wesentliche Änderungen im Skript fest.
 
-## Ergebnis der Sitzung · ca. 15 Minuten
+## Ergebnis der Sitzung
 
 Ihr Projekt enthält die selbst gewählte Fläche, die Aufnahmekandidaten, Ihre dokumentierte Auswahl, die abgerufenen Raster und die berechnete NDVI-Reihe. Ergänzen Sie in `README.md`:
 
@@ -236,4 +243,4 @@ Ihr Projekt enthält die selbst gewählte Fläche, die Aufnahmekandidaten, Ihre 
 
 **Abgabe:** eine Verlaufsgrafik, die zugehörige CSV und fünf bis acht Sätze zur Aussagekraft der Reihe. Eine beobachtete Abnahme wird zunächst als verändertes Vegetationssignal beschrieben. Ihre Ursache muss anhand weiterer Beobachtungen geprüft werden.
 
-Die weiterführende Auswertung bearbeiten Sie als **Hausaufgabe in [Worksheet 03](ws-03.qmd)**: Pixelverfügbarkeit und Zeitreihenanalyse.
+In [Worksheet 03](ws-03.qmd) vergleichen Sie NDVI und kNDVI auf Wald-, Offenland- und auffälligen Vergleichsflächen. Die [Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe](ws-02-zusatz.qmd) bleibt als Zusatz zu dieser Sitzung verfügbar; ihre Ergebnisse werden in Worksheet 10 weiterverwendet.

@@ -29,6 +29,15 @@ if (max(bb["xmax"] - bb["xmin"], bb["ymax"] - bb["ymin"]) > 5000) {
 }
 plot(st_geometry(aoi))
 
+# Ein festes UTM-Gitter für alle Termine, an vollen 10-m-Zellen ausgerichtet.
+vorlage <- rast(xmin = floor(bb["xmin"] / 10) * 10,
+                xmax = ceiling(bb["xmax"] / 10) * 10,
+                ymin = floor(bb["ymin"] / 10) * 10,
+                ymax = ceiling(bb["ymax"] / 10) * 10,
+                resolution = 10, crs = "EPSG:32632")
+gittergrenze <- st_as_sf(as.polygons(ext(vorlage), crs = crs(vorlage)))
+bbox_wgs84 <- as.numeric(st_bbox(st_transform(gittergrenze, 4326)))
+
 # 3. Katalog abfragen: Metadaten, noch keine Raster ----------------------
 zeitraum <- paste0(min(jahre), "-01-01T00:00:00Z/",
                    max(jahre), "-12-31T23:59:59Z")
@@ -69,8 +78,9 @@ if (!file.exists("data/auswahl.csv")) {
 auswahl <- read.csv("data/auswahl.csv")
 auswahl$datum <- as.Date(auswahl$datum)
 auswahl <- auswahl[order(auswahl$datum), ]
-stopifnot(nrow(auswahl) > 0, !anyNA(auswahl$datum),
+stopifnot(nrow(auswahl) == length(jahre), !anyNA(auswahl$datum),
           !anyDuplicated(auswahl$datum),
+          setequal(as.integer(format(auswahl$datum, "%Y")), jahre),
           all(auswahl$datum %in% kandidaten$datum))
 print(auswahl)
 
@@ -95,21 +105,53 @@ function evaluatePixel(s) {
 }'
 writeLines(evalscript, "data/sentinel_evalscript.js")
 
+# Ohne aoi-Argument liefert GetImage das Originalgitter in WGS84 zurück.
+# So wird dessen interne gemeinsame Reprojektion aller sechs Bänder umgangen.
+# Reflexionen werden bilinear, SCL und dataMask mit nächstem Nachbarn übertragen.
+auf_gitter <- function(rohdaten, vorlage) {
+  stopifnot(inherits(rohdaten, "SpatRaster"), nlyr(rohdaten) == 6)
+  bild <- c(project(rohdaten[[1:4]], vorlage, method = "bilinear"),
+            project(rohdaten[[5:6]], vorlage, method = "near"))
+  names(bild) <- c("B02", "B03", "B04", "B08", "SCL", "dataMask")
+  for (band in c("SCL", "dataMask")) {
+    werte <- values(bild[[band]], mat = FALSE)
+    erlaubt <- if (band == "SCL") 0:11 else 0:1
+    if (any(!is.na(werte) & !werte %in% erlaubt)) {
+      stop("Ungültige Klassenwerte im Qualitätsband ", band)
+    }
+  }
+  bild
+}
+
 # 6. Erst ein Datum, anschließend die gewählte Reihe --------------------
 for (i in seq_len(min(nrow(auswahl), anzahl_abrufe))) {
   tag <- as.character(auswahl$datum[i])
   datei <- file.path(ordner, paste0("s2_", tag, ".tif"))
-  if (file.exists(datei)) next
+  manifest_datei <- paste0(datei, ".rds")
+  anfrage <- list(datum = tag, aoi = st_as_binary(st_geometry(aoi)),
+                  gitter = as.vector(ext(vorlage)), crs = crs(vorlage),
+                  aufloesung = res(vorlage), evalscript = evalscript,
+                  mosaicking = "leastCC", verfahren = "bilinear/near-v1")
+  if (file.exists(datei)) {
+    if (!file.exists(manifest_datei) ||
+        !identical(readRDS(manifest_datei)$anfrage, anfrage) ||
+        !compareGeom(rast(datei)[[1]], vorlage, stopOnError = FALSE)) {
+      stop("Vorhandener Abruf passt nicht zu Gebiet/Einstellungen: ", datei,
+           ". Alten Ordner data/sentinel archivieren und erneut abrufen.")
+    }
+    next
+  }
   message("Abruf: ", tag)
-  bild <- CDSE::GetImage(
-    aoi = aoi, time_range = tag,
+  rohdaten <- CDSE::GetImage(
+    bbox = bbox_wgs84, time_range = tag,
     collection = "sentinel-2-l2a", script = evalscript,
     format = "image/tiff", mosaicking_order = "leastCC",
     resolution = 10, client = client
   )
-  stopifnot(inherits(bild, "SpatRaster"), nlyr(bild) == 6)
-  names(bild) <- c("B02", "B03", "B04", "B08", "SCL", "dataMask")
+  bild <- auf_gitter(rohdaten, vorlage)
   writeRaster(bild, datei, overwrite = FALSE)
+  saveRDS(list(anfrage = anfrage, abgerufen = Sys.time(),
+               CDSE = as.character(packageVersion("CDSE"))), manifest_datei)
 }
 # Tagesabruf: Überlappende Kacheln können mosaikiert werden.
 # Das ausgewählte Datum ist festgelegt, keine einzelne Produkt-ID.

@@ -1,21 +1,29 @@
 ---
-title: "Worksheet 09"
+title: "Worksheet 09 · Anwendungsbereich prüfen"
+subtitle: "Vorhersage, Prädiktorauswahl und Area of Applicability"
 order: 9
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## AOA zum räumlich geprüften Modell berechnen
+
+Verwenden Sie das räumlich geprüfte Random-Forest-Modell aus [Worksheet 08](ws-08.qmd), seine gespeicherten Faltungen und denselben Prädiktorstack. Der [AOA-Abschnitt der EON-Vorlage](https://github.com/earth-observation-network/EON2026/blob/main/block4_machineLearning/ML_AOA.qmd) verwendet `CAST::aoa()`.
+
+1. Erzeugen Sie die LAI-Vorhersage und die AOA mit genau den beim Training verwendeten Prädiktoren. Speichern Sie Vorhersage, Dissimilarity Index und binäre AOA.
+2. Stellen Sie LAI und AOA gemeinsam dar. Berechnen Sie den Flächenanteil innerhalb der AOA bezogen auf Zellen mit vollständigen Eingabeprädiktoren. NoData wird nicht als außerhalb der AOA gezählt.
+3. Entfernen Sie genau einen benannten Prädiktor. Trainieren Sie erneut mit denselben räumlichen Faltungen und unveränderten übrigen Einstellungen. Falls `mtry` die verbleibende Prädiktorzahl überschreiten würde, wählen Sie vor beiden Trainings einen zulässigen gemeinsamen Wert.
+4. Berechnen Sie Vorhersage und AOA erneut. Vergleichen Sie räumlichen CV-RMSE, AOA-Flächenanteil und die neu hinzugekommenen beziehungsweise entfallenen AOA-Bereiche auf derselben vollständigen Zellmenge.
+
+## Ergebnis
+
+Geben Sie eine Tabelle für beide Prädiktorsätze und eine Karte der AOA-Änderung ab. Prüfen Sie einen neu ausgeschlossenen Bereich anhand seiner Prädiktorwerte und der Wertebereiche im Training. Ein größerer AOA-Anteil bedeutet nicht automatisch ein genaueres Modell. Die AOA beschreibt die Abdeckung im verwendeten Prädiktorraum; sie weist weder die korrekte LAI-Messung noch die zeitliche Übertragbarkeit nach.

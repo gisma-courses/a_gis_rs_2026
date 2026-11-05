@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 08</title>
+<title>Worksheet 08 · Räumlich validieren</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="../../">
 <link href="../../pages/ws/ws-09.html" rel="next">
 <link href="../../pages/ws/ws-07.html" rel="prev">
-<link href="../..//images/logo.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -73,27 +72,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../../images/placeholder.png;
-      }
-</style>
 
 
-<meta property="og:title" content="Worksheet 08">
-<meta name="twitter:title" content="Worksheet 08">
+<meta property="og:title" content="Worksheet 08 · Räumlich validieren">
+<meta property="og:description" content="Random Forest mit zufälligen und räumlichen Prüffaltungen">
+<meta name="twitter:title" content="Worksheet 08 · Räumlich validieren">
+<meta name="twitter:description" content="Random Forest mit zufälligen und räumlichen Prüffaltungen">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
@@ -263,36 +247,20 @@ background: ../../images/placeholder.png;
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Worksheet 08</h1>
+          <h1 class="quarto-secondary-nav-title">Worksheet 08 · Räumlich validieren</h1>
         </a>     
     </div>
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 08</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -323,7 +291,7 @@ background: ../../images/placeholder.png;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../pages/" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
@@ -455,15 +423,49 @@ background: ../../images/placeholder.png;
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-08.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-08.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Worksheet 08 · Räumlich validieren</h1>
+<p class="subtitle lead">Random Forest mit zufälligen und räumlichen Prüffaltungen</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
 
 
 
+</header>
 
+
+<section id="vergleich-vorbereiten" class="level2">
+<h2 class="anchored" data-anchor-id="vergleich-vorbereiten">Vergleich vorbereiten</h2>
+<p>Verwenden Sie die vollständigen LAI-/Prädiktorpaare aus <a href="../../pages/ws/ws-07.html">Worksheet 07</a> und den Abschnitt <strong>The machine learning way</strong> der <a href="https://github.com/earth-observation-network/EON2026/blob/main/block4_machineLearning/ML_AOA.qmd">EON-Vorlage</a>. Übernehmen Sie daraus die räumliche Faltung mit <code>CAST::knndm()</code>. Die Zahl der Faltungen beträgt in beiden Prüfungen drei.</p>
+<p>Für diesen Vergleich wird keine Variablenauswahl ausgeführt: Ersetzen Sie die <code>ffs()</code>-Modellierung der Vorlage durch <code>caret::train(..., method = "rf")</code>. Legen Sie die Prädiktornamen ausdrücklich fest; <code>ID</code>, Koordinatenkennungen und LAI dürfen nicht versehentlich in den Prädiktorsatz gelangen.</p>
+</section>
+<section id="zwei-prüfungen-ausführen" class="level2">
+<h2 class="anchored" data-anchor-id="zwei-prüfungen-ausführen">Zwei Prüfungen ausführen</h2>
+<ol type="1">
+<li>Erzeugen Sie mit <code>set.seed(42)</code> drei zufällige Faltungen, beispielsweise mit <code>caret::createFolds()</code>, und die drei räumlichen Faltungen mit <code>CAST::knndm()</code>. Speichern Sie die jeweiligen Trainings- und Testindizes und stellen Sie die Testzuordnung an den Referenzorten dar.</li>
+<li>Trainieren Sie mit beiden Faltungssätzen denselben Random Forest: gleiche Prädiktoren, <code>ntree = 500</code>, genau ein festes <code>mtry</code> und dieselben sonstigen Einstellungen. Verwenden Sie <code>trainControl(index = ..., indexOut = ..., savePredictions = "final", method = "cv")</code> und ein einzeiliges <code>tuneGrid</code>. Setzen Sie den Zufallsstart vor jedem Training erneut.</li>
+<li>Berechnen Sie aus den zurückgehaltenen Vorhersagen RMSE, MAE und mittleren Fehler als <code>mean(pred - obs)</code>. Jede Referenz soll pro Prüfverfahren genau einmal getestet werden. Berechnen Sie zusätzlich Kennwerte pro Faltung.</li>
+<li>Vergleichen Sie die Trainings-Test-Abstände anhand von <code>CAST::geodist()</code> und stellen Sie die räumliche Prüfsituation den Abständen zwischen Trainingspunkten und Vorhersagegebiet gegenüber.</li>
+</ol>
+</section>
+<section id="ergebnis" class="level2">
+<h2 class="anchored" data-anchor-id="ergebnis">Ergebnis</h2>
+<p>Geben Sie Faltungskarten, die Tabelle der zurückgehaltenen Vorhersagen und einen Kennwertvergleich ab. Geben Sie an, für welche räumliche Entfernungssituation die jeweiligen Fehler stehen. Nennen Sie die zahlenmäßige Fehlerdifferenz; ein größerer räumlicher Fehler wird nicht vorausgesetzt. Bewahren Sie das räumlich geprüfte Modell mit seinen Faltungen für <a href="../../pages/ws/ws-09.html">Worksheet 09</a> auf.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

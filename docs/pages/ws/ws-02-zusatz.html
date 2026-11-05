@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe</title>
+<title>Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,28 +58,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../">
-<link href="../../..//images/logo.png" rel="icon" type="image/png">
-<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-7ac2f9da8c2617a4fdd15004b4601015.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-c5ca5c32b214fe74a527b2ba75d794cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../site_libs/bootstrap/bootstrap-dark-c8e893c45ba768c613f97d88ef0faa80.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="../../../site_libs/bootstrap/bootstrap-c5ca5c32b214fe74a527b2ba75d794cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-7ac2f9da8c2617a4fdd15004b4601015.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c5ca5c32b214fe74a527b2ba75d794cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-c8e893c45ba768c613f97d88ef0faa80.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-c5ca5c32b214fe74a527b2ba75d794cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -106,28 +105,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../../images/placeholder.png;
-      }
-</style>
 
 
-<meta property="og:title" content="Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe">
+<meta property="og:title" content="Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe">
 <meta property="og:description" content="Zwei Exkurse mit den Ergebnissen aus Worksheet 02">
-<meta name="twitter:title" content="Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe">
+<meta name="twitter:title" content="Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe">
 <meta name="twitter:description" content="Zwei Exkurse mit den Ergebnissen aus Worksheet 02">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
@@ -299,48 +281,47 @@ background: ../../images/placeholder.png;
 
 <div id="quarto-search-results"></div>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Worksheet 03 · Hausaufgabe: Datenabdeckung und Zeitreihe</h1>
-            <p class="subtitle lead">Zwei Exkurse mit den Ergebnissen aus Worksheet 02</p>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-03.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-03.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-02-zusatz.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-02-zusatz.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe</h1>
+<p class="subtitle lead">Zwei Exkurse mit den Ergebnissen aus Worksheet 02</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
+
+
+
+</header>
 
 
 <section id="hausaufgabe" class="level2">
 <h2 class="anchored" data-anchor-id="hausaufgabe">Hausaufgabe</h2>
-<p>Bearbeiten Sie nach <a href="../../../sentinel_ws02 (2)/pages/ws/ws-02.html">Worksheet 02</a> die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.</p>
+<p>Bearbeiten Sie nach <a href="../../pages/ws/ws-02.html">Worksheet 02</a> die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.</p>
 <p><strong>Reihenfolge:</strong> zuerst die Pixelzählung mit Skript 05, dann die Zeitreihenanalyse mit Skript 04. Die Nummern der Skripte entsprechen ihrer Ergänzung zum Projekt; beide lesen ihre Eingaben selbst ein.</p>
 <p>Gezählt und analysiert werden die <strong>fünf ausgewählten Sommertermine</strong>. Die Ergebnisse beschreiben diese Auswahl. Daraus ergibt sich keine allgemeine Wolkenhäufigkeit über den Burgwald.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Exkurs 1 · Wie oft ist ein Pixel gültig oder bewölkt?">
+<div class="callout callout-style-default callout-note callout-titled" title="Exkurs 1 · Gültige, bewölkte und fehlende Beobachtungen zählen">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Exkurs 1 · Wie oft ist ein Pixel gültig oder bewölkt?
+<span class="screen-reader-only">Note</span>Exkurs 1 · Gültige, bewölkte und fehlende Beobachtungen zählen
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -395,7 +376,7 @@ background: ../../images/placeholder.png;
 <li><strong>Gültigkeitsanteil:</strong> <code>n_valid / 5 × 100</code>.</li>
 <li><strong>Wolkenanteil unter verfügbaren Beobachtungen:</strong> <code>n_cloudy / (5 − n_missing) × 100</code>. Ohne verfügbare Beobachtungen bleibt der Wert NoData.</li>
 </ul>
-<p><strong>Interpretation:</strong> Wo ist die zeitliche Vergleichbarkeit gut gestützt? Wo fehlen Beobachtungen, und welche Ursache weist die Klassifikation dafür aus? Behalten Sie beim Vergleich die gröbere ursprüngliche Auflösung der SCL im Blick.</p>
+<p><strong>Auswertung:</strong> Gemeinsame Datenabdeckung als Prozentwert angeben und die dominierende Ausschlussklasse an einer auffälligen Stelle im SCL-Band prüfen.</p>
 </section>
 </div>
 </div>
@@ -412,7 +393,7 @@ background: ../../images/placeholder.png;
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Leitfrage:</strong> Zeigt Ihre Fläche eine gleichgerichtete Veränderung, einen einzelnen auffälligen Termin oder einen wechselnden Verlauf?</p>
+<p><strong>Auswertung:</strong> Differenzen zwischen den Aufnahmen, lineare Steigung und Empfindlichkeit gegenüber einzelnen Terminen berechnen.</p>
 <p>Nutzen Sie die bereits berechneten NDVI-Raster. Falls Exkurs 1 keine an allen Terminen gültigen Pixel ergibt, dokumentieren Sie diese Einschränkung; die gemeinsame Zeitreihenanalyse kann dann mit dieser Auswahl nicht berechnet werden. Die fünf geladenen Sommertage sind die Beobachtungen dieser Analyse. Die weiteren Treffer des STAC-Katalogs sind zunächst nur Metadaten und werden hier nicht als zusätzliche Beobachtungen verwendet.</p>
 <p>Laden Sie <a href="../../scripts/04_zeitreihe_addon.R" download="04_zeitreihe_addon.R">04_zeitreihe_addon.R</a> in Ihren Ordner <code>scripts/</code>. Das Skript liest die Ergebnisse aus Worksheet 02 selbst ein. Führen Sie es abschnittsweise aus.</p>
 <section id="änderungen-zwischen-den-beobachtungen-untersuchen" class="level3">
@@ -462,8 +443,8 @@ background: ../../images/placeholder.png;
 <h3 class="anchored" data-anchor-id="einen-trend-beschreiben-und-hinterfragen">2 · Einen Trend beschreiben und hinterfragen</h3>
 <p>Das Skript passt eine Gerade an die mittleren NDVI-Werte an. Die Zeitvariable berücksichtigt die tatsächlichen Abstände zwischen den Aufnahmen:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>modell <span class="ot">&lt;-</span> <span class="fu">lm</span>(ndvi <span class="sc">~</span> jahre_seit_start, <span class="at">data =</span> d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Die Steigung beschreibt die lineare Änderung in <strong>NDVI-Einheiten pro Jahr</strong>. Öffnen Sie <code>output/zeitreihe/zeitreihenanalyse.png</code>. Passt die Gerade zum beobachteten Verlauf, oder verdeckt sie einen Einbruch und eine anschließende Zunahme?</p>
-<p>Anschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in <code>sensitivitaet.csv</code> mit der Steigung der vollständigen Reihe. Bleibt deren Vorzeichen bestehen? Welcher Termin verändert die Aussage am stärksten?</p>
+<p>Die Steigung beschreibt die lineare Änderung in <strong>NDVI-Einheiten pro Jahr</strong>. Öffnen Sie <code>output/zeitreihe/zeitreihenanalyse.png</code>. Vergleichen Sie die Gerade mit den beobachteten Werten; geben Sie den Termin mit dem größten absoluten Residuum an.</p>
+<p>Anschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in <code>sensitivitaet.csv</code> mit der Steigung der vollständigen Reihe. Geben Sie an, ob das Vorzeichen bestehen bleibt, und nennen Sie den Termin mit dem größten Einfluss auf die Steigung.</p>
 <p><strong>Diese Prüfung untersucht die Empfindlichkeit gegenüber einzelnen Beobachtungen.</strong> Sie ist keine unabhängige Validierung. Fünf ausgewählte Sommertage erlauben hier eine beschreibende Auswertung; saisonale Zerlegung, Bruchpunkterkennung und Zukunftsprognose sind nicht Gegenstand des Add-ons.</p>
 </section>
 <section id="den-räumlichen-mittelwert-überprüfen" class="level3">
@@ -474,17 +455,11 @@ background: ../../images/placeholder.png;
 <li>Positive Werte: höherer NDVI am letzten gegenüber dem ersten Termin.</li>
 <li>NoData: keine gemeinsame gültige Beobachtung über die gesamte Reihe.</li>
 </ul>
-<p><strong>Auftrag:</strong> Zeigt die gesamte Fläche eine ähnliche Änderung, oder gleichen sich räumlich getrennte Zu- und Abnahmen im Mittelwert teilweise aus? Kontrollieren Sie je eine auffällige Fläche in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.</p>
+<p><strong>Auftrag:</strong> Markieren Sie je eine Fläche mit Zu- und Abnahme und kontrollieren Sie beide in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.</p>
 </section>
-<section id="interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
-<p>Ergänzen Sie die Verlaufsgrafik um die Differenzkarte und eine kurze Interpretation:</p>
-<ol type="1">
-<li>Welche Veränderung ist in den Beobachtungen sichtbar?</li>
-<li>Wie empfindlich ist die lineare Beschreibung gegenüber einzelnen Terminen?</li>
-<li>Welche räumlichen Unterschiede verdeckt der Mittelwert?</li>
-<li>Welche zusätzliche Aufnahme würden Sie zur Prüfung Ihrer Erklärung beschaffen?</li>
-</ol>
+<section id="ergebnis" class="level3">
+<h3 class="anchored" data-anchor-id="ergebnis">Ergebnis</h3>
+<p>Geben Sie die größte Zu- und Abnahme mit Datumspaar, die vollständige Steigung und die Spannweite der Auslassungsprüfung an. Markieren Sie je eine räumliche Zu- und Abnahme in der Differenzkarte. Nennen Sie für eine vermutete Ursache eine zusätzliche Aufnahme, mit der sich diese prüfen lässt.</p>
 <p>Speichern Sie den untersuchten Stand der <code>data/auswahl.csv</code> zusammen mit Ihrer Auswertung. Nach einer Änderung der Bildauswahl führen Sie zuerst Skript 03 und anschließend das Add-on erneut aus.</p>
 </section>
 </div>
@@ -930,4 +905,4 @@ background: ../../images/placeholder.png;
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/gisma-courses/a_gis_rs_2026/edit/main/sentinel_ws02 (2)/pages/ws/ws-03.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/gisma-courses/a_gis_rs_2026/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/gisma-courses/a_gis_rs_2026/edit/main/pages/ws/ws-02-zusatz.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/gisma-courses/a_gis_rs_2026/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

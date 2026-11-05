@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 11</title>
+<title>Worksheet 11 · R und OTB verbinden</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -31,7 +66,6 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="../../">
 <link href="../../pages/ws/ws-12.html" rel="next">
 <link href="../../pages/ws/ws-10.html" rel="prev">
-<link href="../..//images/logo.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -73,27 +107,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../../images/placeholder.png;
-      }
-</style>
 
 
-<meta property="og:title" content="Worksheet 11">
-<meta name="twitter:title" content="Worksheet 11">
+<meta property="og:title" content="Worksheet 11 · R und OTB verbinden">
+<meta property="og:description" content="Bandweise Standardisierung und Kontrolle der Werkzeugübergabe">
+<meta name="twitter:title" content="Worksheet 11 · R und OTB verbinden">
+<meta name="twitter:description" content="Bandweise Standardisierung und Kontrolle der Werkzeugübergabe">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
@@ -263,36 +282,20 @@ background: ../../images/placeholder.png;
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Worksheet 11</h1>
+          <h1 class="quarto-secondary-nav-title">Worksheet 11 · R und OTB verbinden</h1>
         </a>     
     </div>
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 11</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -323,7 +326,7 @@ background: ../../images/placeholder.png;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../pages/" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
@@ -455,15 +458,69 @@ background: ../../images/placeholder.png;
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-11.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-11.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Worksheet 11 · R und OTB verbinden</h1>
+<p class="subtitle lead">Bandweise Standardisierung und Kontrolle der Werkzeugübergabe</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
 
 
 
+</header>
 
+
+<section id="verarbeitung-vorbereiten" class="level2">
+<h2 class="anchored" data-anchor-id="verarbeitung-vorbereiten">Verarbeitung vorbereiten</h2>
+<p>Verwenden Sie eine Sentinel-Aufnahme aus Worksheet 02. Installieren Sie <a href="https://www.orfeo-toolbox.org/CookBook/Installation.html">OTB</a> und das R-Paket <code>link2GI</code>. Prüfen Sie mit <code>link2GI::linkOTB()</code>, ob die Installation gefunden wird. Verwenden Sie die vier Reflexionsbänder; SCL und dataMask werden nicht standardisiert.</p>
+<p>Maskieren Sie in R NoData und die in Worksheet 02 ausgeschlossenen SCL-Klassen. Schreiben Sie für diese Übung nur einen kleinen rechteckigen Ausschnitt, in dem alle Zellen der vier Reflexionsbänder gültig sind, als <code>output/otb/eingabe.tif</code>. So benötigt die folgende Übergabe keine zusätzliche NoData-Konvention. Verwenden Sie dieselbe Zellmenge für alle Bandstatistiken.</p>
+</section>
+<section id="standardisierung-ausführen" class="level2">
+<h2 class="anchored" data-anchor-id="standardisierung-ausführen">Standardisierung ausführen</h2>
+<p>Berechnen Sie pro Band Mittelwert und Stichprobenstandardabweichung. Für jedes Band gilt <code>z = (x - mittelwert) / standardabweichung</code>; konstante Bänder werden vor der Übergabe ausgeschlossen. Erzeugen Sie in R eine Referenzausgabe.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(link2GI)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"output/otb/eingabe.tif"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nlyr</span>(x) <span class="sc">==</span> <span class="dv">4</span>, <span class="fu">all</span>(<span class="fu">is.finite</span>(<span class="fu">values</span>(x))))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">global</span>(x, <span class="st">"mean"</span>)[, <span class="dv">1</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">global</span>(x, <span class="st">"sd"</span>)[, <span class="dv">1</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">is.finite</span>(s) <span class="sc">&amp;</span> s <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>z_r <span class="ot">&lt;-</span> (x <span class="sc">-</span> mu) <span class="sc">/</span> s</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(z_r, <span class="st">"output/otb/referenz_r.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># OTB-Ausdrücke verwenden einen Dezimalpunkt unabhängig von R-Ländereinstellungen.</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>zahl <span class="ot">&lt;-</span> <span class="cf">function</span>(v) <span class="fu">format</span>(v, <span class="at">digits =</span> <span class="dv">17</span>, <span class="at">scientific =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="cn">TRUE</span>, <span class="at">decimal.mark =</span> <span class="st">"."</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>terme <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"(im1b"</span>, <span class="fu">seq_len</span>(<span class="fu">nlyr</span>(x)), <span class="st">"-"</span>, <span class="fu">zahl</span>(mu), <span class="st">")/"</span>, <span class="fu">zahl</span>(s))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>expr <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"{"</span>, <span class="fu">paste</span>(terme, <span class="at">collapse =</span> <span class="st">","</span>), <span class="st">"}"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>gili <span class="ot">&lt;-</span> <span class="fu">linkOTB</span>()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">isTRUE</span>(gili<span class="sc">$</span>exist))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>cmd <span class="ot">&lt;-</span> <span class="fu">parseOTBFunction</span>(<span class="at">algo =</span> <span class="st">"BandMathX"</span>, <span class="at">gili =</span> gili)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>cmd<span class="sc">$</span>help <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>cmd<span class="sc">$</span>il <span class="ot">&lt;-</span> <span class="fu">normalizePath</span>(<span class="st">"output/otb/eingabe.tif"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>cmd<span class="sc">$</span>out <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">file.path</span>(<span class="fu">normalizePath</span>(<span class="st">"output/otb"</span>), <span class="st">"standardisiert.tif"</span>), <span class="st">"float"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>cmd<span class="sc">$</span>exp <span class="ot">&lt;-</span> expr</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">runOTB</span>(cmd, <span class="at">gili =</span> gili)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>z_otb <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"output/otb/standardisiert.tif"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">compareGeom</span>(z_r, z_otb))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(<span class="fu">abs</span>(z_r <span class="sc">-</span> z_otb), <span class="st">"max"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Werkzeugreferenzen:</strong> <a href="https://www.orfeo-toolbox.org/CookBook/Applications/app_BandMathX.html">BandMathX</a>, <a href="https://r-spatial.github.io/link2GI/">link2GI</a>.</p>
+</section>
+<section id="ergebnis" class="level2">
+<h2 class="anchored" data-anchor-id="ergebnis">Ergebnis</h2>
+<p>Speichern Sie Eingabedatei, Bandstatistiken, OTB-Ausdruck und die beiden Ausgaben. Vergleichen Sie CRS, Ausdehnung, Rasterweite, Bandzahl sowie den maximalen absoluten Wertunterschied pro Band. Die standardisierten Bänder sollen näherungsweise Mittelwert null und Standardabweichung eins haben. Kleine Unterschiede durch die Float-Ausgabe sind möglich; dokumentieren Sie die tatsächlich gemessene Abweichung.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

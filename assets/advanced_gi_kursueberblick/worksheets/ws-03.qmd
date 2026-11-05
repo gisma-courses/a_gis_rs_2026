@@ -1,21 +1,42 @@
 ---
-title: "Worksheet 03"
+title: "Worksheet 03 · Vegetationssignale vergleichen"
+subtitle: "NDVI und kNDVI an Wald, Offenland und einer auffälligen Fläche"
 order: 3
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Datengrundlage
+
+Verwenden Sie die fünf ausgewählten Sommeraufnahmen aus [Worksheet 02](ws-02.qmd), das RGB-Bild und die Qualitätsbänder. Wählen Sie innerhalb der AOI drei kleine, getrennte Vergleichsflächen: Wald, Offenland und eine im Bild auffällige Fläche. Der aktuelle Kartenhintergrund dient der Orientierung; die Landbedeckung am Aufnahmetag prüfen Sie im jeweiligen Sentinel-Bild.
+
+Falls Ihre bisherige Wald-AOI kein Offenland enthält, legen Sie eine Kopie des Projekts an und erweitern Sie dort die AOI auf einen gemischten Ausschnitt mit höchstens 5 km Kantenlänge. Archivieren Sie den bisherigen Ordner `data/sentinel/` und führen Sie Skript 02 und 03 für das neue Gebiet erneut aus.
+
+## Vergleich ausführen
+
+1. Zeichnen Sie in QGIS drei Polygonobjekte in `data/vergleichsflaechen.gpkg`. Das Textfeld `typ` enthält genau einmal `wald`, `offenland` und `auffaellig`. Die Polygone müssen innerhalb Ihrer AOI liegen und mehrere 10-m-Zellen umfassen.
+2. Laden Sie [06_indices_vergleichen.R](../../scripts/06_indices_vergleichen.R) nach `scripts/` und führen Sie es aus. Es vergleicht pro Fläche dieselben, an allen fünf Terminen gültigen Zellen.
+3. Öffnen Sie `output/indices/kndvi_reihe.tif` und die NDVI-Reihe in QGIS. Verwenden Sie über alle Termine feste Skalen: NDVI −1 bis 1, kNDVI 0 bis 1. Vergleichen Sie für einen gemeinsamen Termin die Werte an denselben Zellpositionen.
+
+Die hier verwendete RBF-Variante lautet
+
+$$kNDVI = \tanh(NDVI^2).$$
+
+Sie ist eine nichtlineare Transformation derselben Rot-/NIR-Beobachtung. Sie fügt keine unabhängige Beobachtung hinzu. Durch das Quadrieren erhalten positive und negative NDVI-Werte gleichen Betrags denselben kNDVI. Prüfen Sie daher das Vorzeichen im NDVI, bevor Sie ein kNDVI-Signal als Vegetationssignal interpretieren. Das Skript transformiert zuerst die Einzelpixel und mittelt anschließend.
+
+## Ergebnis
+
+Geben Sie `flaechenvergleich.csv`, die Verlaufsgrafik mit beiden Indizes und eine RGB-Karte mit den drei Polygonen ab. Nennen Sie pro Fläche den größten Unterschied zwischen zwei ausgewählten Terminen, die zugehörigen Werte beider Indizes und die Zahl gemeinsamer Pixel. Prüfen Sie die auffällige Fläche in RGB und SCL für beide Termine. Halten Sie fest, ob der Unterschied trotz vergleichbarer Bildqualität besteht und ob die Aufnahmetage in derselben Sommerphase liegen. Eine Ursache wird erst mit zusätzlichen Beobachtungen geprüft; damit arbeiten Sie in Worksheet 10 weiter.
+
+**Methodengrundlage:** [Camps-Valls et al. (2021), A unified vegetation index for quantifying the terrestrial biosphere](https://doi.org/10.1126/sciadv.abc7447).
+
+Die [Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe](ws-02-zusatz.qmd) ergänzt diesen Vergleich.

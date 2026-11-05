@@ -11,6 +11,7 @@ library(terra)
 aoi <- vect(st_read("data/aoi.gpkg", quiet = TRUE) |> st_transform(32632))
 auswahl <- read.csv("data/auswahl.csv")
 daten <- sort(as.Date(auswahl$datum))
+stopifnot(length(daten) > 0, !anyNA(daten), !anyDuplicated(daten))
 dateien <- file.path("data/sentinel", paste0("s2_", daten, ".tif"))
 if (!all(file.exists(dateien))) stop("Es fehlen Abrufe aus data/auswahl.csv.")
 dir.create("output/ndvi", recursive = TRUE, showWarnings = FALSE)
@@ -25,15 +26,26 @@ ndvi_liste <- list()
 for (i in seq_along(dateien)) {
   bild <- rast(dateien[i])
   names(bild) <- c("B02", "B03", "B04", "B08", "SCL", "dataMask")
-  if (i == 1) vorlage <- bild[[1]]
+  if (i == 1) {
+    vorlage <- bild[[1]]
+    # Zellmittelpunkt innerhalb der AOI: dieselbe Maske für Werte und Zellzahl.
+    innen <- rasterize(aoi, vorlage, field = 1, background = NA, touches = FALSE)
+  }
   if (!compareGeom(vorlage, bild[[1]], stopOnError = FALSE)) {
     stop("Rastergitter unterscheiden sich. Abrufgebiet/Einstellungen prüfen.")
   }
   gueltig <- bild[["dataMask"]] == 1 & bild[["SCL"]] %in% scl_behalten
+  for (band in c("SCL", "dataMask")) {
+    werte <- values(bild[[band]], mat = FALSE)
+    erlaubt <- if (band == "SCL") 0:11 else 0:1
+    if (any(!is.na(werte) & !werte %in% erlaubt)) {
+      stop("Interpolierte/ungültige Qualitätsklassen: Abruf mit Skript 02 erneuern.")
+    }
+  }
   nenner <- bild[["B08"]] + bild[["B04"]]
   ndvi <- ifel(gueltig & nenner > 0,
                (bild[["B08"]] - bild[["B04"]]) / nenner, NA)
-  ndvi <- mask(ndvi, aoi)
+  ndvi <- mask(ndvi, innen)
   names(ndvi) <- paste0("NDVI_", format(daten[i], "%Y%m%d"))
   writeRaster(ndvi, file.path("output/ndvi", paste0(names(ndvi), ".tif")),
               overwrite = TRUE)
@@ -48,8 +60,8 @@ write.csv(data.frame(band = seq_along(daten), datum = daten),
           "output/ndvi_banddaten.csv", row.names = FALSE)
 
 # 3. Zeitverlauf und Datenabdeckung -------------------------------------
-innen <- rasterize(aoi, vorlage, field = 1, background = NA)
 n_gebiet <- global(!is.na(innen), "sum", na.rm = TRUE)[1, 1]
+if (!is.finite(n_gebiet) || n_gebiet == 0) stop("AOI enthält keine Zellmittelpunkte.")
 n_gueltig <- global(!is.na(reihe), "sum", na.rm = TRUE)[, 1]
 
 # Zusätzlich alle Zeitpunkte auf exakt denselben gültigen Pixeln prüfen.
@@ -63,6 +75,7 @@ verlauf <- data.frame(
   gueltig_prozent = 100 * n_gueltig / n_gebiet,
   ndvi_gleiche_pixel = global(reihe_gleich, "mean", na.rm = TRUE)[, 1]
 )
+stopifnot(all(verlauf$gueltig_prozent >= 0 & verlauf$gueltig_prozent <= 100))
 write.csv(verlauf, "output/ndvi_verlauf.csv", row.names = FALSE)
 print(verlauf)
 cat("An allen Terminen gültige Pixel:", n_gemeinsam, "von", n_gebiet, "\n")

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Worksheet 07</title>
+<title>Worksheet 07 · Referenzdaten und LAI-Schätzung</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="../../">
 <link href="../../pages/ws/ws-08.html" rel="next">
 <link href="../../pages/ws/ws-06.html" rel="prev">
-<link href="../..//images/logo.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -73,27 +72,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../../images/placeholder.png;
-      }
-</style>
 
 
-<meta property="og:title" content="Worksheet 07">
-<meta name="twitter:title" content="Worksheet 07">
+<meta property="og:title" content="Worksheet 07 · Referenzdaten und LAI-Schätzung">
+<meta property="og:description" content="Punktwerte, Satellitenprädiktoren und Residuen zusammenführen">
+<meta name="twitter:title" content="Worksheet 07 · Referenzdaten und LAI-Schätzung">
+<meta name="twitter:description" content="Punktwerte, Satellitenprädiktoren und Residuen zusammenführen">
 <meta name="twitter:creator" content="@gisma">
 <meta name="twitter:card" content="summary">
 </head>
@@ -263,36 +247,20 @@ background: ../../images/placeholder.png;
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Worksheet 07</h1>
+          <h1 class="quarto-secondary-nav-title">Worksheet 07 · Referenzdaten und LAI-Schätzung</h1>
         </a>     
     </div>
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 07</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -323,7 +291,7 @@ background: ../../images/placeholder.png;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../pages/" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
@@ -455,15 +423,49 @@ background: ../../images/placeholder.png;
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-07.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-07.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Worksheet 07 · Referenzdaten und LAI-Schätzung</h1>
+<p class="subtitle lead">Punktwerte, Satellitenprädiktoren und Residuen zusammenführen</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
 
 
 
+</header>
 
+
+<section id="daten-übernehmen" class="level2">
+<h2 class="anchored" data-anchor-id="daten-übernehmen">Daten übernehmen</h2>
+<p>Laden Sie den Datenordner der <a href="https://github.com/earth-observation-network/EON2026/tree/main/block4_machineLearning">EON2026-Materialien zu Machine Learning</a> und verwenden Sie aus <code>ML_AOA.qmd</code> den Abschnitt <strong>Case Study 2: Modelling the Leaf Area Index</strong>. Benötigt werden <code>trainingsites_LAI.gpkg</code> sowie <code>sentinel_uniwald.grd</code> einschließlich der zugehörigen Rasterdatendatei. Übernehmen Sie die Eingangsdaten in Ihr Projekt. Das Beispiel liegt im Marburger Universitätswald.</p>
+<p>Lesen Sie die LAI-Referenzen mit <code>sf</code>, den Prädiktorstack mit <code>terra</code>. Prüfen Sie CRS, räumliche Überdeckung, Zahl der Referenzen und verfügbare Prädiktorbänder. Halten Sie Mess- und Aufnahmezeitpunkt sowie die Messmethode fest, soweit sie im Quelldatensatz dokumentiert sind. Fehlende Angaben werden als fehlend ausgewiesen.</p>
+</section>
+<section id="lineares-modell-ausführen" class="level2">
+<h2 class="anchored" data-anchor-id="lineares-modell-ausführen">Lineares Modell ausführen</h2>
+<ol type="1">
+<li>Transformieren Sie die Referenzgeometrien in das Raster-CRS. Extrahieren Sie die Prädiktoren an den Referenzen. Die <code>ID</code>-Spalte aus <code>terra::extract()</code> dient der Zuordnung zur Referenz; sie ist kein Prädiktor.</li>
+<li>Schließen Sie unvollständige NDVI-/LAI-Paare aus und protokollieren Sie deren Anzahl. Berechnen Sie <code>lm(LAI ~ NDVI, data = trainDat)</code> und erzeugen Sie die flächenhafte Schätzung mit dem Modellobjekt. Übernehmen Sie keine fest eingetragenen Regressionskoeffizienten aus der Vorlage.</li>
+<li>Speichern Sie die beobachteten und angepassten LAI-Werte sowie die Residuen. Zeichnen Sie Residuen gegen angepasste Werte und stellen Sie ihre Vorzeichen an den Referenzorten kartografisch dar.</li>
+<li>Markieren Sie Zellen, deren NDVI außerhalb des Trainingsbereichs liegt, und prüfen Sie die Karte auf negative LAI-Schätzungen.</li>
+</ol>
+</section>
+<section id="ergebnis" class="level2">
+<h2 class="anchored" data-anchor-id="ergebnis">Ergebnis</h2>
+<p>Geben Sie eine Datenübersicht, die Regressionsgleichung, ein Streudiagramm und eine LAI-Karte mit Referenzpunkten ab. Nennen Sie Zahl und Wertebereich der verwendeten Referenzen sowie erkennbare Residuenmuster. Der Fehler an den zum Fit verwendeten Punkten ist ein Anpassungsfehler; die Prüfung an ausgelassenen Referenzen folgt in <a href="../../pages/ws/ws-08.html">Worksheet 08</a>.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

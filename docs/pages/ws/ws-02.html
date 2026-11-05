@@ -66,7 +66,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../../">
 <link href="../../pages/ws/ws-03.html" rel="next">
 <link href="../../pages/ws/ws-01.html" rel="prev">
-<link href="../..//images/logo.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -108,23 +107,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../../images/placeholder.png;
-      }
-</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -329,7 +311,7 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -342,24 +324,7 @@ window.Quarto = {
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen</h1>
-            <p class="subtitle lead">Datensouveränität - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse</p>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -390,7 +355,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../pages/" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
@@ -522,18 +487,34 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-02.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-02.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen</h1>
+<p class="subtitle lead">Datensouveränität - Untersuchungsfläche, ausgewählte Aufnahmen und reproduzierbare Ergebnisse</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
+
+
+
+</header>
 
 
 <section id="auftrag" class="level2">
 <h2 class="anchored" data-anchor-id="auftrag">Auftrag</h2>
 <p><strong>Wie verändert sich das sommerliche Vegetationssignal einer selbst gewählten Waldfläche im Burgwald zwischen 2018 und 2022?</strong></p>
 <p>Sie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.</p>
-<p>Aus den Warm-ups kennen Sie Projektordner, relative Pfade, blockweises Ausführen und die Kontrolle von Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.</p>
+<p>Aus Worksheet 01 kennen Sie Projektordner, relative Pfade und blockweises Ausführen. Das optionale Mikroklima-Warmup bietet zusätzliche Übung mit Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.</p>
 <p>Am Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus <strong>einer ausgewählten Sommerbeobachtung pro Jahr</strong>. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.</p>
 </section>
 <section id="material-und-vorbereitung" class="level2">
@@ -559,8 +540,8 @@ window.Quarto = {
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<section id="was-wird-benötigt" class="level3">
-<h3 class="anchored" data-anchor-id="was-wird-benötigt">Was wird benötigt?</h3>
+<section id="zugangsdaten" class="level3">
+<h3 class="anchored" data-anchor-id="zugangsdaten">Zugangsdaten</h3>
 <p>Ihr <strong>CDSE-Konto</strong> dient zur Anmeldung im Browser. Ein <strong>OAuth-Client</strong> ermöglicht dem Skript den Zugriff: Er besitzt eine <strong>Client-ID</strong> und ein <strong>Client-Secret</strong>. Diese sind nicht Ihre E-Mail-Adresse und Ihr Kontopasswort. Aus den beiden Werten kann das R-Paket einen zeitlich begrenzten Zugriffstoken beziehen.</p>
 </section>
 <section id="konto-anlegen-und-anmelden" class="level3">
@@ -646,7 +627,7 @@ CDSE_SECRET=Ihr_Client_Secret</code></pre>
 <li>genau ein Polygon als Untersuchungsfläche.</li>
 </ul>
 <p>Zeichnen Sie das Polygon, speichern Sie die Bearbeitung und beenden Sie den Bearbeitungsmodus. Verwenden Sie über die gesamte Reihe dieselbe Fläche.</p>
-<p><strong>Ihre Entscheidung:</strong> Notieren Sie in <code>README.md</code>, welche Fläche Sie gewählt haben und warum. Formulieren Sie eine vorläufige Erwartung: eher ähnliches sommerliches Signal oder erkennbare Unterschiede? Das ist eine zu prüfende Erwartung, noch kein Ergebnis.</p>
+<p><strong>Dokumentation:</strong> Halten Sie in <code>README.md</code> Lage, Größe und erkennbare Landbedeckung der gewählten Fläche fest.</p>
 </section>
 <section id="aufnahmen-suchen-und-eine-auswahl-treffen" class="level2">
 <h2 class="anchored" data-anchor-id="aufnahmen-suchen-und-eine-auswahl-treffen">2 · Aufnahmen suchen und eine Auswahl treffen</h2>
@@ -683,7 +664,7 @@ CDSE_SECRET=Ihr_Client_Secret</code></pre>
 </tbody>
 </table>
 <p>Der erste Vorschlag wählt pro Jahr den Tag mit der geringsten mittleren Szenenbewölkung. <strong>Diese Prozentangabe bezieht sich auf die gefundenen Szenen, nicht auf Ihre kleine Untersuchungsfläche.</strong> Ein solcher Tag kann über Ihrem Gebiet trotzdem bewölkt sein.</p>
-<p>Prüfen Sie die fünf vorgeschlagenen Daten. Liegen sie ungefähr in derselben Phase des Sommers? Sehen Sie die Aufnahmen bei Bedarf im <a href="https://browser.dataspace.copernicus.eu/">Copernicus Browser</a> an. Wenn Sie einen anderen Tag auswählen, übernehmen Sie die vollständige zugehörige Zeile aus der Kandidatentabelle in <code>data/auswahl.csv</code>.</p>
+<p>Vergleichen Sie die fünf vorgeschlagenen Aufnahmetage nach ihrer Lage innerhalb des Sommers. Sehen Sie die Aufnahmen bei Bedarf im <a href="https://browser.dataspace.copernicus.eu/">Copernicus Browser</a> an. Wenn Sie einen anderen Tag auswählen, übernehmen Sie die vollständige zugehörige Zeile aus der Kandidatentabelle in <code>data/auswahl.csv</code>.</p>
 <p>Die Auswahl-Datei wird beim erneuten Ausführen nicht überschrieben. Für eine neue Suche mit geändertem Gebiet oder Zeitraum archivieren Sie die alte Auswahl und lassen eine neue erzeugen.</p>
 </section>
 <section id="einen-abruf-prüfen-dann-die-reihe-laden" class="level2">
@@ -726,8 +707,8 @@ CDSE_SECRET=Ihr_Client_Secret</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Kontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und Schatten. Die SCL wird auf das Ausgabegitter gebracht; sie besitzt dadurch keine zusätzliche ursprüngliche Detailinformation.</p>
-<p>Wenn der erste Abruf stimmt, setzen Sie <code>anzahl_abrufe &lt;- Inf</code> und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden übersprungen. Kontrollieren Sie auch die übrigen Aufnahmen.</p>
+<p>Kontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und Schatten. Alle Termine liegen auf demselben 10-m-UTM-Gitter. Reflexionen werden bilinear, SCL und dataMask mit dem nächsten Nachbarn übertragen. Die SCL besitzt dadurch keine zusätzliche ursprüngliche Detailinformation. Für die AOI-Auswertung zählen Zellen, deren Mittelpunkt innerhalb des Polygons liegt.</p>
+<p>Wenn der erste Abruf stimmt, setzen Sie <code>anzahl_abrufe &lt;- Inf</code> und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden nur bei passender AOI und passenden Abrufeinstellungen übersprungen. Zu jedem TIFF wird ein Abrufmanifest <code>.tif.rds</code> gespeichert. Ältere TIFFs ohne Manifest oder mit geänderten Einstellungen archivieren Sie zusammen mit dem bisherigen Ordner <code>data/sentinel/</code> und laden die ausgewählten Tage erneut. Kontrollieren Sie auch die übrigen Aufnahmen.</p>
 <p><strong>Zwischenergebnis:</strong> Für jedes ausgewählte Datum existiert eine lokale TIFF-Datei. Ungeeignete Tage ersetzen Sie durch einen anderen Kandidaten und rufen diesen nach. Alte Dateien dürfen zur Dokumentation liegen bleiben; die Auswertung verwendet ausschließlich die aktuelle Auswahl-Datei.</p>
 <p>Der Abruf verwendet jeweils einen Tag. Überlappende Kacheln können dabei zu einem Bild mosaikiert werden; eine einzelne Produkt-ID wird damit nicht festgeschrieben.</p>
 </section>
@@ -752,12 +733,7 @@ NDVI = \frac{B08-B04}{B08+B04}
 <li>einem zweiten Verlauf ausschließlich für die Pixel, die an <strong>allen</strong> ausgewählten Terminen gültig sind.</li>
 </ul>
 <p>Der zweite Verlauf macht sichtbar, ob wechselnde räumliche Abdeckung den Vergleich beeinflusst. Bleiben nur sehr wenige gemeinsame Pixel, ist auch dieser Vergleich räumlich schwach gestützt. Prüfen Sie dann die Bildauswahl. Die Grafik verbindet einzelne Beobachtungstage; über den Verlauf zwischen ihnen liegen keine Aussagen vor.</p>
-<p><strong>Bearbeiten Sie drei konkrete Fragen:</strong></p>
-<ol type="1">
-<li>Zwischen welchen Aufnahmetagen ist der größte Unterschied sichtbar?</li>
-<li>Bleibt dieser Unterschied bestehen, wenn dieselben Pixel verglichen werden?</li>
-<li>Welche zusätzliche Aufnahme wäre hilfreich, um Vegetationsveränderung von unterschiedlicher sommerlicher Entwicklung oder Bildstörungen zu unterscheiden?</li>
-</ol>
+<p><strong>Ergebnis:</strong> Nennen Sie das Datumspaar mit dem größten Unterschied und geben Sie die NDVI-Differenz für beide räumlichen Bezugsflächen an. Legen Sie einen zusätzlichen Aufnahmetermin fest, mit dem Sie Vegetationsveränderung, sommerliche Entwicklung oder Bildstörungen unterscheiden können.</p>
 </section>
 <section id="eine-entscheidung-überprüfen" class="level2">
 <h2 class="anchored" data-anchor-id="eine-entscheidung-überprüfen">6 · Eine Entscheidung überprüfen</h2>
@@ -776,7 +752,7 @@ NDVI = \frac{B08-B04}{B08+B04}
 <li>Ausführungsreihenfolge der beiden Skripte.</li>
 </ul>
 <p><strong>Abgabe:</strong> eine Verlaufsgrafik, die zugehörige CSV und fünf bis acht Sätze zur Aussagekraft der Reihe. Eine beobachtete Abnahme wird zunächst als verändertes Vegetationssignal beschrieben. Ihre Ursache muss anhand weiterer Beobachtungen geprüft werden.</p>
-<p>Die weiterführende Auswertung bearbeiten Sie als <strong>Hausaufgabe in <a href="../../pages/ws/ws-03.html">Worksheet 03</a></strong>: Pixelverfügbarkeit und Zeitreihenanalyse.</p>
+<p>In <a href="../../pages/ws/ws-03.html">Worksheet 03</a> vergleichen Sie NDVI und kNDVI auf Wald-, Offenland- und auffälligen Vergleichsflächen. Die <a href="../../pages/ws/ws-02-zusatz.html">Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe</a> bleibt als Zusatz zu dieser Sitzung verfügbar; ihre Ergebnisse werden in Worksheet 10 weiterverwendet.</p>
 
 
 </section>

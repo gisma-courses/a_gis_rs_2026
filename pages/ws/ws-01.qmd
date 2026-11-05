@@ -2,8 +2,6 @@
 title: "Worksheet 01 · Ein kleines R-Projekt"
 subtitle: "Verzeichnisse, Skriptstruktur und kontrollierte Änderungen"
 order: 1
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
 format-links: [html, pdf, docx]
 format:
   html:
@@ -121,7 +119,7 @@ print(list.files("output"))
 
 Führen Sie das Skript zunächst abschnittsweise mit **Ctrl+Enter** aus. Prüfen Sie anschließend die PNG-Datei im Ordner `output`. Öffnen Sie das erzeugte GeoPackage in QGIS und vergleichen Sie es mit der Eingabedatei.
 
-**Kontrolle:** Liegt das Gebiet innerhalb seines Puffers? Ist die Pufferfläche größer als die Ausgangsfläche? Welche Dateien wurden erzeugt und wo liegen sie?
+**Kontrolle:** Vergleichen Sie Gebiets- und Pufferfläche in der Konsole. Prüfen Sie in QGIS, dass der Puffer die Gebietsgrenze vollständig umschließt und die Ausgabedateien unter `output/` liegen.
 
 ## 3 · Einen Parameter gezielt ändern
 
@@ -129,7 +127,7 @@ Führen Sie das Skript zunächst abschnittsweise mit **Ctrl+Enter** aus. Prüfen
 
 Vergleichen Sie die beiden Karten und die ausgegebenen Flächen. Prüfen Sie außerdem, ob beide Ergebnisvarianten unter `output/` liegen und die Eingabedatei unter `data/` unverändert geblieben ist.
 
-**Notieren Sie:** Was steuert der Parameter? In welcher Einheit? Warum entsteht durch seine Änderung auch ein anderer Ausgabename?
+**Dokumentieren Sie:** Pufferabstand in Metern, beide berechneten Flächen und die Dateinamen der 100-m- und 500-m-Variante.
 
 ## 4 · Einen Pfadfehler verstehen
 

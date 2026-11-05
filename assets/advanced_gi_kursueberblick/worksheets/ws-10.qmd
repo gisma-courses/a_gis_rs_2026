@@ -1,21 +1,31 @@
 ---
-title: "Worksheet 10"
+title: "Worksheet 10 · Veränderungen untersuchen"
+subtitle: "Sommervergleich mit einer zusätzlichen Aufnahme überprüfen"
 order: 10
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Zeitliche Veränderungen eingrenzen
+
+Verwenden Sie die selbst abgerufenen Sentinel-Aufnahmen aus Worksheet 02 und den Flächenvergleich aus Worksheet 03. Die [Hausaufgabe zu Datenabdeckung und Zeitreihe](ws-02-zusatz.qmd) enthält Skripte für Pixelzählung, gemeinsame Datenabdeckung, Differenzkarte und beschreibende Trendprüfung. Führen Sie diese für die dokumentierte Auswahl aus, sofern die Ergebnisse noch nicht vorliegen.
+
+## Einen Veränderungskandidaten prüfen
+
+1. Wählen Sie in der Differenzkarte eine zusammenhängende Fläche mit auffälliger NDVI-Änderung. Speichern Sie das Polygon und das Datumspaar. Geben Sie die mittlere Änderung auf gemeinsamen gültigen Pixeln und deren Zellzahl an.
+2. Prüfen Sie dieselbe Fläche in RGB, SCL und NDVI an beiden Terminen. Dokumentieren Sie Wolken, Schatten, fehlende Daten und den Tag im Jahr. Verwerfen Sie Kandidaten, die bereits durch Bildstörungen erklärt werden.
+3. Laden Sie einen zusätzlichen, möglichst wolkenarmen Sommertag aus einem der beiden Vergleichsjahre. Die reguläre `auswahl.csv` bleibt bei genau einem Datum pro Jahr: Verwenden Sie dafür eine Projektkopie und ersetzen Sie dort die betreffende Jahreszeile durch den zusätzlichen Termin. Führen Sie Skript 02, 03 und die Auswertung erneut aus.
+4. Vergleichen Sie die beiden Datumskombinationen auf exakt derselben Schnittmenge gültiger Pixel aller drei Beobachtungen. Berechnen Sie die Flächenmittel aus den Einzelrastern erneut auf dieser gemeinsamen Maske. Sonst könnten eine neue Bildauswahl und eine geänderte Bezugsfläche gleichzeitig wirken.
+
+## Ergebnis
+
+Geben Sie drei gleich skalierte Bildausschnitte mit Datum, eine Differenzkarte sowie eine Tabelle mit drei Flächenmitteln, Datenabdeckung und beiden Änderungswerten ab. Formulieren Sie anhand der Werte, ob das Signal mit der zusätzlichen Aufnahme bestehen bleibt. Beschreiben Sie eine mögliche Ursache getrennt vom beobachteten Signal und nennen Sie die dafür noch fehlende Information. Die Gerade aus fünf Sommerterminen ist eine beschreibende Zusammenfassung; sie ersetzt diese Bildprüfung nicht.

@@ -3,18 +3,18 @@ project:
   output-dir: docs/
   resources:
     - "assets/Archive.zip"
-    - "scripts/microclimate_warmup_minimal.R"
+    - "scripts/*.R"
+    - "scripts/*.r"
     
   
   render:
     - "index.qmd"
     - "pages/**/*.qmd"
     - "slides/*.qmd"
-    - "scripts/*.R"
+    - "!sentinel_ws02*/**"
 
 website:
   title: ""
-  favicon: /images/logo.png
   bread-crumbs: false
   open-graph: true
   page-navigation: true
@@ -55,7 +55,7 @@ website:
         - text: "---"
         - section: "Inhalte"
           contents:
-            - href: pages/
+            - href: index.qmd
               text: Kursstruktur
         - text: "---"
         - section: "Worksheets"
@@ -113,11 +113,3 @@ format:
     toc: true
     link-external-icon: false
     link-external-newwindow: true
-
-  revealjs:
-    theme:
-      - default
-      - metropolis.scss
-    slide-number: true
-    transition: fade
-    incremental: false

@@ -149,7 +149,9 @@ smooth_dem <- function(r, radius_m) {
   res_m <- mean(terra::res(r))
   n <- max(3, 2 * ceiling(radius_m / res_m) + 1)
   w <- matrix(1, nrow = n, ncol = n)
-  terra::focal(r, w = w, fun = mean, na.policy = "omit", fillvalue = NA)
+  out <- terra::focal(r, w = w, fun = mean, na.policy = "omit", fillvalue = NA)
+  names(out) <- names(r)
+  out
 }
 
 loocv_trend_rmse <- function(df) {
@@ -210,7 +212,7 @@ terra::writeRaster(r_ked_like, file.path(map_dir, "temperature_ked_like.tif"), o
 R_candidates <- c(20, 40, 80, 120)
 R_results <- lapply(R_candidates, function(R) {
   dem_R <- smooth_dem(DEM_scale, R)
-  alt_R <- terra::extract(dem_R, stations_vect)[[1]]
+  alt_R <- terra::extract(dem_R, stations_vect)[["altitude"]]
   df_R <- train_one
   df_R$altitude <- alt_R[match(df_R$stationid, stations$stationid)]
   data.frame(R = R, RMSE = loocv_trend_rmse(df_R))
@@ -235,11 +237,10 @@ write.csv(bench, file.path(summary_dir, "benchmark_methods.csv"), row.names = FA
 
 # 10) Figures ------------------------------------------------------------------
 panel_df <- dplyr::bind_rows(
-  cbind(terra::as.data.frame(r_idw, xy = TRUE), method = "IDW"),
-  cbind(terra::as.data.frame(r_trend, xy = TRUE), method = "Trend altitude"),
-  cbind(terra::as.data.frame(r_ked_like, xy = TRUE), method = "KED-like")
+  cbind(setNames(terra::as.data.frame(r_idw, xy = TRUE), c("x", "y", "temperature")), method = "IDW"),
+  cbind(setNames(terra::as.data.frame(r_trend, xy = TRUE), c("x", "y", "temperature")), method = "Trend altitude"),
+  cbind(setNames(terra::as.data.frame(r_ked_like, xy = TRUE), c("x", "y", "temperature")), method = "Höhentrend + IDW-Residuen")
 )
-names(panel_df)[3] <- "temperature"
 
 p_map <- ggplot(panel_df, aes(x = x, y = y, fill = temperature)) +
   geom_raster() +

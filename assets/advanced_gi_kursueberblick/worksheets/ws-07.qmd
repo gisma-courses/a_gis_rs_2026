@@ -1,21 +1,33 @@
 ---
-title: "Worksheet 07"
+title: "Worksheet 07 · Referenzdaten und LAI-Schätzung"
+subtitle: "Punktwerte, Satellitenprädiktoren und Residuen zusammenführen"
 order: 7
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Daten übernehmen
+
+Laden Sie den Datenordner der [EON2026-Materialien zu Machine Learning](https://github.com/earth-observation-network/EON2026/tree/main/block4_machineLearning) und verwenden Sie aus `ML_AOA.qmd` den Abschnitt **Case Study 2: Modelling the Leaf Area Index**. Benötigt werden `trainingsites_LAI.gpkg` sowie `sentinel_uniwald.grd` einschließlich der zugehörigen Rasterdatendatei. Übernehmen Sie die Eingangsdaten in Ihr Projekt. Das Beispiel liegt im Marburger Universitätswald.
+
+Lesen Sie die LAI-Referenzen mit `sf`, den Prädiktorstack mit `terra`. Prüfen Sie CRS, räumliche Überdeckung, Zahl der Referenzen und verfügbare Prädiktorbänder. Halten Sie Mess- und Aufnahmezeitpunkt sowie die Messmethode fest, soweit sie im Quelldatensatz dokumentiert sind. Fehlende Angaben werden als fehlend ausgewiesen.
+
+## Lineares Modell ausführen
+
+1. Transformieren Sie die Referenzgeometrien in das Raster-CRS. Extrahieren Sie die Prädiktoren an den Referenzen. Die `ID`-Spalte aus `terra::extract()` dient der Zuordnung zur Referenz; sie ist kein Prädiktor.
+2. Schließen Sie unvollständige NDVI-/LAI-Paare aus und protokollieren Sie deren Anzahl. Berechnen Sie `lm(LAI ~ NDVI, data = trainDat)` und erzeugen Sie die flächenhafte Schätzung mit dem Modellobjekt. Übernehmen Sie keine fest eingetragenen Regressionskoeffizienten aus der Vorlage.
+3. Speichern Sie die beobachteten und angepassten LAI-Werte sowie die Residuen. Zeichnen Sie Residuen gegen angepasste Werte und stellen Sie ihre Vorzeichen an den Referenzorten kartografisch dar.
+4. Markieren Sie Zellen, deren NDVI außerhalb des Trainingsbereichs liegt, und prüfen Sie die Karte auf negative LAI-Schätzungen.
+
+## Ergebnis
+
+Geben Sie eine Datenübersicht, die Regressionsgleichung, ein Streudiagramm und eine LAI-Karte mit Referenzpunkten ab. Nennen Sie Zahl und Wertebereich der verwendeten Referenzen sowie erkennbare Residuenmuster. Der Fehler an den zum Fit verwendeten Punkten ist ein Anpassungsfehler; die Prüfung an ausgelassenen Referenzen folgt in [Worksheet 08](ws-08.qmd).

@@ -29,7 +29,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href=".//images/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -71,23 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../images/placeholder.png;
-      }
-</style>
 
 
 <meta property="og:title" content="Advanced GI &amp; Fernerkundung">
@@ -263,7 +245,7 @@ background: ../images/placeholder.png;
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -276,24 +258,7 @@ background: ../images/placeholder.png;
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Advanced GI &amp; Fernerkundung</h1>
-            <p class="subtitle lead">Räumliche Muster, Regionalisierung und belastbare Auswertungen</p>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -324,7 +289,7 @@ background: ../images/placeholder.png;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pages/" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
@@ -453,13 +418,29 @@ background: ../images/placeholder.png;
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Advanced GI &amp; Fernerkundung</h1>
+<p class="subtitle lead">Räumliche Muster, Regionalisierung und belastbare Auswertungen</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
+
+
+
+</header>
 
 
 <section id="zielsetzung" class="level2">
@@ -470,6 +451,7 @@ background: ../images/placeholder.png;
 </section>
 <section id="arbeitsweise" class="level2">
 <h2 class="anchored" data-anchor-id="arbeitsweise">Arbeitsweise</h2>
+<p>Das <a href="./pages/microclimate_warmup_reader.html">Mikroklima-Warmup</a> bietet vorab einen Einstieg für Studierende ohne Programmiererfahrung: Projekt öffnen, vorhandenes Skript blockweise ausführen und Ergebnisse ansehen. Es setzt keine selbstständige Programmierung voraus.</p>
 <p>Die zwölf Sitzungen verbinden kurze fachliche Einführungen mit einem hohen Übungsanteil. Die Arbeitsaufträge finden Sie in den jeweils verlinkten Worksheets.</p>
 <p>Sie nutzen Code aus den Kursmaterialien, Dokumentation und KI-Unterstützung. Dazu gehört, Eingaben und Parameter zu verstehen, Änderungen festzuhalten und Ausgaben zu kontrollieren. Sie müssen keine Algorithmen selbst entwickeln. Sie sollen jedoch erklären können, was Ihr Skript verarbeitet und woran Sie ein plausibles Ergebnis erkennen.</p>
 <p>Im Verlauf des Kurses entsteht ein Projektordner mit Datenquellen, Skripten, Parametern und ausgewählten Ergebnissen. Ihre Interpretationen unterscheiden zwischen Beobachtung, möglicher Erklärung und verbleibender Unsicherheit.</p>
@@ -489,17 +471,17 @@ background: ../images/placeholder.png;
 <tr class="odd">
 <td>1 · Skripte handhaben</td>
 <td>Ein vorhandenes Skript übernehmen, Pfade und Parameter anpassen, Fehler mit Dokumentation oder KI bearbeiten und den Ablauf erneut ausführen.</td>
-<td><a href="worksheets/ws-01.qmd">Worksheet 01</a></td>
+<td><a href="./pages/ws/ws-01.html">Worksheet 01</a></td>
 </tr>
 <tr class="even">
 <td>2 · Satellitendaten beschaffen</td>
 <td>Sentinel-2-Aufnahmen über den CDSE-Workflow abrufen; Abdeckung, Wolken, Schatten und Aufnahmedaten prüfen.</td>
-<td><a href="worksheets/ws-02.qmd">Worksheet 02</a></td>
+<td><a href="./pages/ws/ws-02.html">Worksheet 02</a></td>
 </tr>
 <tr class="odd">
 <td>3 · Vegetationssignale interpretieren</td>
 <td>NDVI und kNDVI an Wald-, Offenland- und auffälligen Vergleichsflächen untersuchen; Unterschiede zwischen Vegetationssignal und Aufnahmebedingungen erkennen.</td>
-<td><a href="worksheets/ws-03.qmd">Worksheet 03</a></td>
+<td><a href="./pages/ws/ws-03.html">Worksheet 03</a></td>
 </tr>
 </tbody>
 </table>
@@ -519,17 +501,17 @@ background: ../images/placeholder.png;
 <tr class="odd">
 <td>4 · Muster quantitativ beschreiben</td>
 <td>SHDI und Aggregation Index mit Entropie und relativer gegenseitiger Information vergleichen; den Einfluss räumlicher Anordnung und Fenstergröße untersuchen.</td>
-<td><a href="worksheets/ws-04.qmd">Worksheet 04</a></td>
+<td><a href="./pages/ws/ws-04.html">Worksheet 04</a></td>
 </tr>
 <tr class="even">
 <td>5 · Klimadaten segmentieren</td>
 <td>Monatliche Klimadaten selbst beschaffen und mit <code>supercells</code> regionalisieren; Segmentzahl und Kompaktheit kontrolliert variieren.</td>
-<td><a href="worksheets/ws-05.qmd">Worksheet 05</a></td>
+<td><a href="./pages/ws/ws-05.html">Worksheet 05</a></td>
 </tr>
 <tr class="odd">
 <td>6 · Regionalisierungen beurteilen</td>
 <td>Homogenität innerhalb der Segmente, Unterschiede benachbarter Jahresgänge und Empfindlichkeit gegenüber gröberer Rasterauflösung bewerten.</td>
-<td><a href="worksheets/ws-06.qmd">Worksheet 06</a></td>
+<td><a href="./pages/ws/ws-06.html">Worksheet 06</a></td>
 </tr>
 </tbody>
 </table>
@@ -549,17 +531,17 @@ background: ../images/placeholder.png;
 <tr class="odd">
 <td>7 · Referenzdaten und Schätzung</td>
 <td>LAI-Referenzen und Satellitendaten zusammenführen; ein einfaches Modell anwenden und dessen Datengrundlage, Residuen und Voraussetzungen beurteilen.</td>
-<td><a href="worksheets/ws-07.qmd">Worksheet 07</a></td>
+<td><a href="./pages/ws/ws-07.html">Worksheet 07</a></td>
 </tr>
 <tr class="even">
 <td>8 · Räumlich validieren</td>
 <td>Einen Random Forest mit zufälligen und räumlichen Prüffaltungen vergleichen; bei gleichen Prädiktoren und Modelleinstellungen die Bedeutung der Prüfsituation erkennen.</td>
-<td><a href="worksheets/ws-08.qmd">Worksheet 08</a></td>
+<td><a href="./pages/ws/ws-08.html">Worksheet 08</a></td>
 </tr>
 <tr class="odd">
 <td>9 · Anwendungsbereich prüfen</td>
 <td>Vorhersage und AOA gemeinsam interpretieren; untersuchen, wie eine Änderung der Prädiktorauswahl Modellgüte und Anwendungsbereich beeinflusst.</td>
-<td><a href="worksheets/ws-09.qmd">Worksheet 09</a></td>
+<td><a href="./pages/ws/ws-09.html">Worksheet 09</a></td>
 </tr>
 </tbody>
 </table>
@@ -579,17 +561,17 @@ background: ../images/placeholder.png;
 <tr class="odd">
 <td>10 · Veränderungen untersuchen</td>
 <td>Sommeraufnahmen mehrerer Jahre vergleichen; Veränderungskandidaten anhand der Originalbilder und einer zusätzlichen Aufnahme prüfen.</td>
-<td><a href="worksheets/ws-10.qmd">Worksheet 10</a></td>
+<td><a href="./pages/ws/ws-10.html">Worksheet 10</a></td>
 </tr>
 <tr class="even">
 <td>11 · Werkzeuge verbinden</td>
 <td>Eine bandweise Standardisierung über R, <code>link2GI</code> und OTB ausführen; Werte, Georeferenzierung und Übergabe zwischen den Werkzeugen kontrollieren.</td>
-<td><a href="worksheets/ws-11.qmd">Worksheet 11</a></td>
+<td><a href="./pages/ws/ws-11.html">Worksheet 11</a></td>
 </tr>
 <tr class="odd">
 <td>12 · Eigenständig übertragen</td>
 <td>Eine begrenzte Frage zu Landschaftsmustern, Klimaregionalisierung oder zeitlicher Veränderung für einen eigenen Ausschnitt bearbeiten und den Ablauf durch eine andere Gruppe nachvollziehen lassen.</td>
-<td><a href="worksheets/ws-12.qmd">Worksheet 12</a></td>
+<td><a href="./pages/ws/ws-12.html">Worksheet 12</a></td>
 </tr>
 </tbody>
 </table>

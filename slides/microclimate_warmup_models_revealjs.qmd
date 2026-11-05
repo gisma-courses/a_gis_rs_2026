@@ -34,7 +34,7 @@ Nicht die Darstellung ist der Kern, sondern die Modellannahme dahinter.
 
 Projekt-ZIP herunterladen:
 
-[**Projekt herunterladen**](../assets/Archiv.zip){download="Archiv.zip"}
+[**Projekt herunterladen**](../assets/Archive.zip){download="Archive.zip"}
 
 Dann:
 
@@ -47,12 +47,12 @@ Skript im Ordner scripts/ öffnen
 Das Skript liegt im Projekt unter:
 
 ```text
-scripts/microclimate_warmup_minimal_kommentiert.R
+scripts/microclimate_warmup_minimal.R
 ```
 
 Skript separat:
 
-[**R-Skript herunterladen**](../scripts/microclimate_warmup_minimal_kommentiert.R){download="microclimate_warmup_minimal_kommentiert.R"}
+[**R-Skript herunterladen**](../scripts/microclimate_warmup_minimal.R){download="microclimate_warmup_minimal.R"}
 
 # Warum Skripte?
 
@@ -455,7 +455,11 @@ So sind Muster und Messstützung gleichzeitig sichtbar.
 
 ```r
 maps <- c(map_vor, map_idw, map_lm, map_rf)
-z <- range(c(pts$temp - 1, pts$temp + 1), na.rm = TRUE)
+z <- range(c(pts$temp,
+             global(maps, "min", na.rm = TRUE)[, 1],
+             global(maps, "max", na.rm = TRUE)[, 1]), na.rm = TRUE)
+# Kleine Reserve für Rundung bei der Kartenprojektion.
+z <- z + c(-0.01, 0.01)
 
 par(mfrow = c(2, 2))
 
@@ -480,30 +484,13 @@ Die Darstellung ist nur die Oberfläche.
 
 Die Aussage steckt in der Modellannahme.
 
-# Diskussion
+# Ergebnisse prüfen
 
-Leitfragen:
+1. `output/warmup/temperatur_modelle.tif` in QGIS öffnen.
+2. Vier Bänder mit gleicher Temperaturskala darstellen.
+3. Werte an einem Stationsort und zwischen zwei Stationen vergleichen.
+4. `output/warmup/loocv_rmse.csv` lesen: Fehler gelten für ausgelassene Stationsorte.
 
-```text
-Welches Ergebnis zeigt harte Zuständigkeit?
-Welches Ergebnis zeigt lokale Nähe?
-Welches Ergebnis folgt der Höhe?
-Welches Ergebnis wirkt gut, bleibt aber riskant?
-Warum reicht RMSE allein nicht?
-```
+# Weiter im Kurs
 
-# Schluss
-
-Aus Punktmessungen entsteht kein neutraler Raum.
-
-Dazwischen stehen immer:
-
-```text
-Aussagefläche
-Modellannahme
-Prädiktoren
-Validierung
-fachliche Plausibilität
-```
-
-Das Skript macht diese Kette minimal sichtbar.
+Worksheet 01: eigenes Projekt anlegen, Pfade und Parameter ändern, Skript nach einem Neustart erneut ausführen.

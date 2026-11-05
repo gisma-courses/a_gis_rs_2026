@@ -1,21 +1,37 @@
 ---
-title: "Worksheet 12"
+title: "Worksheet 12 · Einen Ansatz übertragen"
+subtitle: "Eigener Ausschnitt, begrenzte Frage und erneut ausführbarer Ablauf"
 order: 12
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Einen der erprobten Ansätze wählen
+
+| Ansatz | Räumliche Aufgabe | Vergleich |
+|---|---|---|
+| Landschaftsmuster | Zwei Ausschnitte in Hessen oder Nordrhein-Westfalen vergleichen. | Gleiche Klassen, Rasterweite, Fenstergröße und Nachbarschaft; SHDI, AI, Entropie und relative gegenseitige Information. |
+| Klimaregionalisierung | Einen neuen Klimaausschnitt segmentieren. | Zwei Parameterstände und eine Prüfung innerer Streuung sowie benachbarter Jahresgänge. |
+| Zeitliche Veränderung | Einen Veränderungskandidaten in einer eigenen Sentinel-AOI prüfen. | Vergleichbare Sommertermine, gemeinsame gültige Pixel und eine zusätzliche Aufnahme. |
+
+Formulieren Sie eine räumlich und zeitlich abgegrenzte Frage. Verwenden Sie den zugehörigen Ablauf aus Worksheet 04, 05–06 oder 02–03 und 10. Passen Sie Gebiet und Parameter an; ein neu entwickelter Algorithmus wird nicht verlangt.
+
+## Projekt ausführen und weitergeben
+
+1. Beschaffen Sie die Eingangsdaten selbst. Speichern Sie Quelle, Produktstand, Abrufdatum, CRS, Rasterweite und zeitlichen Bezug in einer kurzen Datentabelle.
+2. Führen Sie den gewählten Ablauf aus. Vergleichen Sie zwei ausdrücklich benannte Varianten und halten Sie die übrigen Einstellungen konstant. Speichern Sie Parameter und die zugehörigen Ergebnisse getrennt.
+3. Geben Sie Projekt, Skripte und eine `README.md` mit Ausführungsreihenfolge an eine andere Gruppe. Zugangsdaten bleiben außerhalb des Projekts. Die andere Gruppe startet R neu und führt den Ablauf mit lokalen Eingangsdaten erneut aus.
+4. Protokollieren Sie Ausführungsfehler und korrigieren Sie Pfade oder fehlende Schritte. Vergleichen Sie mindestens einen Tabellenwert und Rastergitter beziehungsweise Segmentzahl mit dem ursprünglichen Ergebnis.
+
+## Abgabe
+
+Geben Sie den erneut ausführbaren Projektordner, eine Vergleichstabelle, höchstens drei Karten und eine Seite Ergebnistext ab. Der Text enthält die abgegrenzte Frage, den zahlenmäßig belegten Variantenvergleich und die Grenze der räumlichen beziehungsweise zeitlichen Aussage. Die gewählte Datenbasis und die dokumentierten Parameter müssen zu den abgegebenen Karten und Tabellen passen.

@@ -1,4 +1,4 @@
-# Hausaufgabe WS03: pro Pixel gültige und bewölkte Beobachtungen zählen
+# Zusatz zu WS02 / WS10: pro Pixel gültige und bewölkte Beobachtungen zählen
 # Name / Datum: ergänzen
 # Eingabe: exakt die Termine in data/auswahl.csv, keine übrigen TIFF-Dateien.
 # Kategorien beziehen sich auf diese ausgewählten Tage, nicht auf das Jahr.
@@ -22,11 +22,21 @@ for (i in seq_along(dateien)) {
   x <- rast(dateien[i])
   stopifnot(nlyr(x) == 6)
   names(x) <- c("B02", "B03", "B04", "B08", "SCL", "dataMask")
-  if (i == 1) vorlage <- x[[1]]
+  if (i == 1) {
+    vorlage <- x[[1]]
+    innen <- rasterize(aoi, vorlage, field = 1, background = NA, touches = FALSE)
+  }
   if (!compareGeom(vorlage, x[[1]], stopOnError = FALSE)) {
     stop("Unterschiedliche Rastergitter: Abrufe prüfen.")
   }
   scl <- x[["SCL"]]
+  for (band in c("SCL", "dataMask")) {
+    werte <- values(x[[band]], mat = FALSE)
+    erlaubt <- if (band == "SCL") 0:11 else 0:1
+    if (any(!is.na(werte) & !werte %in% erlaubt)) {
+      stop("Interpolierte/ungültige Qualitätsklassen: Abruf mit Skript 02 erneuern.")
+    }
+  }
   da <- null_eins(x[["dataMask"]] == 1 & !is.na(scl) & scl != 0)
   nenner <- x[["B08"]] + x[["B04"]]
   valid <- null_eins(da == 1 & scl %in% scl_behalten & nenner > 0)
@@ -38,7 +48,7 @@ for (i in seq_along(dateien)) {
   names(tag) <- c("n_valid", "n_cloudy", "n_shadow", "n_other", "n_missing")
   if (i == 1) counts <- tag else counts <- counts + tag
 }
-counts <- mask(counts, aoi)
+counts <- mask(counts, innen)
 n_termine <- length(daten)
 beobachtet <- n_termine - counts[["n_missing"]]
 valid_pct <- 100 * counts[["n_valid"]] / n_termine

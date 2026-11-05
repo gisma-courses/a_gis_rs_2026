@@ -86,6 +86,8 @@ library(gstat)
 library(randomForest)
 library(leaflet)
 
+set.seed(42)  # RF-Karten und LOOCV bei Wiederholung vergleichbar halten.
+
 
 # Messstationen laden.
 # Erwartung:
@@ -606,12 +608,16 @@ maps <- c(map_vor, map_idw, map_lm, map_rf)
 
 
 # Gemeinsamer Farbbereich:
-#   beobachtete Temperaturwerte minus/plus 1 Grad.
+#   alle vorhergesagten und beobachteten Temperaturwerte.
 #
 # Das verhindert, dass jedes Panel durch eigene Skalierung künstlich
 # plausibel oder dramatisch wirkt.
 
-z <- range(c(pts$temp - 1, pts$temp + 1), na.rm = TRUE)
+z <- range(c(pts$temp,
+             global(maps, "min", na.rm = TRUE)[, 1],
+             global(maps, "max", na.rm = TRUE)[, 1]), na.rm = TRUE)
+# Kleine Reserve für Rundung bei der Kartenprojektion.
+z <- z + c(-0.01, 0.01)
 
 
 # 2 x 2 Panel für die vier Ergebnisraster.
@@ -637,6 +643,11 @@ par(mfrow = c(1, 1))
 # Diese Tabelle ist der Einstieg in die Modellkritik.
 
 print(rmse)
+
+# Ergebnisse für den Vergleich in QGIS und die erneute Ausführung speichern.
+dir.create("output/warmup", recursive = TRUE, showWarnings = FALSE)
+writeRaster(maps, "output/warmup/temperatur_modelle.tif", overwrite = TRUE)
+write.csv(rmse, "output/warmup/loocv_rmse.csv", row.names = FALSE)
 
 # =============================================================================
 # 16. ERGEBNISRASTER ALS LEAFLET-KARTE DARSTELLEN
@@ -713,7 +724,7 @@ leaflet_map <- leaflet_map |>
   ) |>
   hideGroup(names(maps)[-1])
 
-leaflet_map
+print(leaflet_map)
 
 
 

@@ -1,10 +1,11 @@
-Mikroklima-Interpolation fuer absolute Beginners
+Mikroklima-Warmup – Einstieg ohne Programmiererfahrung
 
-1. ZIP entpacken.
-2. microclimate_beginner.Rproj in RStudio oeffnen.
-3. Falls Pakete fehlen: 00_install_packages.R ausfuehren.
-4. 01_run_microclimate_beginner.R oeffnen.
-5. Zeilen blockweise mit Strg+Enter ausfuehren oder Source klicken.
-6. Ergebnisse liegen danach in outputs/fig, outputs/maps und outputs/summary.
+1. Archive.zip entpacken.
+2. microclimate_beginner.Rproj in RStudio öffnen.
+3. Fehlende Pakete mit scripts/00_install_packages.R installieren.
+4. scripts/microclimate_warmup_minimal.R öffnen und blockweise mit Strg+Enter ausführen.
+5. Karte und Fehlertabelle liegen unter output/warmup/; die interaktive Karte erscheint im Viewer.
 
-Die Daten sind bewusst klein und synthetisch, aber strukturell wie ein Sensor-Datensatz aufgebaut.
+Der Reader und die Folien verwenden dieses Skript mit data/climdata.rds und data/DEM1.tif.
+Die Beginner-Skripte mit stations.csv und synthetischem DEM sind zusätzliche, getrennte Beispiele.
+Weiterarbeit im Kurs: Worksheet 01, anschließend Worksheet 02 und 03.

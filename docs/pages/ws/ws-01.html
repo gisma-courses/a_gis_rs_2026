@@ -65,7 +65,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../pages/ws/ws-02.html" rel="next">
-<link href="../..//images/logo.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -107,23 +106,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background: ../../images/placeholder.png;
-      }
-</style>
 
 
 <meta property="og:title" content="Worksheet 01 · Ein kleines R-Projekt">
@@ -299,7 +281,7 @@ background: ../../images/placeholder.png;
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -312,24 +294,7 @@ background: ../../images/placeholder.png;
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Worksheet 01 · Ein kleines R-Projekt</h1>
-            <p class="subtitle lead">Verzeichnisse, Skriptstruktur und kontrollierte Änderungen</p>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
@@ -360,7 +325,7 @@ background: ../../images/placeholder.png;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../pages/" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Kursstruktur</span></a>
   </div>
 </li>
@@ -492,11 +457,27 @@ background: ../../images/placeholder.png;
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-01.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="ws-01.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Worksheet 01 · Ein kleines R-Projekt</h1>
+<p class="subtitle lead">Verzeichnisse, Skriptstruktur und kontrollierte Änderungen</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
 
 
 
 
+  </div>
+
+
+
+</header>
 
 
 <section id="ziel" class="level2">
@@ -612,13 +593,13 @@ background: ../../images/placeholder.png;
 <span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">list.files</span>(<span class="st">"output"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Führen Sie das Skript zunächst abschnittsweise mit <strong>Ctrl+Enter</strong> aus. Prüfen Sie anschließend die PNG-Datei im Ordner <code>output</code>. Öffnen Sie das erzeugte GeoPackage in QGIS und vergleichen Sie es mit der Eingabedatei.</p>
-<p><strong>Kontrolle:</strong> Liegt das Gebiet innerhalb seines Puffers? Ist die Pufferfläche größer als die Ausgangsfläche? Welche Dateien wurden erzeugt und wo liegen sie?</p>
+<p><strong>Kontrolle:</strong> Vergleichen Sie Gebiets- und Pufferfläche in der Konsole. Prüfen Sie in QGIS, dass der Puffer die Gebietsgrenze vollständig umschließt und die Ausgabedateien unter <code>output/</code> liegen.</p>
 </section>
 <section id="einen-parameter-gezielt-ändern" class="level2">
 <h2 class="anchored" data-anchor-id="einen-parameter-gezielt-ändern">3 · Einen Parameter gezielt ändern</h2>
 <p>Ändern Sie ausschließlich <code>puffer_m &lt;- 100</code> zu <code>puffer_m &lt;- 500</code>. Schreiben Sie davor einen kurzen Kommentar, warum Sie den Parameter verändern. Führen Sie das gesamte Skript mit <strong>Source</strong> erneut aus.</p>
 <p>Vergleichen Sie die beiden Karten und die ausgegebenen Flächen. Prüfen Sie außerdem, ob beide Ergebnisvarianten unter <code>output/</code> liegen und die Eingabedatei unter <code>data/</code> unverändert geblieben ist.</p>
-<p><strong>Notieren Sie:</strong> Was steuert der Parameter? In welcher Einheit? Warum entsteht durch seine Änderung auch ein anderer Ausgabename?</p>
+<p><strong>Dokumentieren Sie:</strong> Pufferabstand in Metern, beide berechneten Flächen und die Dateinamen der 100-m- und 500-m-Variante.</p>
 </section>
 <section id="einen-pfadfehler-verstehen" class="level2">
 <h2 class="anchored" data-anchor-id="einen-pfadfehler-verstehen">4 · Einen Pfadfehler verstehen</h2>

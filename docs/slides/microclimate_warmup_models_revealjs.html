@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<link href="..//images/logo.png" rel="icon" type="image/png">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -217,15 +216,15 @@
 <section id="technischer-einstieg" class="slide level2">
 <h2>Technischer Einstieg</h2>
 <p>Projekt-ZIP herunterladen:</p>
-<p><a href="../assets/Archiv.zip" download="Archiv.zip"><strong>Projekt herunterladen</strong></a></p>
+<p><a href="../assets/Archive.zip" download="Archive.zip"><strong>Projekt herunterladen</strong></a></p>
 <p>Dann:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a></a>ZIP entpacken</span>
 <span id="cb2-2"><a></a>.Rproj-Datei im entpackten Projektordner öffnen</span>
 <span id="cb2-3"><a></a>Skript im Ordner scripts/ öffnen</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Das Skript liegt im Projekt unter:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb3-1"><a></a>scripts/microclimate_warmup_minimal_kommentiert.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb3-1"><a></a>scripts/microclimate_warmup_minimal.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Skript separat:</p>
-<p><a href="../scripts/microclimate_warmup_minimal_kommentiert.R" download="microclimate_warmup_minimal_kommentiert.R"><strong>R-Skript herunterladen</strong></a></p>
+<p><a href="../scripts/microclimate_warmup_minimal.R" download="microclimate_warmup_minimal.R"><strong>R-Skript herunterladen</strong></a></p>
 </section></section>
 <section id="warum-skripte" class="title-slide slide level1 center">
 <h1>Warum Skripte?</h1>
@@ -544,16 +543,20 @@ RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2}
 <section id="code-darstellung" class="slide level2">
 <h2>Code: Darstellung</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>maps <span class="ot">&lt;-</span> <span class="fu">c</span>(map_vor, map_idw, map_lm, map_rf)</span>
-<span id="cb32-2"><a></a>z <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(pts<span class="sc">$</span>temp <span class="sc">-</span> <span class="dv">1</span>, pts<span class="sc">$</span>temp <span class="sc">+</span> <span class="dv">1</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb32-3"><a></a></span>
-<span id="cb32-4"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb32-5"><a></a></span>
-<span id="cb32-6"><a></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nlyr</span>(maps)) {</span>
-<span id="cb32-7"><a></a>  <span class="fu">plot</span>(maps[[i]], <span class="at">range =</span> z, <span class="at">main =</span> <span class="fu">names</span>(maps)[i])</span>
-<span id="cb32-8"><a></a>  <span class="fu">points</span>(pts, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
-<span id="cb32-9"><a></a>}</span>
-<span id="cb32-10"><a></a></span>
-<span id="cb32-11"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb32-2"><a></a>z <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">c</span>(pts<span class="sc">$</span>temp,</span>
+<span id="cb32-3"><a></a>             <span class="fu">global</span>(maps, <span class="st">"min"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[, <span class="dv">1</span>],</span>
+<span id="cb32-4"><a></a>             <span class="fu">global</span>(maps, <span class="st">"max"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[, <span class="dv">1</span>]), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-5"><a></a><span class="co"># Kleine Reserve für Rundung bei der Kartenprojektion.</span></span>
+<span id="cb32-6"><a></a>z <span class="ot">&lt;-</span> z <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.01</span>, <span class="fl">0.01</span>)</span>
+<span id="cb32-7"><a></a></span>
+<span id="cb32-8"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb32-9"><a></a></span>
+<span id="cb32-10"><a></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nlyr</span>(maps)) {</span>
+<span id="cb32-11"><a></a>  <span class="fu">plot</span>(maps[[i]], <span class="at">range =</span> z, <span class="at">main =</span> <span class="fu">names</span>(maps)[i])</span>
+<span id="cb32-12"><a></a>  <span class="fu">points</span>(pts, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb32-13"><a></a>}</span>
+<span id="cb32-14"><a></a></span>
+<span id="cb32-15"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section id="ergebnislogik" class="title-slide slide level1 center">
 <h1>Ergebnislogik</h1>
@@ -565,26 +568,19 @@ RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2}
 <p>Die Aussage steckt in der Modellannahme.</p>
 </section>
 
-<section id="diskussion" class="title-slide slide level1 center">
-<h1>Diskussion</h1>
-<p>Leitfragen:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb34-1"><a></a>Welches Ergebnis zeigt harte Zuständigkeit?</span>
-<span id="cb34-2"><a></a>Welches Ergebnis zeigt lokale Nähe?</span>
-<span id="cb34-3"><a></a>Welches Ergebnis folgt der Höhe?</span>
-<span id="cb34-4"><a></a>Welches Ergebnis wirkt gut, bleibt aber riskant?</span>
-<span id="cb34-5"><a></a>Warum reicht RMSE allein nicht?</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="ergebnisse-prüfen" class="title-slide slide level1 center">
+<h1>Ergebnisse prüfen</h1>
+<ol type="1">
+<li><code>output/warmup/temperatur_modelle.tif</code> in QGIS öffnen.</li>
+<li>Vier Bänder mit gleicher Temperaturskala darstellen.</li>
+<li>Werte an einem Stationsort und zwischen zwei Stationen vergleichen.</li>
+<li><code>output/warmup/loocv_rmse.csv</code> lesen: Fehler gelten für ausgelassene Stationsorte.</li>
+</ol>
 </section>
 
-<section id="schluss" class="title-slide slide level1 center">
-<h1>Schluss</h1>
-<p>Aus Punktmessungen entsteht kein neutraler Raum.</p>
-<p>Dazwischen stehen immer:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb35-1"><a></a>Aussagefläche</span>
-<span id="cb35-2"><a></a>Modellannahme</span>
-<span id="cb35-3"><a></a>Prädiktoren</span>
-<span id="cb35-4"><a></a>Validierung</span>
-<span id="cb35-5"><a></a>fachliche Plausibilität</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Das Skript macht diese Kette minimal sichtbar.</p>
+<section id="weiter-im-kurs" class="title-slide slide level1 center">
+<h1>Weiter im Kurs</h1>
+<p>Worksheet 01: eigenes Projekt anlegen, Pfade und Parameter ändern, Skript nach einem Neustart erneut ausführen.</p>
 
 
 </section>
@@ -603,7 +599,7 @@ RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2}
   <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
-  
+
 
   <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
   <script src="../site_libs/revealjs/plugin/search/search.js"></script>
@@ -625,7 +621,7 @@ RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2}
 'jumpToSlide': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'smaller': false,
- 
+
         // Display controls in the bottom right corner
         controls: true,
 
@@ -971,6 +967,6 @@ RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2}
         }
       });
       </script>
-    
+
 
 </body></html>

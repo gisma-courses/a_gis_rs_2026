@@ -1,21 +1,32 @@
 ---
-title: "Worksheet 06"
+title: "Worksheet 06 · Regionalisierungen beurteilen"
+subtitle: "Innere Homogenität, benachbarte Jahresgänge und Rasterauflösung"
 order: 6
-title-block-banner: ../../images/placeholder.png
-title-block-banner-color: black
-#page-layout: full
 format-links: [html, pdf, docx]
 format:
   html:
     toc: false
     code-fold: false
-    number-sections: false
   pdf:
     pdf-engine: lualatex
   docx: default
 execute:
-  echo: false
-  warning: false
-  message: false
+  eval: false
+  echo: true
 ---
 
+## Varianten aus Worksheet 05 auswerten
+
+Verwenden Sie die drei Segmentierungen und genau dieselben zwölf Temperaturbänder. Rasterisieren Sie jede Segmentierung auf deren Gitter mit einer eindeutigen Segment-ID. Für jede Rasterzelle gilt genau eine ID; verwenden Sie die Zellmittelpunkte für die Zuordnung.
+
+1. Berechnen Sie je Segment und Monat den Mittelwert und die Standardabweichung der Temperatur. Zeichnen Sie die zwölf Monatsmittel für drei benachbarte Segmente. Geben Sie für diese Segmente Zellzahl und innere Standardabweichung an.
+2. Fassen Sie pro Variante die monatlichen Varianzen innerhalb der Segmente zu einem nach gültiger Zellzahl gewichteten Mittel zusammen. Berichten Sie diesen Wert zusammen mit der Segmentzahl; mehr Segmente können die innere Streuung allein durch kleinere Flächen reduzieren.
+3. Bestimmen Sie für die drei benachbarten Segmente die mittlere absolute Differenz ihrer zwölf Monatsmittel. Prüfen Sie an einer Karte, ob eine deutliche Grenze im Temperaturjahresgang oder vor allem eine geometrische Unterteilung vorliegt.
+
+## Rasterauflösung kontrolliert ändern
+
+Aggregieren Sie die zwölf 1-km-Bänder mit `terra::aggregate(x, fact = 2, fun = mean, na.rm = TRUE)` auf 2 km. Segmentieren Sie erneut mit `k = 50` und `compactness = 1`. Verwenden Sie dieselbe AOI, Bandreihenfolge und Skalierung. Für den Vergleich werden Segmentmittel und Streuungen beider Grenzvarianten auf den ursprünglichen 1-km-Klimadaten berechnet. So stammen die Bewertungswerte aus derselben Datenbasis.
+
+## Ergebnis
+
+Geben Sie eine Tabelle mit Segmentzahl, flächengewichteter innerer Streuung und Nachbarschaftsdifferenzen sowie die drei Jahresgangkurven und eine Grenzvergleichskarte ab. Wählen Sie anhand dieser Werte eine Regionalisierung für den Ausschnitt. Benennen Sie eine Grenze, die gegenüber der Rastervergröberung stabil bleibt, und eine, die sich verschiebt. Die Regionen beschreiben die verwendeten Temperaturklimanormalwerte; Niederschlag, Extremereignisse und aktuelle Klimaveränderungen wurden nicht regionalisiert.
