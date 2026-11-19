@@ -1,0 +1,63 @@
+---
+title: "Block 1 · Rückblick und Anschluss"
+subtitle: "Von vergleichbaren Satellitenbeobachtungen zu räumlichen Mustern"
+format:
+  revealjs:
+    theme: [default, metropolis.scss]
+    slide-number: true
+execute:
+  eval: false
+---
+
+## Der Arbeitsablauf
+
+Projekt öffnen → AOI festlegen → Aufnahmen auswählen → Daten abrufen → Qualität prüfen → Indizes berechnen → Flächen vergleichen.
+
+Die Skripte lesen ihre Eingaben selbst ein. Relative Pfade beziehen sich auf das RStudio-Projekt.
+
+## Was abgegeben wird
+
+- WS01: kommentiertes Pufferskript, zwei Parameterstände, GeoPackages und Karten.
+- WS02: Aufnahmetage, RGB-/Qualitätsbänder, NDVI-Reihe, Datenabdeckung und Verlauf.
+- WS03: drei Vergleichsflächen, NDVI/kNDVI-Tabelle und gemeinsame Pixelzahlen.
+- Zusatz: Beobachtungszähler, Differenzkarte und beschreibende Trendprüfung.
+
+## Ein Vergleich braucht dieselbe Grundlage
+
+Aufnahmetage, Sommerphase, Wolkenmaske und gültige Pixel gehören zum Ergebnis.
+
+`data/auswahl.csv` legt die Termine fest. `data/qualitaetsmaske.csv` enthält die zugelassenen SCL-Klassen.
+
+Nach Änderungen: Abruf bei Bedarf wiederholen, dann NDVI und Folgeauswertungen neu berechnen.
+
+## NDVI und kNDVI
+
+$$NDVI = \frac{NIR-Rot}{NIR+Rot}, \qquad kNDVI = \tanh(NDVI^2).$$
+
+Beide verwenden dieselbe Beobachtung. kNDVI transformiert das Signal nichtlinear und verliert durch das Quadrieren das Vorzeichen.
+
+Erst Einzelpixel transformieren, dann mitteln.
+
+## Was die fünf Termine aussagen
+
+Die Reihe beschreibt fünf ausgewählte Sommerbeobachtungen von 2018 bis 2022.
+
+Eine Differenz ist ein verändertes Vegetationssignal. Ihre Ursache wird anhand der Originalbilder und zusätzlicher Beobachtungen geprüft.
+
+Die Auslassungsprüfung beschreibt die Empfindlichkeit der Trendgeraden. Sie ist keine unabhängige Validierung.
+
+## Vom Flächenmittel zum Muster
+
+Ein Mittelwert enthält keine Information darüber, wo hohe und niedrige Werte liegen.
+
+Auch gleiche Landbedeckungsanteile können unterschiedlich angeordnet sein.
+
+WS04 hält die Klassenhäufigkeiten konstant und verändert nur die Anordnung. Danach wird die Fenstergröße variiert.
+
+## Regionen aus kontinuierlichen Daten
+
+WS05 gruppiert Zellen anhand von zwölf monatlichen Temperaturmitteln zu zusammenhängenden Regionen.
+
+WS06 prüft innere Streuung, Unterschiede benachbarter Jahresgänge und verschobene Grenzen bei gröberem Raster.
+
+Die Temperaturwerte sind Klimanormalwerte für 1970–2000. Sie bilden keine aktuelle Beobachtungsreihe ab.

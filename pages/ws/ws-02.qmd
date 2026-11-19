@@ -20,7 +20,7 @@ execute:
 
 ## Auftrag
 
-**Wie verändert sich das sommerliche Vegetationssignal einer selbst gewählten Waldfläche im Burgwald zwischen 2018 und 2022?**
+**Wie unterscheidet sich das sommerliche Vegetationssignal im gewählten Burgwald-Ausschnitt zwischen 2018 und 2022?**
 
 Sie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.
 
@@ -29,6 +29,8 @@ Aus Worksheet 01 kennen Sie Projektordner, relative Pfade und blockweises Ausfü
 Am Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus **einer ausgewählten Sommerbeobachtung pro Jahr**. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.
 
 ## Material und Vorbereitung
+
+Installation: [00_install_packages.R](../../scripts/00_install_packages.R).
 
 Die technische Grundlage ist der [CDSE-Abruf aus dem aktuellen Kursrepository](https://github.com/gisma/LV-19-d19-006-25-R/blob/main/src/S1_observation/01-2_get_cdse-sentinel-data.R). Die Lehrfassung übernimmt STAC-Suche und CDSE-Abruf, verwendet Ihr eigenes Gebiet und berechnet den NDVI anschließend lokal. Der große Projekt-Setup des Repositories wird dafür nicht benötigt.
 
@@ -118,7 +120,7 @@ Die Menüfolge und die Hinweise zum Secret sind in der [offiziellen CDSE-Anleitu
 
 ## 1 · Eine eigene Untersuchungsfläche festlegen
 
-Öffnen Sie die Burgwald-Gebietsgrenze aus Worksheet 01 in QGIS. Wählen Sie anhand einer Hintergrundkarte eine kleine Waldfläche, für die Sie den sommerlichen Verlauf untersuchen möchten. Ein Gebiet mit ungefähr 1–2 km Kantenlänge reicht; die maximale Kantenlänge dieser Übung beträgt 5 km.
+Öffnen Sie die Burgwald-Gebietsgrenze aus Worksheet 01 in QGIS. Wählen Sie anhand einer Hintergrundkarte einen kleinen Ausschnitt mit Wald und angrenzendem Offenland. In Worksheet 03 vergleichen Sie darin eine Wald-, eine Offenland- und eine auffällige Teilfläche. Ein Gebiet mit ungefähr 1–2 km Kantenlänge reicht; die maximale Kantenlänge dieser Übung beträgt 5 km.
 
 ::: {.callout-note title="Legen Sie einen neuen GeoPackage-Layer an:" collapse="true"}
 
@@ -187,7 +189,7 @@ Kontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und 
 
 Wenn der erste Abruf stimmt, setzen Sie `anzahl_abrufe <- Inf` und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden nur bei passender AOI und passenden Abrufeinstellungen übersprungen. Zu jedem TIFF wird ein Abrufmanifest `.tif.rds` gespeichert. Ältere TIFFs ohne Manifest oder mit geänderten Einstellungen archivieren Sie zusammen mit dem bisherigen Ordner `data/sentinel/` und laden die ausgewählten Tage erneut. Kontrollieren Sie auch die übrigen Aufnahmen.
 
-**Zwischenergebnis:** Für jedes ausgewählte Datum existiert eine lokale TIFF-Datei. Ungeeignete Tage ersetzen Sie durch einen anderen Kandidaten und rufen diesen nach. Alte Dateien dürfen zur Dokumentation liegen bleiben; die Auswertung verwendet ausschließlich die aktuelle Auswahl-Datei.
+**Zwischenergebnis:** Für jedes ausgewählte Datum existiert eine lokale TIFF-Datei. Ungeeignete Tage ersetzen Sie in `data/auswahl.csv` durch einen anderen Kandidaten. Führen Sie danach Abschnitt 6 des Abrufskripts erneut aus; er liest die Auswahl bei jedem Start neu ein. Alte Dateien dürfen zur Dokumentation liegen bleiben; die Auswertung verwendet ausschließlich die aktuelle Auswahl-Datei.
 
 Der Abruf verwendet jeweils einen Tag. Überlappende Kacheln können dabei zu einem Bild mosaikiert werden; eine einzelne Produkt-ID wird damit nicht festgeschrieben.
 
@@ -201,10 +203,11 @@ $$
 NDVI = \frac{B08-B04}{B08+B04}
 $$
 
-Vor der Auswertung werden ungültige Daten und bestimmte SCL-Klassen ausgeschlossen. In der Vorlage bleiben Vegetation, unbewachsene Flächen, Wasser und unklassifizierte Pixel erhalten; Wolken, Wolkenschatten, Schnee und weitere ausgeschlossene Klassen werden zu `NA`. Diese Maske ist eine dokumentierte Arbeitsentscheidung und ersetzt die visuelle Prüfung nicht.
+Vor der Auswertung werden ungültige Daten und bestimmte SCL-Klassen ausgeschlossen. In der Vorlage bleiben Vegetation, unbewachsene Flächen, Wasser und unklassifizierte Pixel erhalten; Wolken, Wolkenschatten, Schnee und weitere ausgeschlossene Klassen werden zu `NA`. Die Klassen stehen in `data/qualitaetsmaske.csv`; Skript 03 legt die Datei beim ersten Lauf an. Skript 05 liest dieselbe Datei. Ändern Sie die Maske dort und führen Sie danach Skript 03, 05 und die weiteren Auswertungen erneut aus. Die visuelle Bildprüfung bleibt erforderlich.
 
 ```r
-scl_behalten <- c(4, 5, 6, 7)
+read.csv("data/qualitaetsmaske.csv")
+# Vorgabe in der Spalte scl: 4, 5, 6, 7
 ```
 
 Das Skript berechnet einen NDVI pro Datum, begrenzt ihn auf Ihr Polygon und schreibt die Ergebnisse nach `output/ndvi/`. Zusätzlich entstehen `output/ndvi_reihe.tif` und `output/ndvi_banddaten.csv`. Die CSV ordnet jedem Band sein tatsächliches Aufnahmedatum zu.

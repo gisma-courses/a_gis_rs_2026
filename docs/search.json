@@ -176,234 +176,512 @@
     ]
   },
   {
-    "objectID": "pages/ws/ws-11.html",
-    "href": "pages/ws/ws-11.html",
-    "title": "Worksheet 11 · R und OTB verbinden",
+    "objectID": "pages/ws/ws-12.html",
+    "href": "pages/ws/ws-12.html",
+    "title": "Worksheet 12 · Einen Ansatz übertragen",
     "section": "",
-    "text": "Verwenden Sie eine Sentinel-Aufnahme aus Worksheet 02. Installieren Sie OTB und das R-Paket link2GI. Prüfen Sie mit link2GI::linkOTB(), ob die Installation gefunden wird. Verwenden Sie die vier Reflexionsbänder; SCL und dataMask werden nicht standardisiert.\nMaskieren Sie in R NoData und die in Worksheet 02 ausgeschlossenen SCL-Klassen. Schreiben Sie für diese Übung nur einen kleinen rechteckigen Ausschnitt, in dem alle Zellen der vier Reflexionsbänder gültig sind, als output/otb/eingabe.tif. So benötigt die folgende Übergabe keine zusätzliche NoData-Konvention. Verwenden Sie dieselbe Zellmenge für alle Bandstatistiken.",
+    "text": "Ansatz\nRäumliche Aufgabe\nVergleich\n\n\n\n\nLandschaftsmuster\nZwei Ausschnitte in Hessen oder Nordrhein-Westfalen vergleichen.\nGleiche Klassen, Rasterweite, Fenstergröße und Nachbarschaft; SHDI, AI, Entropie und relative gegenseitige Information.\n\n\nKlimaregionalisierung\nEinen neuen Klimaausschnitt segmentieren.\nZwei Parameterstände und eine Prüfung innerer Streuung sowie benachbarter Jahresgänge.\n\n\nZeitliche Veränderung\nEinen Veränderungskandidaten in einer eigenen Sentinel-AOI prüfen.\nVergleichbare Sommertermine, gemeinsame gültige Pixel und eine zusätzliche Aufnahme.\n\n\n\nFormulieren Sie eine räumlich und zeitlich abgegrenzte Frage. Verwenden Sie den zugehörigen Ablauf aus Worksheet 04, 05–06 oder 02–03 und 10. Passen Sie Gebiet und Parameter an; ein neu entwickelter Algorithmus wird nicht verlangt.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 11"
+      "Worksheet 12"
     ]
   },
   {
-    "objectID": "pages/ws/ws-11.html#verarbeitung-vorbereiten",
-    "href": "pages/ws/ws-11.html#verarbeitung-vorbereiten",
-    "title": "Worksheet 11 · R und OTB verbinden",
+    "objectID": "pages/ws/ws-12.html#einen-der-erprobten-ansätze-wählen",
+    "href": "pages/ws/ws-12.html#einen-der-erprobten-ansätze-wählen",
+    "title": "Worksheet 12 · Einen Ansatz übertragen",
     "section": "",
-    "text": "Verwenden Sie eine Sentinel-Aufnahme aus Worksheet 02. Installieren Sie OTB und das R-Paket link2GI. Prüfen Sie mit link2GI::linkOTB(), ob die Installation gefunden wird. Verwenden Sie die vier Reflexionsbänder; SCL und dataMask werden nicht standardisiert.\nMaskieren Sie in R NoData und die in Worksheet 02 ausgeschlossenen SCL-Klassen. Schreiben Sie für diese Übung nur einen kleinen rechteckigen Ausschnitt, in dem alle Zellen der vier Reflexionsbänder gültig sind, als output/otb/eingabe.tif. So benötigt die folgende Übergabe keine zusätzliche NoData-Konvention. Verwenden Sie dieselbe Zellmenge für alle Bandstatistiken.",
+    "text": "Ansatz\nRäumliche Aufgabe\nVergleich\n\n\n\n\nLandschaftsmuster\nZwei Ausschnitte in Hessen oder Nordrhein-Westfalen vergleichen.\nGleiche Klassen, Rasterweite, Fenstergröße und Nachbarschaft; SHDI, AI, Entropie und relative gegenseitige Information.\n\n\nKlimaregionalisierung\nEinen neuen Klimaausschnitt segmentieren.\nZwei Parameterstände und eine Prüfung innerer Streuung sowie benachbarter Jahresgänge.\n\n\nZeitliche Veränderung\nEinen Veränderungskandidaten in einer eigenen Sentinel-AOI prüfen.\nVergleichbare Sommertermine, gemeinsame gültige Pixel und eine zusätzliche Aufnahme.\n\n\n\nFormulieren Sie eine räumlich und zeitlich abgegrenzte Frage. Verwenden Sie den zugehörigen Ablauf aus Worksheet 04, 05–06 oder 02–03 und 10. Passen Sie Gebiet und Parameter an; ein neu entwickelter Algorithmus wird nicht verlangt.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 11"
+      "Worksheet 12"
     ]
   },
   {
-    "objectID": "pages/ws/ws-11.html#standardisierung-ausführen",
-    "href": "pages/ws/ws-11.html#standardisierung-ausführen",
-    "title": "Worksheet 11 · R und OTB verbinden",
-    "section": "Standardisierung ausführen",
-    "text": "Standardisierung ausführen\nBerechnen Sie pro Band Mittelwert und Stichprobenstandardabweichung. Für jedes Band gilt z = (x - mittelwert) / standardabweichung; konstante Bänder werden vor der Übergabe ausgeschlossen. Erzeugen Sie in R eine Referenzausgabe.\nlibrary(terra)\nlibrary(link2GI)\nx &lt;- rast(\"output/otb/eingabe.tif\")\nstopifnot(nlyr(x) == 4, all(is.finite(values(x))))\nmu &lt;- global(x, \"mean\")[, 1]\ns &lt;- global(x, \"sd\")[, 1]\nstopifnot(all(is.finite(s) & s &gt; 0))\nz_r &lt;- (x - mu) / s\nwriteRaster(z_r, \"output/otb/referenz_r.tif\", overwrite = TRUE)\n# OTB-Ausdrücke verwenden einen Dezimalpunkt unabhängig von R-Ländereinstellungen.\nzahl &lt;- function(v) format(v, digits = 17, scientific = TRUE, trim = TRUE, decimal.mark = \".\")\nterme &lt;- paste0(\"(im1b\", seq_len(nlyr(x)), \"-\", zahl(mu), \")/\", zahl(s))\nexpr &lt;- paste0(\"{\", paste(terme, collapse = \",\"), \"}\")\ngili &lt;- linkOTB()\nstopifnot(isTRUE(gili$exist))\ncmd &lt;- parseOTBFunction(algo = \"BandMathX\", gili = gili)\ncmd$help &lt;- NULL\ncmd$il &lt;- normalizePath(\"output/otb/eingabe.tif\")\ncmd$out &lt;- c(file.path(normalizePath(\"output/otb\"), \"standardisiert.tif\"), \"float\")\ncmd$exp &lt;- expr\nrunOTB(cmd, gili = gili)\nz_otb &lt;- rast(\"output/otb/standardisiert.tif\")\nstopifnot(compareGeom(z_r, z_otb))\nglobal(abs(z_r - z_otb), \"max\", na.rm = TRUE)\nWerkzeugreferenzen: BandMathX, link2GI.",
+    "objectID": "pages/ws/ws-12.html#projekt-ausführen-und-weitergeben",
+    "href": "pages/ws/ws-12.html#projekt-ausführen-und-weitergeben",
+    "title": "Worksheet 12 · Einen Ansatz übertragen",
+    "section": "Projekt ausführen und weitergeben",
+    "text": "Projekt ausführen und weitergeben\n\nBeschaffen Sie die Eingangsdaten selbst. Speichern Sie Quelle, Produktstand, Abrufdatum, CRS, Rasterweite und zeitlichen Bezug in einer kurzen Datentabelle.\nFühren Sie den gewählten Ablauf aus. Vergleichen Sie zwei ausdrücklich benannte Varianten und halten Sie die übrigen Einstellungen konstant. Speichern Sie Parameter und die zugehörigen Ergebnisse getrennt.\nGeben Sie Projekt, Skripte und eine README.md mit Ausführungsreihenfolge an eine andere Gruppe. Zugangsdaten bleiben außerhalb des Projekts. Die andere Gruppe startet R neu und führt den Ablauf mit lokalen Eingangsdaten erneut aus.\nProtokollieren Sie Ausführungsfehler und korrigieren Sie Pfade oder fehlende Schritte. Vergleichen Sie mindestens einen Tabellenwert und Rastergitter beziehungsweise Segmentzahl mit dem ursprünglichen Ergebnis.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 11"
+      "Worksheet 12"
     ]
   },
   {
-    "objectID": "pages/ws/ws-11.html#ergebnis",
-    "href": "pages/ws/ws-11.html#ergebnis",
-    "title": "Worksheet 11 · R und OTB verbinden",
+    "objectID": "pages/ws/ws-12.html#abgabe",
+    "href": "pages/ws/ws-12.html#abgabe",
+    "title": "Worksheet 12 · Einen Ansatz übertragen",
+    "section": "Abgabe",
+    "text": "Abgabe\nGeben Sie den erneut ausführbaren Projektordner, eine Vergleichstabelle, höchstens drei Karten und eine Seite Ergebnistext ab. Der Text enthält die abgegrenzte Frage, den zahlenmäßig belegten Variantenvergleich und die Grenze der räumlichen beziehungsweise zeitlichen Aussage. Die gewählte Datenbasis und die dokumentierten Parameter müssen zu den abgegebenen Karten und Tabellen passen.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 12"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-10.html",
+    "href": "pages/ws/ws-10.html",
+    "title": "Worksheet 10 · Veränderungen untersuchen",
+    "section": "",
+    "text": "Verwenden Sie die selbst abgerufenen Sentinel-Aufnahmen aus Worksheet 02 und den Flächenvergleich aus Worksheet 03. Die Hausaufgabe zu Datenabdeckung und Zeitreihe enthält Skripte für Pixelzählung, gemeinsame Datenabdeckung, Differenzkarte und beschreibende Trendprüfung. Führen Sie diese für die dokumentierte Auswahl aus, sofern die Ergebnisse noch nicht vorliegen.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 10"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-10.html#zeitliche-veränderungen-eingrenzen",
+    "href": "pages/ws/ws-10.html#zeitliche-veränderungen-eingrenzen",
+    "title": "Worksheet 10 · Veränderungen untersuchen",
+    "section": "",
+    "text": "Verwenden Sie die selbst abgerufenen Sentinel-Aufnahmen aus Worksheet 02 und den Flächenvergleich aus Worksheet 03. Die Hausaufgabe zu Datenabdeckung und Zeitreihe enthält Skripte für Pixelzählung, gemeinsame Datenabdeckung, Differenzkarte und beschreibende Trendprüfung. Führen Sie diese für die dokumentierte Auswahl aus, sofern die Ergebnisse noch nicht vorliegen.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 10"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-10.html#einen-veränderungskandidaten-prüfen",
+    "href": "pages/ws/ws-10.html#einen-veränderungskandidaten-prüfen",
+    "title": "Worksheet 10 · Veränderungen untersuchen",
+    "section": "Einen Veränderungskandidaten prüfen",
+    "text": "Einen Veränderungskandidaten prüfen\n\nWählen Sie in der Differenzkarte eine zusammenhängende Fläche mit auffälliger NDVI-Änderung. Speichern Sie das Polygon und das Datumspaar. Geben Sie die mittlere Änderung auf gemeinsamen gültigen Pixeln und deren Zellzahl an.\nPrüfen Sie dieselbe Fläche in RGB, SCL und NDVI an beiden Terminen. Dokumentieren Sie Wolken, Schatten, fehlende Daten und den Tag im Jahr. Verwerfen Sie Kandidaten, die bereits durch Bildstörungen erklärt werden.\nLaden Sie einen zusätzlichen, möglichst wolkenarmen Sommertag aus einem der beiden Vergleichsjahre. Die reguläre auswahl.csv bleibt bei genau einem Datum pro Jahr: Verwenden Sie dafür eine Projektkopie und ersetzen Sie dort die betreffende Jahreszeile durch den zusätzlichen Termin. Führen Sie Skript 02, 03 und die Auswertung erneut aus.\nVergleichen Sie die beiden Datumskombinationen auf exakt derselben Schnittmenge gültiger Pixel aller drei Beobachtungen. Berechnen Sie die Flächenmittel aus den Einzelrastern erneut auf dieser gemeinsamen Maske. Sonst könnten eine neue Bildauswahl und eine geänderte Bezugsfläche gleichzeitig wirken.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 10"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-10.html#ergebnis",
+    "href": "pages/ws/ws-10.html#ergebnis",
+    "title": "Worksheet 10 · Veränderungen untersuchen",
     "section": "Ergebnis",
-    "text": "Ergebnis\nSpeichern Sie Eingabedatei, Bandstatistiken, OTB-Ausdruck und die beiden Ausgaben. Vergleichen Sie CRS, Ausdehnung, Rasterweite, Bandzahl sowie den maximalen absoluten Wertunterschied pro Band. Die standardisierten Bänder sollen näherungsweise Mittelwert null und Standardabweichung eins haben. Kleine Unterschiede durch die Float-Ausgabe sind möglich; dokumentieren Sie die tatsächlich gemessene Abweichung.",
+    "text": "Ergebnis\nGeben Sie drei gleich skalierte Bildausschnitte mit Datum, eine Differenzkarte sowie eine Tabelle mit drei Flächenmitteln, Datenabdeckung und beiden Änderungswerten ab. Formulieren Sie anhand der Werte, ob das Signal mit der zusätzlichen Aufnahme bestehen bleibt. Beschreiben Sie eine mögliche Ursache getrennt vom beobachteten Signal und nennen Sie die dafür noch fehlende Information. Die Gerade aus fünf Sommerterminen ist eine beschreibende Zusammenfassung; sie ersetzt diese Bildprüfung nicht.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 11"
+      "Worksheet 10"
     ]
   },
   {
-    "objectID": "pages/ws/ws-09.html",
-    "href": "pages/ws/ws-09.html",
-    "title": "Worksheet 09 · Anwendungsbereich prüfen",
+    "objectID": "pages/ws/ws-08.html",
+    "href": "pages/ws/ws-08.html",
+    "title": "Worksheet 08 · Räumlich validieren",
     "section": "",
-    "text": "Verwenden Sie das räumlich geprüfte Random-Forest-Modell aus Worksheet 08, seine gespeicherten Faltungen und denselben Prädiktorstack. Der AOA-Abschnitt der EON-Vorlage verwendet CAST::aoa().\n\nErzeugen Sie die LAI-Vorhersage und die AOA mit genau den beim Training verwendeten Prädiktoren. Speichern Sie Vorhersage, Dissimilarity Index und binäre AOA.\nStellen Sie LAI und AOA gemeinsam dar. Berechnen Sie den Flächenanteil innerhalb der AOA bezogen auf Zellen mit vollständigen Eingabeprädiktoren. NoData wird nicht als außerhalb der AOA gezählt.\nEntfernen Sie genau einen benannten Prädiktor. Trainieren Sie erneut mit denselben räumlichen Faltungen und unveränderten übrigen Einstellungen. Falls mtry die verbleibende Prädiktorzahl überschreiten würde, wählen Sie vor beiden Trainings einen zulässigen gemeinsamen Wert.\nBerechnen Sie Vorhersage und AOA erneut. Vergleichen Sie räumlichen CV-RMSE, AOA-Flächenanteil und die neu hinzugekommenen beziehungsweise entfallenen AOA-Bereiche auf derselben vollständigen Zellmenge.",
+    "text": "Verwenden Sie die vollständigen LAI-/Prädiktorpaare aus Worksheet 07 und den Abschnitt The machine learning way der EON-Vorlage. Übernehmen Sie daraus die räumliche Faltung mit CAST::knndm(). Die Zahl der Faltungen beträgt in beiden Prüfungen drei.\nFür diesen Vergleich wird keine Variablenauswahl ausgeführt: Ersetzen Sie die ffs()-Modellierung der Vorlage durch caret::train(..., method = \"rf\"). Legen Sie die Prädiktornamen ausdrücklich fest; ID, Koordinatenkennungen und LAI dürfen nicht versehentlich in den Prädiktorsatz gelangen.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 09"
+      "Worksheet 08"
     ]
   },
   {
-    "objectID": "pages/ws/ws-09.html#aoa-zum-räumlich-geprüften-modell-berechnen",
-    "href": "pages/ws/ws-09.html#aoa-zum-räumlich-geprüften-modell-berechnen",
-    "title": "Worksheet 09 · Anwendungsbereich prüfen",
+    "objectID": "pages/ws/ws-08.html#vergleich-vorbereiten",
+    "href": "pages/ws/ws-08.html#vergleich-vorbereiten",
+    "title": "Worksheet 08 · Räumlich validieren",
     "section": "",
-    "text": "Verwenden Sie das räumlich geprüfte Random-Forest-Modell aus Worksheet 08, seine gespeicherten Faltungen und denselben Prädiktorstack. Der AOA-Abschnitt der EON-Vorlage verwendet CAST::aoa().\n\nErzeugen Sie die LAI-Vorhersage und die AOA mit genau den beim Training verwendeten Prädiktoren. Speichern Sie Vorhersage, Dissimilarity Index und binäre AOA.\nStellen Sie LAI und AOA gemeinsam dar. Berechnen Sie den Flächenanteil innerhalb der AOA bezogen auf Zellen mit vollständigen Eingabeprädiktoren. NoData wird nicht als außerhalb der AOA gezählt.\nEntfernen Sie genau einen benannten Prädiktor. Trainieren Sie erneut mit denselben räumlichen Faltungen und unveränderten übrigen Einstellungen. Falls mtry die verbleibende Prädiktorzahl überschreiten würde, wählen Sie vor beiden Trainings einen zulässigen gemeinsamen Wert.\nBerechnen Sie Vorhersage und AOA erneut. Vergleichen Sie räumlichen CV-RMSE, AOA-Flächenanteil und die neu hinzugekommenen beziehungsweise entfallenen AOA-Bereiche auf derselben vollständigen Zellmenge.",
+    "text": "Verwenden Sie die vollständigen LAI-/Prädiktorpaare aus Worksheet 07 und den Abschnitt The machine learning way der EON-Vorlage. Übernehmen Sie daraus die räumliche Faltung mit CAST::knndm(). Die Zahl der Faltungen beträgt in beiden Prüfungen drei.\nFür diesen Vergleich wird keine Variablenauswahl ausgeführt: Ersetzen Sie die ffs()-Modellierung der Vorlage durch caret::train(..., method = \"rf\"). Legen Sie die Prädiktornamen ausdrücklich fest; ID, Koordinatenkennungen und LAI dürfen nicht versehentlich in den Prädiktorsatz gelangen.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 09"
+      "Worksheet 08"
     ]
   },
   {
-    "objectID": "pages/ws/ws-09.html#ergebnis",
-    "href": "pages/ws/ws-09.html#ergebnis",
-    "title": "Worksheet 09 · Anwendungsbereich prüfen",
+    "objectID": "pages/ws/ws-08.html#zwei-prüfungen-ausführen",
+    "href": "pages/ws/ws-08.html#zwei-prüfungen-ausführen",
+    "title": "Worksheet 08 · Räumlich validieren",
+    "section": "Zwei Prüfungen ausführen",
+    "text": "Zwei Prüfungen ausführen\n\nErzeugen Sie mit set.seed(42) drei zufällige Faltungen, beispielsweise mit caret::createFolds(), und die drei räumlichen Faltungen mit CAST::knndm(). Speichern Sie die jeweiligen Trainings- und Testindizes und stellen Sie die Testzuordnung an den Referenzorten dar.\nTrainieren Sie mit beiden Faltungssätzen denselben Random Forest: gleiche Prädiktoren, ntree = 500, genau ein festes mtry und dieselben sonstigen Einstellungen. Verwenden Sie trainControl(index = ..., indexOut = ..., savePredictions = \"final\", method = \"cv\") und ein einzeiliges tuneGrid. Setzen Sie den Zufallsstart vor jedem Training erneut.\nBerechnen Sie aus den zurückgehaltenen Vorhersagen RMSE, MAE und mittleren Fehler als mean(pred - obs). Jede Referenz soll pro Prüfverfahren genau einmal getestet werden. Berechnen Sie zusätzlich Kennwerte pro Faltung.\nVergleichen Sie die Trainings-Test-Abstände anhand von CAST::geodist() und stellen Sie die räumliche Prüfsituation den Abständen zwischen Trainingspunkten und Vorhersagegebiet gegenüber.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 08"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-08.html#ergebnis",
+    "href": "pages/ws/ws-08.html#ergebnis",
+    "title": "Worksheet 08 · Räumlich validieren",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie eine Tabelle für beide Prädiktorsätze und eine Karte der AOA-Änderung ab. Prüfen Sie einen neu ausgeschlossenen Bereich anhand seiner Prädiktorwerte und der Wertebereiche im Training. Ein größerer AOA-Anteil bedeutet nicht automatisch ein genaueres Modell. Die AOA beschreibt die Abdeckung im verwendeten Prädiktorraum; sie weist weder die korrekte LAI-Messung noch die zeitliche Übertragbarkeit nach.",
+    "text": "Ergebnis\nGeben Sie Faltungskarten, die Tabelle der zurückgehaltenen Vorhersagen und einen Kennwertvergleich ab. Geben Sie an, für welche räumliche Entfernungssituation die jeweiligen Fehler stehen. Nennen Sie die zahlenmäßige Fehlerdifferenz; ein größerer räumlicher Fehler wird nicht vorausgesetzt. Bewahren Sie das räumlich geprüfte Modell mit seinen Faltungen für Worksheet 09 auf.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 09"
+      "Worksheet 08"
     ]
   },
   {
-    "objectID": "pages/ws/ws-07.html",
-    "href": "pages/ws/ws-07.html",
-    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
+    "objectID": "pages/ws/ws-06.html",
+    "href": "pages/ws/ws-06.html",
+    "title": "Worksheet 06 · Regionalisierungen beurteilen",
     "section": "",
-    "text": "Laden Sie den Datenordner der EON2026-Materialien zu Machine Learning und verwenden Sie aus ML_AOA.qmd den Abschnitt Case Study 2: Modelling the Leaf Area Index. Benötigt werden trainingsites_LAI.gpkg sowie sentinel_uniwald.grd einschließlich der zugehörigen Rasterdatendatei. Übernehmen Sie die Eingangsdaten in Ihr Projekt. Das Beispiel liegt im Marburger Universitätswald.\nLesen Sie die LAI-Referenzen mit sf, den Prädiktorstack mit terra. Prüfen Sie CRS, räumliche Überdeckung, Zahl der Referenzen und verfügbare Prädiktorbänder. Halten Sie Mess- und Aufnahmezeitpunkt sowie die Messmethode fest, soweit sie im Quelldatensatz dokumentiert sind. Fehlende Angaben werden als fehlend ausgewiesen.",
+    "text": "Verwenden Sie die Ergebnisse aus Worksheet 05. Laden Sie 09_klima_pruefen.R nach scripts/ und führen Sie es aus. Es berechnet eine zusätzliche Segmentierung auf einem 2-km-Gitter und bewertet alle vier Grenzvarianten auf denselben vollständigen 1-km-Klimazellen.\nDie Ergebnisse stehen unter output/klima/pruefung/:\n\n\n\n\n\n\n\nDatei\nInhalt\n\n\n\n\nsegment_monate.csv\nSegment-ID, Monat, Zellzahl, Temperaturmittel, Stichprobenstandardabweichung und Populationsvarianz.\n\n\nvariantenvergleich.csv\nSegmentzahl und nach Zellzahl gewichtete innere Varianz, gemittelt über zwölf Monate.\n\n\nnachbarschaft.csv\nBenachbarte Segmentpaare und mittlere absolute Differenz ihrer zwölf Monatsmittel. Reine Eckkontakte zählen nicht.\n\n\n*_ids.tif\nSegmentzuordnung auf dem gemeinsamen 1-km-Gitter.\n\n\nk50_c1_2km.gpkg\nSegmentierung aus den gröberen Eingangsdaten.\n\n\n*_jahresgaenge.png\nJahresgänge einer automatisch gewählten Gruppe aus drei benachbarten Segmenten; die IDs stehen in der Legende.\n\n\n\nDie Standardabweichung ist bei einem einzelnen Pixel nicht bestimmbar. Seine Populationsvarianz beträgt null. Alle Bewertungszellen haben dieselbe Fläche. Mehr Segmente können die innere Streuung schon durch kleinere Flächen verringern; vergleichen Sie die Streuung deshalb stets zusammen mit der Segmentzahl.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 07"
+      "Worksheet 06"
     ]
   },
   {
-    "objectID": "pages/ws/ws-07.html#daten-übernehmen",
-    "href": "pages/ws/ws-07.html#daten-übernehmen",
-    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
+    "objectID": "pages/ws/ws-06.html#segmentierungen-prüfen",
+    "href": "pages/ws/ws-06.html#segmentierungen-prüfen",
+    "title": "Worksheet 06 · Regionalisierungen beurteilen",
     "section": "",
-    "text": "Laden Sie den Datenordner der EON2026-Materialien zu Machine Learning und verwenden Sie aus ML_AOA.qmd den Abschnitt Case Study 2: Modelling the Leaf Area Index. Benötigt werden trainingsites_LAI.gpkg sowie sentinel_uniwald.grd einschließlich der zugehörigen Rasterdatendatei. Übernehmen Sie die Eingangsdaten in Ihr Projekt. Das Beispiel liegt im Marburger Universitätswald.\nLesen Sie die LAI-Referenzen mit sf, den Prädiktorstack mit terra. Prüfen Sie CRS, räumliche Überdeckung, Zahl der Referenzen und verfügbare Prädiktorbänder. Halten Sie Mess- und Aufnahmezeitpunkt sowie die Messmethode fest, soweit sie im Quelldatensatz dokumentiert sind. Fehlende Angaben werden als fehlend ausgewiesen.",
+    "text": "Verwenden Sie die Ergebnisse aus Worksheet 05. Laden Sie 09_klima_pruefen.R nach scripts/ und führen Sie es aus. Es berechnet eine zusätzliche Segmentierung auf einem 2-km-Gitter und bewertet alle vier Grenzvarianten auf denselben vollständigen 1-km-Klimazellen.\nDie Ergebnisse stehen unter output/klima/pruefung/:\n\n\n\n\n\n\n\nDatei\nInhalt\n\n\n\n\nsegment_monate.csv\nSegment-ID, Monat, Zellzahl, Temperaturmittel, Stichprobenstandardabweichung und Populationsvarianz.\n\n\nvariantenvergleich.csv\nSegmentzahl und nach Zellzahl gewichtete innere Varianz, gemittelt über zwölf Monate.\n\n\nnachbarschaft.csv\nBenachbarte Segmentpaare und mittlere absolute Differenz ihrer zwölf Monatsmittel. Reine Eckkontakte zählen nicht.\n\n\n*_ids.tif\nSegmentzuordnung auf dem gemeinsamen 1-km-Gitter.\n\n\nk50_c1_2km.gpkg\nSegmentierung aus den gröberen Eingangsdaten.\n\n\n*_jahresgaenge.png\nJahresgänge einer automatisch gewählten Gruppe aus drei benachbarten Segmenten; die IDs stehen in der Legende.\n\n\n\nDie Standardabweichung ist bei einem einzelnen Pixel nicht bestimmbar. Seine Populationsvarianz beträgt null. Alle Bewertungszellen haben dieselbe Fläche. Mehr Segmente können die innere Streuung schon durch kleinere Flächen verringern; vergleichen Sie die Streuung deshalb stets zusammen mit der Segmentzahl.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 07"
+      "Worksheet 06"
     ]
   },
   {
-    "objectID": "pages/ws/ws-07.html#lineares-modell-ausführen",
-    "href": "pages/ws/ws-07.html#lineares-modell-ausführen",
-    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
-    "section": "Lineares Modell ausführen",
-    "text": "Lineares Modell ausführen\n\nTransformieren Sie die Referenzgeometrien in das Raster-CRS. Extrahieren Sie die Prädiktoren an den Referenzen. Die ID-Spalte aus terra::extract() dient der Zuordnung zur Referenz; sie ist kein Prädiktor.\nSchließen Sie unvollständige NDVI-/LAI-Paare aus und protokollieren Sie deren Anzahl. Berechnen Sie lm(LAI ~ NDVI, data = trainDat) und erzeugen Sie die flächenhafte Schätzung mit dem Modellobjekt. Übernehmen Sie keine fest eingetragenen Regressionskoeffizienten aus der Vorlage.\nSpeichern Sie die beobachteten und angepassten LAI-Werte sowie die Residuen. Zeichnen Sie Residuen gegen angepasste Werte und stellen Sie ihre Vorzeichen an den Referenzorten kartografisch dar.\nMarkieren Sie Zellen, deren NDVI außerhalb des Trainingsbereichs liegt, und prüfen Sie die Karte auf negative LAI-Schätzungen.",
+    "objectID": "pages/ws/ws-06.html#drei-vergleiche",
+    "href": "pages/ws/ws-06.html#drei-vergleiche",
+    "title": "Worksheet 06 · Regionalisierungen beurteilen",
+    "section": "Drei Vergleiche",
+    "text": "Drei Vergleiche\n\nVergleichen Sie die drei Parameterstände aus Worksheet 05 anhand von Segmentzahl und innerer Varianz. Geben Sie die gemessenen Unterschiede an.\nPrüfen Sie die dargestellten Jahresgänge und die zugehörigen Einträge in nachbarschaft.csv. Markieren Sie eine Grenze mit deutlichem und eine mit geringem Unterschied zwischen den benachbarten Jahresgängen.\nVergleichen Sie k50_c1 mit k50_c1_2km. Die gröberen Eingangsdaten entstehen durch Mittelung von jeweils 2 × 2 Zellen; Segmentzahlvorgabe und Kompaktheit bleiben gleich. Legen Sie die Grenzen in QGIS übereinander und markieren Sie eine stabile und eine verschobene Grenze.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 07"
+      "Worksheet 06"
     ]
   },
   {
-    "objectID": "pages/ws/ws-07.html#ergebnis",
-    "href": "pages/ws/ws-07.html#ergebnis",
-    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
+    "objectID": "pages/ws/ws-06.html#ergebnis",
+    "href": "pages/ws/ws-06.html#ergebnis",
+    "title": "Worksheet 06 · Regionalisierungen beurteilen",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie eine Datenübersicht, die Regressionsgleichung, ein Streudiagramm und eine LAI-Karte mit Referenzpunkten ab. Nennen Sie Zahl und Wertebereich der verwendeten Referenzen sowie erkennbare Residuenmuster. Der Fehler an den zum Fit verwendeten Punkten ist ein Anpassungsfehler; die Prüfung an ausgelassenen Referenzen folgt in Worksheet 08.",
+    "text": "Ergebnis\nGeben Sie die Vergleichstabelle, Jahresgangkurven und eine Grenzvergleichskarte ab. Wählen Sie anhand der Werte eine Regionalisierung für Ihren Ausschnitt. Sie beschreibt Temperaturklimanormalwerte; Niederschlag, Extremereignisse und aktuelle Klimaveränderungen wurden nicht untersucht.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 07"
+      "Worksheet 06"
     ]
   },
   {
-    "objectID": "pages/ws/ws-05.html",
-    "href": "pages/ws/ws-05.html",
-    "title": "Worksheet 05 · Klimadaten segmentieren",
+    "objectID": "pages/ws/ws-04.html",
+    "href": "pages/ws/ws-04.html",
+    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
     "section": "",
-    "text": "Verwenden Sie zwölf monatliche Temperaturmittel aus WorldClim 2.1. Diese beschreiben Klimanormalwerte für 1970–2000, keine zwölf Beobachtungen eines einzelnen Jahres. Laden Sie die Deutschlanddaten mit geodata::worldclim_country(country = \"DEU\", var = \"tavg\", path = \"data\"). Prüfen Sie Einheiten und Skalierung anhand der Produktangaben und der Metadaten; halten Sie das Abrufdatum fest.\nSchneiden Sie in QGIS oder R einen zusammenhängenden Ausschnitt in Hessen oder Nordrhein-Westfalen mit ungefähr 100 km Kantenlänge aus. Projizieren Sie die zwölf Bänder gemeinsam auf ein metrisches Gitter mit 1 km Rasterweite, bilinearer Interpolation und identischer Ausdehnung. Speichern Sie data/temperatur_monate.tif; die Bandreihenfolge muss Januar bis Dezember sein. Die Reprojektion erzeugt keine zusätzliche Klimainformation.",
+    "text": "Installation: 00_install_packages.R.\nVerwenden Sie einen kategorischen Landbedeckungsausschnitt aus Hessen oder Nordrhein-Westfalen, etwa CORINE Land Cover 2018. Schneiden Sie in QGIS einen Ausschnitt mit mindestens 8 km Kantenlänge zu. Speichern Sie ihn in einem metrischen CRS als data/landbedeckung.tif. Klassenwerte bleiben ganzzahlig; verwenden Sie beim Umprojizieren den nächsten Nachbarn. Prüfen Sie den NoData-Wert anhand der Produktlegende. Halten Sie Produkt, Bezugsjahr, Rasterweite und Klassensystem fest.\nÖffnen Sie scripts/00_install_packages.R, setzen Sie block &lt;- 2 und installieren Sie die zusätzlichen Pakete. Laden Sie 07_landschaftsmuster.R nach scripts/ und führen Sie es aus.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 05"
+      "Worksheet 04"
     ]
   },
   {
-    "objectID": "pages/ws/ws-05.html#klimadaten-beschaffen",
-    "href": "pages/ws/ws-05.html#klimadaten-beschaffen",
-    "title": "Worksheet 05 · Klimadaten segmentieren",
+    "objectID": "pages/ws/ws-04.html#daten-vorbereiten",
+    "href": "pages/ws/ws-04.html#daten-vorbereiten",
+    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
     "section": "",
-    "text": "Verwenden Sie zwölf monatliche Temperaturmittel aus WorldClim 2.1. Diese beschreiben Klimanormalwerte für 1970–2000, keine zwölf Beobachtungen eines einzelnen Jahres. Laden Sie die Deutschlanddaten mit geodata::worldclim_country(country = \"DEU\", var = \"tavg\", path = \"data\"). Prüfen Sie Einheiten und Skalierung anhand der Produktangaben und der Metadaten; halten Sie das Abrufdatum fest.\nSchneiden Sie in QGIS oder R einen zusammenhängenden Ausschnitt in Hessen oder Nordrhein-Westfalen mit ungefähr 100 km Kantenlänge aus. Projizieren Sie die zwölf Bänder gemeinsam auf ein metrisches Gitter mit 1 km Rasterweite, bilinearer Interpolation und identischer Ausdehnung. Speichern Sie data/temperatur_monate.tif; die Bandreihenfolge muss Januar bis Dezember sein. Die Reprojektion erzeugt keine zusätzliche Klimainformation.",
+    "text": "Installation: 00_install_packages.R.\nVerwenden Sie einen kategorischen Landbedeckungsausschnitt aus Hessen oder Nordrhein-Westfalen, etwa CORINE Land Cover 2018. Schneiden Sie in QGIS einen Ausschnitt mit mindestens 8 km Kantenlänge zu. Speichern Sie ihn in einem metrischen CRS als data/landbedeckung.tif. Klassenwerte bleiben ganzzahlig; verwenden Sie beim Umprojizieren den nächsten Nachbarn. Prüfen Sie den NoData-Wert anhand der Produktlegende. Halten Sie Produkt, Bezugsjahr, Rasterweite und Klassensystem fest.\nÖffnen Sie scripts/00_install_packages.R, setzen Sie block &lt;- 2 und installieren Sie die zusätzlichen Pakete. Laden Sie 07_landschaftsmuster.R nach scripts/ und führen Sie es aus.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 05"
+      "Worksheet 04"
     ]
   },
   {
-    "objectID": "pages/ws/ws-05.html#drei-segmentierungen-berechnen",
-    "href": "pages/ws/ws-05.html#drei-segmentierungen-berechnen",
-    "title": "Worksheet 05 · Klimadaten segmentieren",
-    "section": "Drei Segmentierungen berechnen",
-    "text": "Drei Segmentierungen berechnen\nlibrary(terra)\nlibrary(supercells)\nlibrary(sf)\nx &lt;- rast(\"data/temperatur_monate.tif\")\nstopifnot(nlyr(x) == 12, !is.lonlat(x))\na &lt;- supercells(x, k = 50, compactness = 1)\nb &lt;- supercells(x, k = 100, compactness = 1)\nc &lt;- supercells(x, k = 50, compactness = 5)\ndir.create(\"output/klima\", recursive = TRUE, showWarnings = FALSE)\nst_write(a, \"output/klima/k50_c1.gpkg\", delete_dsn = TRUE)\nst_write(b, \"output/klima/k100_c1.gpkg\", delete_dsn = TRUE)\nst_write(c, \"output/klima/k50_c5.gpkg\", delete_dsn = TRUE)\nAlle Varianten verwenden dieselben zwölf unstandardisierten Temperaturbänder und dieselbe Distanzfunktion. k ist die angestrebte Segmentzahl; zählen Sie auch die tatsächlich erzeugten Segmente. Kompaktheitswerte sind von der Skalierung der Eingabewerte abhängig. Ändern Sie zwischen den Varianten keine weiteren Einstellungen.",
+    "objectID": "pages/ws/ws-04.html#zusammensetzung-und-anordnung-vergleichen",
+    "href": "pages/ws/ws-04.html#zusammensetzung-und-anordnung-vergleichen",
+    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
+    "section": "Zusammensetzung und Anordnung vergleichen",
+    "text": "Zusammensetzung und Anordnung vergleichen\nDas Skript erzeugt unter output/muster/ das Original und eine zufällig umgeordnete Variante. Dabei bleiben Gitter, NoData und Klassenhäufigkeiten gleich. Zusätzlich werden um denselben Mittelpunkt Fenster mit 2, 4 und 8 km Kantenlänge ausgeschnitten. Die tatsächlich verwendeten Maße stehen in kennwerte.csv; Fenster werden nach innen auf das Zellgitter gerundet.\nDie Tabelle enthält SHDI, Aggregation Index, zellbasierte Shannon-Entropie in Bits, marginale Entropie aus Nachbarschaftspaaren und relative gegenseitige Information. Für Nachbarschaften werden vier Richtungen verwendet. SHDI nutzt den natürlichen Logarithmus; die zellbasierte Entropie in Bits entspricht SHDI / log(2).\nlsm_l_ent() bestimmt Randhäufigkeiten aus Zellpaaren. An Gebietsrändern und NoData-Lücken werden Zellen deshalb anders gewichtet als bei einer einfachen Zählung aller Zellen. Gleiche Klassenanteile garantieren hier keine exakt gleiche marginale Entropie. Bei nur einer Klasse kann die normierte gegenseitige Information undefiniert sein; kennzeichnen Sie solche Werte als nicht auswertbar.\n\nPrüfen Sie in klassenanteile.csv, dass Original und Umordnung dieselben Klassenhäufigkeiten haben. SHDI und zellbasierte Entropie müssen übereinstimmen.\nVergleichen Sie AI, marginale Entropie und relative gegenseitige Information. Stellen Sie Original und Umordnung in QGIS mit derselben Klassenlegende dar.\nVergleichen Sie die drei Fenster anhand der Klassenanteile und Maßwerte. Die Umordnung verändert nur die Anordnung; ein anderer Ausschnitt kann zusätzlich die Zusammensetzung verändern.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 05"
+      "Worksheet 04"
     ]
   },
   {
-    "objectID": "pages/ws/ws-05.html#ergebnis",
-    "href": "pages/ws/ws-05.html#ergebnis",
-    "title": "Worksheet 05 · Klimadaten segmentieren",
+    "objectID": "pages/ws/ws-04.html#ergebnis-und-anschluss",
+    "href": "pages/ws/ws-04.html#ergebnis-und-anschluss",
+    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
+    "section": "Ergebnis und Anschluss",
+    "text": "Ergebnis und Anschluss\nGeben Sie die beiden Karten und die Kennwerttabelle ab. Belegen Sie die Wirkung der Umordnung und der Fenstergröße jeweils mit einem Zahlenpaar. In Worksheet 05 wechseln Sie von vorgegebenen Landbedeckungsklassen zu kontinuierlichen Temperaturdaten und bilden daraus räumliche Regionen.\nMethoden: SHDI, AI, marginale Entropie, relative gegenseitige Information.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 04"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html",
+    "href": "pages/ws/ws-02.html",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "",
+    "text": "Wie unterscheidet sich das sommerliche Vegetationssignal im gewählten Burgwald-Ausschnitt zwischen 2018 und 2022?\nSie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.\nAus Worksheet 01 kennen Sie Projektordner, relative Pfade und blockweises Ausführen. Das optionale Mikroklima-Warmup bietet zusätzliche Übung mit Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.\nAm Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus einer ausgewählten Sommerbeobachtung pro Jahr. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#auftrag",
+    "href": "pages/ws/ws-02.html#auftrag",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "",
+    "text": "Wie unterscheidet sich das sommerliche Vegetationssignal im gewählten Burgwald-Ausschnitt zwischen 2018 und 2022?\nSie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.\nAus Worksheet 01 kennen Sie Projektordner, relative Pfade und blockweises Ausführen. Das optionale Mikroklima-Warmup bietet zusätzliche Übung mit Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.\nAm Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus einer ausgewählten Sommerbeobachtung pro Jahr. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#material-und-vorbereitung",
+    "href": "pages/ws/ws-02.html#material-und-vorbereitung",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "Material und Vorbereitung",
+    "text": "Material und Vorbereitung\nInstallation: 00_install_packages.R.\nDie technische Grundlage ist der CDSE-Abruf aus dem aktuellen Kursrepository. Die Lehrfassung übernimmt STAC-Suche und CDSE-Abruf, verwendet Ihr eigenes Gebiet und berechnet den NDVI anschließend lokal. Der große Projekt-Setup des Repositories wird dafür nicht benötigt.\nLaden Sie beide Skripte in den Ordner scripts/ Ihres bestehenden RStudio-Projekts:\n\n02_sentinel_abruf.R\n03_ndvi_reihe.R\n\nBenötigt werden QGIS, RStudio und die R-Pakete sf, terra, rstac, dplyr und CDSE. Installieren Sie fehlende Pakete vor der Sitzung über die Konsole:\ninstall.packages(c(\"sf\", \"terra\", \"rstac\", \"dplyr\", \"CDSE\"))\nFür den Rasterabruf richten Sie einmalig Ihren persönlichen CDSE-Zugang und die Anmeldung des R-Skripts ein. Die einzelnen Schritte stehen im folgenden Exkurs.\n\n\n\n\n\n\nNoteExkurs · CDSE-Konto, OAuth-Client und Zugang in R einrichten\n\n\n\n\n\n\nZugangsdaten\nIhr CDSE-Konto dient zur Anmeldung im Browser. Ein OAuth-Client ermöglicht dem Skript den Zugriff: Er besitzt eine Client-ID und ein Client-Secret. Diese sind nicht Ihre E-Mail-Adresse und Ihr Kontopasswort. Aus den beiden Werten kann das R-Paket einen zeitlich begrenzten Zugriffstoken beziehen.\n\n\n1. Konto anlegen und anmelden\nÖffnen Sie Copernicus Data Space, registrieren Sie sich und schließen Sie die Bestätigung Ihrer E-Mail-Adresse ab. Falls Sie bereits ein Konto besitzen, verwenden Sie dieses. Öffnen Sie anschließend das Sentinel-Hub-Dashboard für CDSE und melden Sie sich mit diesem Konto an.\n\n\n2. OAuth-Client erstellen\n\nÖffnen Sie im Dashboard User Settings.\nSuchen Sie den Bereich OAuth clients und klicken Sie auf Create.\nVergeben Sie einen Namen, beispielsweise GI-Kurs-Sentinel.\nWählen Sie ein Ablaufdatum nach dem vorgesehenen Kursende.\nLassen Sie die Option für eine Single-page application (SPA) ausgeschaltet: Wir verwenden ein lokales R-Skript.\nBestätigen Sie mit Create.\nKopieren Sie Client ID und Client Secret direkt in die im nächsten Schritt beschriebene Datei. Das Secret ist nach dem Schließen des Dialogs nicht erneut abrufbar. Falls es verloren geht, erstellen Sie einen neuen Client.\n\n\n\n3. Werte in R hinterlegen\nÖffnen Sie in der RStudio-Konsole Ihre persönliche Umgebungsdatei:\nfile.edit(path.expand(\"~/.Renviron\"))\nErgänzen Sie die folgenden beiden Zeilen. Ersetzen Sie die Platzhalter durch die kopierten Werte; vorhandene andere Einträge bleiben erhalten.\nCDSE_ID=Ihre_Client_ID\nCDSE_SECRET=Ihr_Client_Secret\nDiese Zeilen gehören in die Datei, nicht in die R-Konsole. Speichern Sie die Datei als .Renviron, ohne zusätzliche Endung .txt. Fügen Sie nach der letzten Zeile einen Zeilenumbruch ein. Starten Sie R anschließend über Session → Restart R neu.\n\n\n4. Prüfen, ob R die Werte eingelesen hat\nnzchar(Sys.getenv(\"CDSE_ID\"))\nnzchar(Sys.getenv(\"CDSE_SECRET\"))\nBeide Ausgaben müssen TRUE lauten. Damit ist zunächst nur geprüft, ob Werte vorhanden sind. Ihre Gültigkeit wird beim authentifizierten Zugriff geprüft.\nFalls FALSE erscheint, kontrollieren Sie Dateiname, Schreibweise der Variablen und Speicherung. Sie können die persönliche Datei auch ausdrücklich einlesen und die Prüfung wiederholen:\nreadRenviron(path.expand(\"~/.Renviron\"))\n\n\n5. Verbindung im Abrufskript verwenden\nDer folgende Abschnitt ist bereits in 02_sentinel_abruf.R enthalten:\nclient &lt;- CDSE::GetOAuthClient(\n  id = Sys.getenv(\"CDSE_ID\"),\n  secret = Sys.getenv(\"CDSE_SECRET\")\n)\nDas Objekt client wird anschließend an CDSE::GetImage() übergeben. Führen Sie zunächst den vorgesehenen Einzelabruf aus. Bei einer Meldung wie invalid_client prüfen Sie, ob ID und Secret zum selben aktiven Client gehören und vollständig kopiert wurden.\nVertraulich behandeln: Geben Sie Secret, Zugriffstoken und persönliche .Renviron nicht weiter. Sie gehören nicht in das Projektarchiv, ein Git-Repository, Screenshots oder KI-Prompts.\nDie Menüfolge und die Hinweise zum Secret sind in der offiziellen CDSE-Anleitung zur OAuth-Registrierung beschrieben.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#eine-eigene-untersuchungsfläche-festlegen",
+    "href": "pages/ws/ws-02.html#eine-eigene-untersuchungsfläche-festlegen",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "1 · Eine eigene Untersuchungsfläche festlegen",
+    "text": "1 · Eine eigene Untersuchungsfläche festlegen\nÖffnen Sie die Burgwald-Gebietsgrenze aus Worksheet 01 in QGIS. Wählen Sie anhand einer Hintergrundkarte einen kleinen Ausschnitt mit Wald und angrenzendem Offenland. In Worksheet 03 vergleichen Sie darin eine Wald-, eine Offenland- und eine auffällige Teilfläche. Ein Gebiet mit ungefähr 1–2 km Kantenlänge reicht; die maximale Kantenlänge dieser Übung beträgt 5 km.\n\n\n\n\n\n\nNoteLegen Sie einen neuen GeoPackage-Layer an:\n\n\n\n\n\nErstellen Sie die Untersuchungsfläche in QGIS:\n\nÖffnen Sie Layer → Layer erstellen → Neuer GeoPackage-Layer.\nWählen Sie als Datei data/aoi.gpkg in Ihrem RStudio-Projekt, als Tabellennamen aoi, als Geometrietyp Polygon und als Koordinatensystem EPSG:32632 – WGS 84 / UTM zone 32N.\nBestätigen Sie mit OK und markieren Sie den neuen Layer.\nAktivieren Sie den Bearbeitungsmodus über das Stiftsymbol. Wählen Sie Polygonobjekt hinzufügen.\nSetzen Sie mit Linksklicks die Eckpunkte Ihrer Untersuchungsfläche. Ein Rechtsklick schließt die Erfassung ab; bestätigen Sie den Attributdialog mit OK.\nSpeichern Sie die Layeränderungen und beenden Sie den Bearbeitungsmodus.\n\nZeichnen Sie genau ein Polygon. Diese Fläche wird für alle Aufnahmetermine verwendet.\n\n\n\n\nDatei: data/aoi.gpkg im RStudio-Projekt;\nGeometrietyp: Polygon;\nKoordinatensystem: EPSG:32632;\ngenau ein Polygon als Untersuchungsfläche.\n\nZeichnen Sie das Polygon, speichern Sie die Bearbeitung und beenden Sie den Bearbeitungsmodus. Verwenden Sie über die gesamte Reihe dieselbe Fläche.\nDokumentation: Halten Sie in README.md Lage, Größe und erkennbare Landbedeckung der gewählten Fläche fest.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#aufnahmen-suchen-und-eine-auswahl-treffen",
+    "href": "pages/ws/ws-02.html#aufnahmen-suchen-und-eine-auswahl-treffen",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "2 · Aufnahmen suchen und eine Auswahl treffen",
+    "text": "2 · Aufnahmen suchen und eine Auswahl treffen\nÖffnen Sie 02_sentinel_abruf.R. Ergänzen Sie den Skriptkopf. Führen Sie zunächst nur die Abschnitte 1–3 aus.\nDie Einstellungen lauten:\njahre &lt;- 2018:2022\nmonate &lt;- 6:8\nanzahl_abrufe &lt;- 1\nDie Suche liefert Metadaten der Sentinel-2-L2A-Aufnahmen, die Ihr Gebiet schneiden. Sie erzeugt:\n\n\n\n\n\n\n\nDatei\nBedeutung\n\n\n\n\ndata/stac_treffer.rds\nGespeicherte Antwort des Katalogs.\n\n\noutput/aufnahmekandidaten.csv\nVerfügbare Sommertage mit Szenenzahl und mittlerer Szenenbewölkung.\n\n\ndata/auswahl.csv\nIhr Arbeitsstand: ein ausgewählter Aufnahmetag je Jahr.\n\n\n\nDer erste Vorschlag wählt pro Jahr den Tag mit der geringsten mittleren Szenenbewölkung. Diese Prozentangabe bezieht sich auf die gefundenen Szenen, nicht auf Ihre kleine Untersuchungsfläche. Ein solcher Tag kann über Ihrem Gebiet trotzdem bewölkt sein.\nVergleichen Sie die fünf vorgeschlagenen Aufnahmetage nach ihrer Lage innerhalb des Sommers. Sehen Sie die Aufnahmen bei Bedarf im Copernicus Browser an. Wenn Sie einen anderen Tag auswählen, übernehmen Sie die vollständige zugehörige Zeile aus der Kandidatentabelle in data/auswahl.csv.\nDie Auswahl-Datei wird beim erneuten Ausführen nicht überschrieben. Für eine neue Suche mit geändertem Gebiet oder Zeitraum archivieren Sie die alte Auswahl und lassen eine neue erzeugen.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#einen-abruf-prüfen-dann-die-reihe-laden",
+    "href": "pages/ws/ws-02.html#einen-abruf-prüfen-dann-die-reihe-laden",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "3 · Einen Abruf prüfen, dann die Reihe laden",
+    "text": "3 · Einen Abruf prüfen, dann die Reihe laden\nFühren Sie im Abrufskript die Abschnitte 4–6 aus. Mit anzahl_abrufe &lt;- 1 wird zunächst nur der erste ausgewählte Tag geladen.\nÖffnen Sie die erzeugte TIFF-Datei aus data/sentinel/ in QGIS. Die Bänder sind fest angeordnet:\n\n\n\n\n\n\n\n\nBand\nInhalt\nVerwendung\n\n\n\n\n1–3\nB02, B03, B04\nBlau, Grün, Rot; Echtfarbdarstellung mit Rot = Band 3, Grün = Band 2, Blau = Band 1.\n\n\n4\nB08\nNahes Infrarot; zusammen mit B04 für NDVI.\n\n\n5\nSCL\nSzenenklassifikation zur Qualitätsmaskierung.\n\n\n6\ndataMask\nKennzeichnet verfügbare Bilddaten.\n\n\n\nKontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und Schatten. Alle Termine liegen auf demselben 10-m-UTM-Gitter. Reflexionen werden bilinear, SCL und dataMask mit dem nächsten Nachbarn übertragen. Die SCL besitzt dadurch keine zusätzliche ursprüngliche Detailinformation. Für die AOI-Auswertung zählen Zellen, deren Mittelpunkt innerhalb des Polygons liegt.\nWenn der erste Abruf stimmt, setzen Sie anzahl_abrufe &lt;- Inf und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden nur bei passender AOI und passenden Abrufeinstellungen übersprungen. Zu jedem TIFF wird ein Abrufmanifest .tif.rds gespeichert. Ältere TIFFs ohne Manifest oder mit geänderten Einstellungen archivieren Sie zusammen mit dem bisherigen Ordner data/sentinel/ und laden die ausgewählten Tage erneut. Kontrollieren Sie auch die übrigen Aufnahmen.\nZwischenergebnis: Für jedes ausgewählte Datum existiert eine lokale TIFF-Datei. Ungeeignete Tage ersetzen Sie in data/auswahl.csv durch einen anderen Kandidaten. Führen Sie danach Abschnitt 6 des Abrufskripts erneut aus; er liest die Auswahl bei jedem Start neu ein. Alte Dateien dürfen zur Dokumentation liegen bleiben; die Auswertung verwendet ausschließlich die aktuelle Auswahl-Datei.\nDer Abruf verwendet jeweils einen Tag. Überlappende Kacheln können dabei zu einem Bild mosaikiert werden; eine einzelne Produkt-ID wird damit nicht festgeschrieben.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#aus-den-aufnahmen-eine-ndvi-reihe-berechnen",
+    "href": "pages/ws/ws-02.html#aus-den-aufnahmen-eine-ndvi-reihe-berechnen",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "4 · Aus den Aufnahmen eine NDVI-Reihe berechnen",
+    "text": "4 · Aus den Aufnahmen eine NDVI-Reihe berechnen\nÖffnen Sie 03_ndvi_reihe.R. Führen Sie die Abschnitte 1 und 2 aus. Das Skript prüft, ob alle ausgewählten Aufnahmen vorhanden sind und dasselbe Rastergitter besitzen.\nDie Berechnung lautet:\n\\[\nNDVI = \\frac{B08-B04}{B08+B04}\n\\]\nVor der Auswertung werden ungültige Daten und bestimmte SCL-Klassen ausgeschlossen. In der Vorlage bleiben Vegetation, unbewachsene Flächen, Wasser und unklassifizierte Pixel erhalten; Wolken, Wolkenschatten, Schnee und weitere ausgeschlossene Klassen werden zu NA. Die Klassen stehen in data/qualitaetsmaske.csv; Skript 03 legt die Datei beim ersten Lauf an. Skript 05 liest dieselbe Datei. Ändern Sie die Maske dort und führen Sie danach Skript 03, 05 und die weiteren Auswertungen erneut aus. Die visuelle Bildprüfung bleibt erforderlich.\nread.csv(\"data/qualitaetsmaske.csv\")\n# Vorgabe in der Spalte scl: 4, 5, 6, 7\nDas Skript berechnet einen NDVI pro Datum, begrenzt ihn auf Ihr Polygon und schreibt die Ergebnisse nach output/ndvi/. Zusätzlich entstehen output/ndvi_reihe.tif und output/ndvi_banddaten.csv. Die CSV ordnet jedem Band sein tatsächliches Aufnahmedatum zu.\nPrüfung: Öffnen Sie zwei NDVI-Raster in QGIS. Verwenden Sie dieselbe Farbskala von −1 bis 1. Prüfen Sie auffällige Stellen im ursprünglichen RGB-Bild. Fehlende Werte sind keine NDVI-Werte von null.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#einen-belastbaren-verlauf-darstellen",
+    "href": "pages/ws/ws-02.html#einen-belastbaren-verlauf-darstellen",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "5 · Einen belastbaren Verlauf darstellen",
+    "text": "5 · Einen belastbaren Verlauf darstellen\nFühren Sie die Abschnitte 3 und 4 aus. Das Skript erzeugt eine Tabelle und eine Grafik mit:\n\nmittlerem NDVI über die an jedem Termin gültigen Pixel;\nAnteil gültiger Pixel innerhalb Ihrer Untersuchungsfläche;\neinem zweiten Verlauf ausschließlich für die Pixel, die an allen ausgewählten Terminen gültig sind.\n\nDer zweite Verlauf macht sichtbar, ob wechselnde räumliche Abdeckung den Vergleich beeinflusst. Bleiben nur sehr wenige gemeinsame Pixel, ist auch dieser Vergleich räumlich schwach gestützt. Prüfen Sie dann die Bildauswahl. Die Grafik verbindet einzelne Beobachtungstage; über den Verlauf zwischen ihnen liegen keine Aussagen vor.\nErgebnis: Nennen Sie das Datumspaar mit dem größten Unterschied und geben Sie die NDVI-Differenz für beide räumlichen Bezugsflächen an. Legen Sie einen zusätzlichen Aufnahmetermin fest, mit dem Sie Vegetationsveränderung, sommerliche Entwicklung oder Bildstörungen unterscheiden können.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#eine-entscheidung-überprüfen",
+    "href": "pages/ws/ws-02.html#eine-entscheidung-überprüfen",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "6 · Eine Entscheidung überprüfen",
+    "text": "6 · Eine Entscheidung überprüfen\nWählen Sie für ein Jahr einen zweiten geeigneten Sommertag aus der Kandidatentabelle. Sichern Sie die bisherigen Ergebnisdateien in einem Unterordner output/vergleich_1/. Ersetzen Sie den entsprechenden Eintrag in data/auswahl.csv, laden Sie den neuen Tag und berechnen Sie die Reihe erneut.\nVergleichen Sie den betroffenen NDVI-Wert, die Datenabdeckung und Ihre ursprüngliche Interpretation. Dokumentieren Sie, welche Tagesauswahl Sie für die weitere Arbeit verwenden und warum.\nBei technischen Problemen können Sie Dokumentation oder KI nutzen. Geben Sie den betroffenen Abschnitt und die Fehlermeldung an, verlangen Sie eine begrenzte Korrektur und überprüfen Sie danach Datum, Rastergitter und Werte. Halten Sie wesentliche Änderungen im Skript fest.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-02.html#ergebnis-der-sitzung",
+    "href": "pages/ws/ws-02.html#ergebnis-der-sitzung",
+    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "section": "Ergebnis der Sitzung",
+    "text": "Ergebnis der Sitzung\nIhr Projekt enthält die selbst gewählte Fläche, die Aufnahmekandidaten, Ihre dokumentierte Auswahl, die abgerufenen Raster und die berechnete NDVI-Reihe. Ergänzen Sie in README.md:\n\nFragestellung und Begründung der Untersuchungsfläche;\ngewählte Aufnahmetage, Auswahlgründe und Abrufdatum;\nverwendete Qualitätsmaske;\nbeobachteten Unterschied und Ergebnis des zweiten Tagesvergleichs;\nAusführungsreihenfolge der beiden Skripte.\n\nAbgabe: eine Verlaufsgrafik, die zugehörige CSV und fünf bis acht Sätze zur Aussagekraft der Reihe. Eine beobachtete Abnahme wird zunächst als verändertes Vegetationssignal beschrieben. Ihre Ursache muss anhand weiterer Beobachtungen geprüft werden.\nIn Worksheet 03 vergleichen Sie NDVI und kNDVI auf Wald-, Offenland- und auffälligen Vergleichsflächen. Die Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe bleibt als Zusatz zu dieser Sitzung verfügbar; ihre Ergebnisse werden in Worksheet 10 weiterverwendet.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 02"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html",
+    "href": "pages/ws/ws-01.html",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "section": "",
+    "text": "Sie richten ein kleines R-Projekt ein, trennen Eingangsdaten, Skripte und Ergebnisse und führen einen überschaubaren Analyseablauf aus. Anschließend verändern Sie einen Parameter und prüfen die Wirkung. Sie nutzen dabei relative Pfade, einen aussagekräftigen Skriptkopf und kurze Kommentare.\nBeispiel: Sie laden die Gebietsgrenze des Burgwalds, erzeugen einen Puffer und speichern eine Karte sowie die berechnete Geometrie. Die Daten stammen aus dem Kursrepository LV-19-d19-006-25-R. Die Pufferberechnung dient hier als einfache Übung zur Skriptnutzung.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 01"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html#ziel",
+    "href": "pages/ws/ws-01.html#ziel",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "section": "",
+    "text": "Sie richten ein kleines R-Projekt ein, trennen Eingangsdaten, Skripte und Ergebnisse und führen einen überschaubaren Analyseablauf aus. Anschließend verändern Sie einen Parameter und prüfen die Wirkung. Sie nutzen dabei relative Pfade, einen aussagekräftigen Skriptkopf und kurze Kommentare.\nBeispiel: Sie laden die Gebietsgrenze des Burgwalds, erzeugen einen Puffer und speichern eine Karte sowie die berechnete Geometrie. Die Daten stammen aus dem Kursrepository LV-19-d19-006-25-R. Die Pufferberechnung dient hier als einfache Übung zur Skriptnutzung.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 01"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html#das-projekt-anlegen",
+    "href": "pages/ws/ws-01.html#das-projekt-anlegen",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "section": "1 · Das Projekt anlegen",
+    "text": "1 · Das Projekt anlegen\nÖffnen Sie in RStudio File → New Project → New Directory → New Project. Nennen Sie das Projekt burgwald-mini und wählen Sie einen Speicherort. Öffnen Sie es künftig über burgwald-mini.Rproj.\nLegen Sie über den Reiter Files → New Folder drei Unterordner an:\n\n\n\n\n\n\n\nOrt im Projekt\nInhalt\n\n\n\n\nburgwald-mini.Rproj\nÖffnet das Projekt mit dem Projektordner als Arbeitsverzeichnis.\n\n\ndata/\nHeruntergeladene Eingangsdaten; diese werden nicht überschrieben.\n\n\nscripts/\nIhre R-Skripte.\n\n\noutput/\nBerechnete Daten und Abbildungen; diese lassen sich erneut erzeugen.\n\n\n\nPrüfen Sie in der Konsole:\n\ngetwd()\nlist.files()\n\nDas Arbeitsverzeichnis muss Ihr Ordner burgwald-mini sein. Die drei Unterordner und die Projektdatei sollten angezeigt werden. Alle folgenden Pfade beziehen sich auf diesen Projektordner, auch wenn das Skript in scripts/ liegt. Ein zusätzliches setwd() ist nicht erforderlich.\nInstallieren Sie das benötigte Paket einmalig in der Konsole, falls es noch fehlt:\n\ninstall.packages(\"sf\")",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 01"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html#ein-übersichtliches-skript-anlegen",
+    "href": "pages/ws/ws-01.html#ein-übersichtliches-skript-anlegen",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "section": "2 · Ein übersichtliches Skript anlegen",
+    "text": "2 · Ein übersichtliches Skript anlegen\nErstellen Sie über File → New File → R Script ein Skript und speichern Sie es als scripts/01_burgwald_puffer.R. Übernehmen Sie den folgenden Code und ergänzen Sie Name und Datum im Kopf.\nDer Aufbau bleibt einfach: Header → Paket → Einstellungen → Daten → Verarbeitung → Ausgabe → Kontrolle. Änderungen an Pfaden oder Parametern erfolgen gesammelt im Abschnitt „Einstellungen“.\n\n# ------------------------------------------------------------\n# Titel:   Burgwald – Gebietsgrenze puffern\n# Autor:   Ihr Name\n# Datum:   JJJJ-MM-TT\n# Zweck:   Gebietsgrenze laden, puffern und Ergebnisse speichern\n# Quelle:  https://github.com/gisma/LV-19-d19-006-25-R\n# Eingabe: data/burgwald_hull.GPKG\n# Ausgabe: Puffer als GeoPackage und Karte unter output/\n# Start:   RStudio-Projekt burgwald-mini.Rproj öffnen\n# ------------------------------------------------------------\n\n# 1. Paket ---------------------------------------------------\nlibrary(sf)\n\n# 2. Einstellungen -------------------------------------------\npuffer_m &lt;- 100\n\ndaten_url &lt;- paste0(\n  \"https://raw.githubusercontent.com/\",\n  \"gisma/LV-19-d19-006-25-R/main/burgwald_hull.GPKG\"\n)\neingabe &lt;- file.path(\"data\", \"burgwald_hull.GPKG\")\nausgabe &lt;- file.path(\"output\", paste0(\"puffer_\", puffer_m, \"m\"))\n\n# 3. Daten laden ---------------------------------------------\n# Der Download erfolgt nur, wenn die Eingabedatei noch fehlt.\nif (!file.exists(eingabe)) {\n  download.file(daten_url, destfile = eingabe, mode = \"wb\")\n}\ngebiet &lt;- st_read(eingabe, quiet = TRUE)\n\n# 4. Verarbeiten ---------------------------------------------\n# UTM 32N verwendet Meter: Der Pufferabstand ist damit eindeutig.\ngebiet &lt;- st_transform(gebiet, 25832)\npuffer &lt;- st_buffer(gebiet, dist = puffer_m)\n\n# 5. Ergebnisse speichern ------------------------------------\n# Nur die gleichnamige Ergebnisdatei wird beim Wiederholen ersetzt.\nst_write(puffer, paste0(ausgabe, \".gpkg\"),\n         delete_dsn = TRUE, quiet = TRUE)\n\npng(paste0(ausgabe, \".png\"), width = 1000, height = 800)\nplot(st_geometry(puffer), col = \"lightblue\",\n     main = paste(\"Burgwald – Puffer\", puffer_m, \"m\"))\nplot(st_geometry(gebiet), col = \"darkgreen\", add = TRUE)\nlegend(\"topright\", legend = c(\"Gebiet\", \"Puffer\"),\n       fill = c(\"darkgreen\", \"lightblue\"), bty = \"n\")\ndev.off()\n\n# 6. Kontrollieren -------------------------------------------\nprint(st_crs(gebiet)$epsg)\nprint(data.frame(\n  gebiet_km2 = as.numeric(st_area(gebiet)) / 1e6,\n  puffer_km2 = as.numeric(st_area(puffer)) / 1e6\n))\nprint(list.files(\"output\"))\n\nFühren Sie das Skript zunächst abschnittsweise mit Ctrl+Enter aus. Prüfen Sie anschließend die PNG-Datei im Ordner output. Öffnen Sie das erzeugte GeoPackage in QGIS und vergleichen Sie es mit der Eingabedatei.\nKontrolle: Vergleichen Sie Gebiets- und Pufferfläche in der Konsole. Prüfen Sie in QGIS, dass der Puffer die Gebietsgrenze vollständig umschließt und die Ausgabedateien unter output/ liegen.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 01"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html#einen-parameter-gezielt-ändern",
+    "href": "pages/ws/ws-01.html#einen-parameter-gezielt-ändern",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "section": "3 · Einen Parameter gezielt ändern",
+    "text": "3 · Einen Parameter gezielt ändern\nÄndern Sie ausschließlich puffer_m &lt;- 100 zu puffer_m &lt;- 500. Schreiben Sie davor einen kurzen Kommentar, warum Sie den Parameter verändern. Führen Sie das gesamte Skript mit Source erneut aus.\nVergleichen Sie die beiden Karten und die ausgegebenen Flächen. Prüfen Sie außerdem, ob beide Ergebnisvarianten unter output/ liegen und die Eingabedatei unter data/ unverändert geblieben ist.\nDokumentieren Sie: Pufferabstand in Metern, beide berechneten Flächen und die Dateinamen der 100-m- und 500-m-Variante.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 01"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html#einen-pfadfehler-verstehen",
+    "href": "pages/ws/ws-01.html#einen-pfadfehler-verstehen",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "section": "4 · Einen Pfadfehler verstehen",
+    "text": "4 · Einen Pfadfehler verstehen\nÄndern Sie vorübergehend die Definition von eingabe zu:\n\neingabe &lt;- file.path(\"daten\", \"burgwald_hull.GPKG\")\n\nFühren Sie das Skript erneut aus. Lesen Sie die Fehlermeldung und prüfen Sie mit getwd() und dir.exists(\"daten\"), worauf der Pfad verweist. Stellen Sie anschließend den richtigen Pfad wieder her.\nNutzen Sie bei Bedarf die Dokumentation oder KI. Ein passender Auftrag lautet:\n\nMein RStudio-Projekt enthält die Ordner data, scripts und output. Erkläre diese Fehlermeldung und nenne die kleinste notwendige Korrektur. Ändere keine weiteren Teile des Skripts: [Fehlermeldung und betroffene Codezeilen einfügen].\n\nHalten Sie in einem Kommentar fest, was falsch war und wie Sie die Korrektur geprüft haben. Kommentare sollen den Zweck oder eine Entscheidung erklären, beispielsweise die Wahl eines metrischen Koordinatensystems.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 01"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html#ohne-gespeicherte-objekte-erneut-ausführen",
+    "href": "pages/ws/ws-01.html#ohne-gespeicherte-objekte-erneut-ausführen",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "section": "5 · Ohne gespeicherte Objekte erneut ausführen",
+    "text": "5 · Ohne gespeicherte Objekte erneut ausführen\nStarten Sie R über Session → Restart R neu. Führen Sie das Skript anschließend vollständig mit Source aus. Es muss seine Daten selbst einlesen und alle benötigten Objekte erneut erzeugen können.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 01"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-01.html#ergebnis",
+    "href": "pages/ws/ws-01.html#ergebnis",
+    "title": "Worksheet 01 · Ein kleines R-Projekt",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie drei Grenzkarten auf derselben Temperaturkarte und eine Parametertabelle mit k, Kompaktheit, tatsächlicher Segmentzahl sowie minimaler, medianer und maximaler Segmentfläche ab. Markieren Sie einen Bereich, in dem eine Parameteränderung Grenzen deutlich verschiebt. Speichern Sie die zwölf Eingangsbänder und Segmentierungen für Worksheet 06.\nMethode: supercells – multiband raster segmentation.",
+    "text": "Ergebnis\nGeben Sie Ihren Projektordner mit dem kommentierten Skript und den beiden Ergebnisvarianten weiter. Ergänzen Sie eine kurze Datei README.md im Projektordner mit vier Angaben:\n\nProjektdatei öffnen und anschließend scripts/01_burgwald_puffer.R ausführen.\nBenötigtes Paket: sf; Internetzugang für den ersten Datenabruf.\nDatenquelle und eigenes Abrufdatum.\nIhre Änderung, deren beobachtete Wirkung und gegebenenfalls verwendete KI-Hilfe.\n\nErfolgskriterium: Eine andere Person erkennt, welche Dateien Eingangsdaten, Skripte und Ergebnisse sind, und kann den Ablauf aus einer frischen R-Sitzung erneut ausführen.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 05"
+      "Worksheet 01"
     ]
   },
   {
-    "objectID": "pages/ws/ws-03.html",
-    "href": "pages/ws/ws-03.html",
-    "title": "Worksheet 03 · Vegetationssignale vergleichen",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Advanced GI & Fernerkundung",
     "section": "",
-    "text": "Verwenden Sie die fünf ausgewählten Sommeraufnahmen aus Worksheet 02, das RGB-Bild und die Qualitätsbänder. Wählen Sie innerhalb der AOI drei kleine, getrennte Vergleichsflächen: Wald, Offenland und eine im Bild auffällige Fläche. Der aktuelle Kartenhintergrund dient der Orientierung; die Landbedeckung am Aufnahmetag prüfen Sie im jeweiligen Sentinel-Bild.\nFalls Ihre bisherige Wald-AOI kein Offenland enthält, legen Sie eine Kopie des Projekts an und erweitern Sie dort die AOI auf einen gemischten Ausschnitt mit höchstens 5 km Kantenlänge. Archivieren Sie den bisherigen Ordner data/sentinel/ und führen Sie Skript 02 und 03 für das neue Gebiet erneut aus.",
+    "text": "Wie beschreiben wir räumliche Muster? Wie bilden wir aus Klimadaten sinnvolle Teilräume? Wo sind räumliche Vorhersagen belastbar, und wann zeigt ein Satellitenbild tatsächlich eine Veränderung?\nIn diesem Kurs lernen Sie ausgewählte fortgeschrittene Grundlagen der Geoinformationswissenschaft und Fernerkundung anzuwenden. Sie arbeiten mit realen Daten aus Hessen und Nordrhein-Westfalen, beschaffen diese selbst und bearbeiten überschaubare anwendungsbezogene Fragen. Dabei verbinden Sie die räumliche Kontrolle in QGIS mit reproduzierbaren Auswertungen in R und ausgewählten externen Werkzeugen.\nSie lernen, vorhandene Skripte gezielt anzupassen, methodische Entscheidungen zu vergleichen und Ergebnisse fachlich zu prüfen. Räumliche Auflösung, Untersuchungsgebiet, zeitlicher Bezug und Übertragbarkeit begleiten alle Themen. Ziel ist, dass Sie einen Analyseweg selbstständig ausführen und seine Aussagekraft begründen können.",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 03"
+      "Start"
     ]
   },
   {
-    "objectID": "pages/ws/ws-03.html#datengrundlage",
-    "href": "pages/ws/ws-03.html#datengrundlage",
-    "title": "Worksheet 03 · Vegetationssignale vergleichen",
+    "objectID": "index.html#zielsetzung",
+    "href": "index.html#zielsetzung",
+    "title": "Advanced GI & Fernerkundung",
     "section": "",
-    "text": "Verwenden Sie die fünf ausgewählten Sommeraufnahmen aus Worksheet 02, das RGB-Bild und die Qualitätsbänder. Wählen Sie innerhalb der AOI drei kleine, getrennte Vergleichsflächen: Wald, Offenland und eine im Bild auffällige Fläche. Der aktuelle Kartenhintergrund dient der Orientierung; die Landbedeckung am Aufnahmetag prüfen Sie im jeweiligen Sentinel-Bild.\nFalls Ihre bisherige Wald-AOI kein Offenland enthält, legen Sie eine Kopie des Projekts an und erweitern Sie dort die AOI auf einen gemischten Ausschnitt mit höchstens 5 km Kantenlänge. Archivieren Sie den bisherigen Ordner data/sentinel/ und führen Sie Skript 02 und 03 für das neue Gebiet erneut aus.",
+    "text": "Wie beschreiben wir räumliche Muster? Wie bilden wir aus Klimadaten sinnvolle Teilräume? Wo sind räumliche Vorhersagen belastbar, und wann zeigt ein Satellitenbild tatsächlich eine Veränderung?\nIn diesem Kurs lernen Sie ausgewählte fortgeschrittene Grundlagen der Geoinformationswissenschaft und Fernerkundung anzuwenden. Sie arbeiten mit realen Daten aus Hessen und Nordrhein-Westfalen, beschaffen diese selbst und bearbeiten überschaubare anwendungsbezogene Fragen. Dabei verbinden Sie die räumliche Kontrolle in QGIS mit reproduzierbaren Auswertungen in R und ausgewählten externen Werkzeugen.\nSie lernen, vorhandene Skripte gezielt anzupassen, methodische Entscheidungen zu vergleichen und Ergebnisse fachlich zu prüfen. Räumliche Auflösung, Untersuchungsgebiet, zeitlicher Bezug und Übertragbarkeit begleiten alle Themen. Ziel ist, dass Sie einen Analyseweg selbstständig ausführen und seine Aussagekraft begründen können.",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 03"
+      "Start"
     ]
   },
   {
-    "objectID": "pages/ws/ws-03.html#vergleich-ausführen",
-    "href": "pages/ws/ws-03.html#vergleich-ausführen",
-    "title": "Worksheet 03 · Vegetationssignale vergleichen",
-    "section": "Vergleich ausführen",
-    "text": "Vergleich ausführen\n\nZeichnen Sie in QGIS drei Polygonobjekte in data/vergleichsflaechen.gpkg. Das Textfeld typ enthält genau einmal wald, offenland und auffaellig. Die Polygone müssen innerhalb Ihrer AOI liegen und mehrere 10-m-Zellen umfassen.\nLaden Sie 06_indices_vergleichen.R nach scripts/ und führen Sie es aus. Es vergleicht pro Fläche dieselben, an allen fünf Terminen gültigen Zellen.\nÖffnen Sie output/indices/kndvi_reihe.tif und die NDVI-Reihe in QGIS. Verwenden Sie über alle Termine feste Skalen: NDVI −1 bis 1, kNDVI 0 bis 1. Vergleichen Sie für einen gemeinsamen Termin die Werte an denselben Zellpositionen.\n\nDie hier verwendete RBF-Variante lautet\n\\[kNDVI = \\tanh(NDVI^2).\\]\nSie ist eine nichtlineare Transformation derselben Rot-/NIR-Beobachtung. Sie fügt keine unabhängige Beobachtung hinzu. Durch das Quadrieren erhalten positive und negative NDVI-Werte gleichen Betrags denselben kNDVI. Prüfen Sie daher das Vorzeichen im NDVI, bevor Sie ein kNDVI-Signal als Vegetationssignal interpretieren. Das Skript transformiert zuerst die Einzelpixel und mittelt anschließend.",
+    "objectID": "index.html#arbeitsweise",
+    "href": "index.html#arbeitsweise",
+    "title": "Advanced GI & Fernerkundung",
+    "section": "Arbeitsweise",
+    "text": "Arbeitsweise\nDas Mikroklima-Warmup bietet vorab einen Einstieg für Studierende ohne Programmiererfahrung: Projekt öffnen, vorhandenes Skript blockweise ausführen und Ergebnisse ansehen. Es setzt keine selbstständige Programmierung voraus.\nDie zwölf Sitzungen verbinden kurze fachliche Einführungen mit einem hohen Übungsanteil. Die Arbeitsaufträge finden Sie in den jeweils verlinkten Worksheets.\nSie nutzen Code aus den Kursmaterialien, Dokumentation und KI-Unterstützung. Dazu gehört, Eingaben und Parameter zu verstehen, Änderungen festzuhalten und Ausgaben zu kontrollieren. Sie müssen keine Algorithmen selbst entwickeln. Sie sollen jedoch erklären können, was Ihr Skript verarbeitet und woran Sie ein plausibles Ergebnis erkennen.\nIm Verlauf des Kurses entsteht ein Projektordner mit Datenquellen, Skripten, Parametern und ausgewählten Ergebnissen. Ihre Interpretationen unterscheiden zwischen Beobachtung, möglicher Erklärung und verbleibender Unsicherheit.",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 03"
+      "Start"
     ]
   },
   {
-    "objectID": "pages/ws/ws-03.html#ergebnis",
-    "href": "pages/ws/ws-03.html#ergebnis",
-    "title": "Worksheet 03 · Vegetationssignale vergleichen",
-    "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie flaechenvergleich.csv, die Verlaufsgrafik mit beiden Indizes und eine RGB-Karte mit den drei Polygonen ab. Nennen Sie pro Fläche den größten Unterschied zwischen zwei ausgewählten Terminen, die zugehörigen Werte beider Indizes und die Zahl gemeinsamer Pixel. Prüfen Sie die auffällige Fläche in RGB und SCL für beide Termine. Halten Sie fest, ob der Unterschied trotz vergleichbarer Bildqualität besteht und ob die Aufnahmetage in derselben Sommerphase liegen. Eine Ursache wird erst mit zusätzlichen Beobachtungen geprüft; damit arbeiten Sie in Worksheet 10 weiter.\nMethodengrundlage: Camps-Valls et al. (2021), A unified vegetation index for quantifying the terrestrial biosphere.\nDie Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe ergänzt diesen Vergleich.",
+    "objectID": "index.html#block-1-daten-beschaffen-und-skripte-nutzen",
+    "href": "index.html#block-1-daten-beschaffen-und-skripte-nutzen",
+    "title": "Advanced GI & Fernerkundung",
+    "section": "Block 1 · Daten beschaffen und Skripte nutzen",
+    "text": "Block 1 · Daten beschaffen und Skripte nutzen\nSie richten einen reproduzierbaren Arbeitsablauf ein und beschaffen Sentinel-2-Daten für den Burgwald. Sie lernen, eine automatisierte Bildauswahl zu kontrollieren und Vegetationsindizes anhand konkreter Flächen zu interpretieren. Der Vergleich unterschiedlicher Aufnahmetermine zeigt, wie stark Datenqualität und zeitlicher Bezug die Aussage beeinflussen.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n1 · Skripte handhaben\nEin vorhandenes Skript übernehmen, Pfade und Parameter anpassen, Fehler mit Dokumentation oder KI bearbeiten und den Ablauf erneut ausführen.\nWorksheet 01\n\n\n2 · Satellitendaten beschaffen\nSentinel-2-Aufnahmen über den CDSE-Workflow abrufen; Abdeckung, Wolken, Schatten und Aufnahmedaten prüfen.\nWorksheet 02\n\n\n3 · Vegetationssignale interpretieren\nNDVI und kNDVI an Wald-, Offenland- und auffälligen Vergleichsflächen untersuchen; Unterschiede zwischen Vegetationssignal und Aufnahmebedingungen erkennen.\nWorksheet 03",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 03"
+      "Start"
     ]
   },
   {
-    "objectID": "pages/ws/ws-02-zusatz.html",
-    "href": "pages/ws/ws-02-zusatz.html",
-    "title": "Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe",
-    "section": "",
-    "text": "Bearbeiten Sie nach Worksheet 02 die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.\nReihenfolge: zuerst die Pixelzählung mit Skript 05, dann die Zeitreihenanalyse mit Skript 04. Die Nummern der Skripte entsprechen ihrer Ergänzung zum Projekt; beide lesen ihre Eingaben selbst ein.\nGezählt und analysiert werden die fünf ausgewählten Sommertermine. Die Ergebnisse beschreiben diese Auswahl. Daraus ergibt sich keine allgemeine Wolkenhäufigkeit über den Burgwald.\n\n\n\n\n\n\nNoteExkurs 1 · Gültige, bewölkte und fehlende Beobachtungen zählen\n\n\n\n\n\nLaden Sie 05_pixel_counts.R in scripts/ und führen Sie es aus. Es verwendet die abgerufenen Bänder SCL und dataMask sowie die Rot-/NIR-Werte. Ein Pixel wird an jedem Termin genau einer der folgenden Kategorien zugeordnet:\n\n\n\n\n\n\n\nAusgabeband\nZählregel pro Termin\n\n\n\n\nn_valid\nVerfügbare Daten, SCL 4, 5, 6 oder 7 und ein positiver Rot-plus-NIR-Nenner: gültig nach der NDVI-Maske aus WS02.\n\n\nn_cloudy\nVerfügbare Daten und SCL 8, 9 oder 10: mittlere/hohe Wolkenwahrscheinlichkeit oder dünner Cirrus.\n\n\nn_shadow\nVerfügbare Daten und SCL 3: Wolkenschatten.\n\n\nn_other\nVerfügbare Daten, die in keine der obigen Kategorien fallen, etwa Schnee/Eis, dunkle Flächen oder weitere ungültige Werte.\n\n\nn_missing\nKeine verfügbaren Daten laut dataMask beziehungsweise SCL 0 oder fehlende SCL.\n\n\n\nWichtig: n_cloudy ist nicht gleich fünf minus n_valid. Auch Schatten, sonstige ausgeschlossene Werte und fehlende Daten können einen NDVI ausschließen. Die SCL ist eine automatische Klassifikation; die Zählung übernimmt deren Zuordnungen.\n\n\n\nÖffnen Sie output/pixel_counts/beobachtungs_counts.tif in QGIS. Stellen Sie zuerst Band 1 (n_valid), dann Band 2 (n_cloudy) jeweils mit festen Grenzen 0 bis 5 dar. Null ist ein gültiges Zählergebnis; außerhalb Ihrer Untersuchungsfläche bleibt NoData.\nVerwenden Sie das Werkzeug Objekte abfragen, um die Bandwerte an drei Stellen zu vergleichen: hohe Verfügbarkeit, niedrige Verfügbarkeit und möglichst hohe Wolkenzahl. Falls Ihre Auswahl keine bewölkten Pixel enthält, dokumentieren Sie genau diesen Befund.\nPrüfen Sie jeweils die Summe aller fünf Zähler: Sie muss fünf ergeben. Sehen Sie eine auffällige Stelle in den Tagesbildern und deren SCL-Band nach.\nBestimmen Sie mithilfe von haeufigkeit_valid.csv, welcher Anteil der AOI-Pixel an allen fünf Terminen gültig ist: Zellzahl bei Wert 5 geteilt durch die Summe der Zellzahlen. Fehlt die Kategorie 5, beträgt dieser Anteil null.\n\nZusätzlich erzeugt beobachtungs_anteile.tif zwei Prozentwerte mit unterschiedlichen Bezugsgrößen:\n\nGültigkeitsanteil: n_valid / 5 × 100.\nWolkenanteil unter verfügbaren Beobachtungen: n_cloudy / (5 − n_missing) × 100. Ohne verfügbare Beobachtungen bleibt der Wert NoData.\n\nAuswertung: Gemeinsame Datenabdeckung als Prozentwert angeben und die dominierende Ausschlussklasse an einer auffälligen Stelle im SCL-Band prüfen.\n\n\n\n\n\n\n\n\n\n\nNoteExkurs 2 · Die Sommerreihe analysieren\n\n\n\n\n\nAuswertung: Differenzen zwischen den Aufnahmen, lineare Steigung und Empfindlichkeit gegenüber einzelnen Terminen berechnen.\nNutzen Sie die bereits berechneten NDVI-Raster. Falls Exkurs 1 keine an allen Terminen gültigen Pixel ergibt, dokumentieren Sie diese Einschränkung; die gemeinsame Zeitreihenanalyse kann dann mit dieser Auswahl nicht berechnet werden. Die fünf geladenen Sommertage sind die Beobachtungen dieser Analyse. Die weiteren Treffer des STAC-Katalogs sind zunächst nur Metadaten und werden hier nicht als zusätzliche Beobachtungen verwendet.\nLaden Sie 04_zeitreihe_addon.R in Ihren Ordner scripts/. Das Skript liest die Ergebnisse aus Worksheet 02 selbst ein. Führen Sie es abschnittsweise aus.\n\n\nDas Skript verwendet ausschließlich Pixel, die an allen Terminen gültig sind. Öffnen Sie output/zeitreihe/zeitreihe_kennwerte.csv.\n\n\n\n\n\n\n\nSpalte\nBedeutung\n\n\n\n\ndatum, tag_im_jahr\nTatsächlicher Aufnahmetermin und seine Lage innerhalb des Jahres.\n\n\nndvi\nRäumlicher Mittelwert über die gemeinsamen gültigen Pixel.\n\n\ndelta_vorher\nNDVI des aktuellen Termins minus NDVI des vorherigen Termins.\n\n\ndelta_pro_jahr\nDiese Differenz geteilt durch den tatsächlichen Zeitabstand in Jahren.\n\n\nabweichung_start\nDifferenz zur ersten Aufnahme; diese ist eine Referenz, kein nachgewiesener Normalzustand.\n\n\ntrend, residuum\nWert der angepassten Geraden und Abweichung der Beobachtung davon.\n\n\n\nAuftrag: Bestimmen Sie den größten Rückgang und die größte Zunahme, sofern beide auftreten. Nennen Sie jeweils die beiden verglichenen Daten. Prüfen Sie anhand der Originalbilder und der Aufnahmetage, ob die Unterschiede plausibel sind. Differenzen werden in NDVI-Einheiten angegeben, nicht als prozentuale Änderung der Vegetation.\n\n\n\nDas Skript passt eine Gerade an die mittleren NDVI-Werte an. Die Zeitvariable berücksichtigt die tatsächlichen Abstände zwischen den Aufnahmen:\nmodell &lt;- lm(ndvi ~ jahre_seit_start, data = d)\nDie Steigung beschreibt die lineare Änderung in NDVI-Einheiten pro Jahr. Öffnen Sie output/zeitreihe/zeitreihenanalyse.png. Vergleichen Sie die Gerade mit den beobachteten Werten; geben Sie den Termin mit dem größten absoluten Residuum an.\nAnschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in sensitivitaet.csv mit der Steigung der vollständigen Reihe. Geben Sie an, ob das Vorzeichen bestehen bleibt, und nennen Sie den Termin mit dem größten Einfluss auf die Steigung.\nDiese Prüfung untersucht die Empfindlichkeit gegenüber einzelnen Beobachtungen. Sie ist keine unabhängige Validierung. Fünf ausgewählte Sommertage erlauben hier eine beschreibende Auswertung; saisonale Zerlegung, Bruchpunkterkennung und Zukunftsprognose sind nicht Gegenstand des Add-ons.\n\n\n\nÖffnen Sie output/zeitreihe/differenz_ende_start.tif in QGIS. Verwenden Sie eine divergierende Farbskala mit null als Mitte und gleich großen positiven und negativen Darstellungsgrenzen.\n\nNegative Werte: niedrigerer NDVI am letzten gegenüber dem ersten Termin.\nPositive Werte: höherer NDVI am letzten gegenüber dem ersten Termin.\nNoData: keine gemeinsame gültige Beobachtung über die gesamte Reihe.\n\nAuftrag: Markieren Sie je eine Fläche mit Zu- und Abnahme und kontrollieren Sie beide in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.\n\n\n\nGeben Sie die größte Zu- und Abnahme mit Datumspaar, die vollständige Steigung und die Spannweite der Auslassungsprüfung an. Markieren Sie je eine räumliche Zu- und Abnahme in der Differenzkarte. Nennen Sie für eine vermutete Ursache eine zusätzliche Aufnahme, mit der sich diese prüfen lässt.\nSpeichern Sie den untersuchten Stand der data/auswahl.csv zusammen mit Ihrer Auswertung. Nach einer Änderung der Bildauswahl führen Sie zuerst Skript 03 und anschließend das Add-on erneut aus."
+    "objectID": "index.html#block-2-räumliche-muster-und-klimaregionalisierung",
+    "href": "index.html#block-2-räumliche-muster-und-klimaregionalisierung",
+    "title": "Advanced GI & Fernerkundung",
+    "section": "Block 2 · Räumliche Muster und Klimaregionalisierung",
+    "text": "Block 2 · Räumliche Muster und Klimaregionalisierung\nBlock 1 hat gezeigt, wie Aufnahmetag, Maske und Bezugsfläche einen Indexvergleich beeinflussen. Nun untersuchen Sie, welche räumlichen Unterschiede eine Flächenzusammenfassung verdeckt. Sie vergleichen klassische Landschaftsmaße mit informationstheoretischen Ansätzen. Dabei untersuchen Sie, welche Informationen über Zusammensetzung und räumliche Anordnung tatsächlich erfasst werden. Anschließend wechseln Sie von kategorischer Landbedeckung zu kontinuierlichen Klimadaten: Sie segmentieren Temperaturjahresgänge und bewerten, wie Parameter und Rasterauflösung die entstehenden Regionen beeinflussen.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n4 · Muster quantitativ beschreiben\nSHDI und Aggregation Index mit Entropie und relativer gegenseitiger Information vergleichen; den Einfluss räumlicher Anordnung und Fenstergröße untersuchen.\nWorksheet 04\n\n\n5 · Klimadaten segmentieren\nMonatliche Klimadaten selbst beschaffen und mit supercells regionalisieren; Segmentzahl und Kompaktheit kontrolliert variieren.\nWorksheet 05\n\n\n6 · Regionalisierungen beurteilen\nHomogenität innerhalb der Segmente, Unterschiede benachbarter Jahresgänge und Empfindlichkeit gegenüber gröberer Rasterauflösung bewerten.\nWorksheet 06",
+    "crumbs": [
+      "Start"
+    ]
   },
   {
-    "objectID": "pages/ws/ws-02-zusatz.html#hausaufgabe",
-    "href": "pages/ws/ws-02-zusatz.html#hausaufgabe",
-    "title": "Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe",
-    "section": "",
-    "text": "Bearbeiten Sie nach Worksheet 02 die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.\nReihenfolge: zuerst die Pixelzählung mit Skript 05, dann die Zeitreihenanalyse mit Skript 04. Die Nummern der Skripte entsprechen ihrer Ergänzung zum Projekt; beide lesen ihre Eingaben selbst ein.\nGezählt und analysiert werden die fünf ausgewählten Sommertermine. Die Ergebnisse beschreiben diese Auswahl. Daraus ergibt sich keine allgemeine Wolkenhäufigkeit über den Burgwald.\n\n\n\n\n\n\nNoteExkurs 1 · Gültige, bewölkte und fehlende Beobachtungen zählen\n\n\n\n\n\nLaden Sie 05_pixel_counts.R in scripts/ und führen Sie es aus. Es verwendet die abgerufenen Bänder SCL und dataMask sowie die Rot-/NIR-Werte. Ein Pixel wird an jedem Termin genau einer der folgenden Kategorien zugeordnet:\n\n\n\n\n\n\n\nAusgabeband\nZählregel pro Termin\n\n\n\n\nn_valid\nVerfügbare Daten, SCL 4, 5, 6 oder 7 und ein positiver Rot-plus-NIR-Nenner: gültig nach der NDVI-Maske aus WS02.\n\n\nn_cloudy\nVerfügbare Daten und SCL 8, 9 oder 10: mittlere/hohe Wolkenwahrscheinlichkeit oder dünner Cirrus.\n\n\nn_shadow\nVerfügbare Daten und SCL 3: Wolkenschatten.\n\n\nn_other\nVerfügbare Daten, die in keine der obigen Kategorien fallen, etwa Schnee/Eis, dunkle Flächen oder weitere ungültige Werte.\n\n\nn_missing\nKeine verfügbaren Daten laut dataMask beziehungsweise SCL 0 oder fehlende SCL.\n\n\n\nWichtig: n_cloudy ist nicht gleich fünf minus n_valid. Auch Schatten, sonstige ausgeschlossene Werte und fehlende Daten können einen NDVI ausschließen. Die SCL ist eine automatische Klassifikation; die Zählung übernimmt deren Zuordnungen.\n\n\n\nÖffnen Sie output/pixel_counts/beobachtungs_counts.tif in QGIS. Stellen Sie zuerst Band 1 (n_valid), dann Band 2 (n_cloudy) jeweils mit festen Grenzen 0 bis 5 dar. Null ist ein gültiges Zählergebnis; außerhalb Ihrer Untersuchungsfläche bleibt NoData.\nVerwenden Sie das Werkzeug Objekte abfragen, um die Bandwerte an drei Stellen zu vergleichen: hohe Verfügbarkeit, niedrige Verfügbarkeit und möglichst hohe Wolkenzahl. Falls Ihre Auswahl keine bewölkten Pixel enthält, dokumentieren Sie genau diesen Befund.\nPrüfen Sie jeweils die Summe aller fünf Zähler: Sie muss fünf ergeben. Sehen Sie eine auffällige Stelle in den Tagesbildern und deren SCL-Band nach.\nBestimmen Sie mithilfe von haeufigkeit_valid.csv, welcher Anteil der AOI-Pixel an allen fünf Terminen gültig ist: Zellzahl bei Wert 5 geteilt durch die Summe der Zellzahlen. Fehlt die Kategorie 5, beträgt dieser Anteil null.\n\nZusätzlich erzeugt beobachtungs_anteile.tif zwei Prozentwerte mit unterschiedlichen Bezugsgrößen:\n\nGültigkeitsanteil: n_valid / 5 × 100.\nWolkenanteil unter verfügbaren Beobachtungen: n_cloudy / (5 − n_missing) × 100. Ohne verfügbare Beobachtungen bleibt der Wert NoData.\n\nAuswertung: Gemeinsame Datenabdeckung als Prozentwert angeben und die dominierende Ausschlussklasse an einer auffälligen Stelle im SCL-Band prüfen.\n\n\n\n\n\n\n\n\n\n\nNoteExkurs 2 · Die Sommerreihe analysieren\n\n\n\n\n\nAuswertung: Differenzen zwischen den Aufnahmen, lineare Steigung und Empfindlichkeit gegenüber einzelnen Terminen berechnen.\nNutzen Sie die bereits berechneten NDVI-Raster. Falls Exkurs 1 keine an allen Terminen gültigen Pixel ergibt, dokumentieren Sie diese Einschränkung; die gemeinsame Zeitreihenanalyse kann dann mit dieser Auswahl nicht berechnet werden. Die fünf geladenen Sommertage sind die Beobachtungen dieser Analyse. Die weiteren Treffer des STAC-Katalogs sind zunächst nur Metadaten und werden hier nicht als zusätzliche Beobachtungen verwendet.\nLaden Sie 04_zeitreihe_addon.R in Ihren Ordner scripts/. Das Skript liest die Ergebnisse aus Worksheet 02 selbst ein. Führen Sie es abschnittsweise aus.\n\n\nDas Skript verwendet ausschließlich Pixel, die an allen Terminen gültig sind. Öffnen Sie output/zeitreihe/zeitreihe_kennwerte.csv.\n\n\n\n\n\n\n\nSpalte\nBedeutung\n\n\n\n\ndatum, tag_im_jahr\nTatsächlicher Aufnahmetermin und seine Lage innerhalb des Jahres.\n\n\nndvi\nRäumlicher Mittelwert über die gemeinsamen gültigen Pixel.\n\n\ndelta_vorher\nNDVI des aktuellen Termins minus NDVI des vorherigen Termins.\n\n\ndelta_pro_jahr\nDiese Differenz geteilt durch den tatsächlichen Zeitabstand in Jahren.\n\n\nabweichung_start\nDifferenz zur ersten Aufnahme; diese ist eine Referenz, kein nachgewiesener Normalzustand.\n\n\ntrend, residuum\nWert der angepassten Geraden und Abweichung der Beobachtung davon.\n\n\n\nAuftrag: Bestimmen Sie den größten Rückgang und die größte Zunahme, sofern beide auftreten. Nennen Sie jeweils die beiden verglichenen Daten. Prüfen Sie anhand der Originalbilder und der Aufnahmetage, ob die Unterschiede plausibel sind. Differenzen werden in NDVI-Einheiten angegeben, nicht als prozentuale Änderung der Vegetation.\n\n\n\nDas Skript passt eine Gerade an die mittleren NDVI-Werte an. Die Zeitvariable berücksichtigt die tatsächlichen Abstände zwischen den Aufnahmen:\nmodell &lt;- lm(ndvi ~ jahre_seit_start, data = d)\nDie Steigung beschreibt die lineare Änderung in NDVI-Einheiten pro Jahr. Öffnen Sie output/zeitreihe/zeitreihenanalyse.png. Vergleichen Sie die Gerade mit den beobachteten Werten; geben Sie den Termin mit dem größten absoluten Residuum an.\nAnschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in sensitivitaet.csv mit der Steigung der vollständigen Reihe. Geben Sie an, ob das Vorzeichen bestehen bleibt, und nennen Sie den Termin mit dem größten Einfluss auf die Steigung.\nDiese Prüfung untersucht die Empfindlichkeit gegenüber einzelnen Beobachtungen. Sie ist keine unabhängige Validierung. Fünf ausgewählte Sommertage erlauben hier eine beschreibende Auswertung; saisonale Zerlegung, Bruchpunkterkennung und Zukunftsprognose sind nicht Gegenstand des Add-ons.\n\n\n\nÖffnen Sie output/zeitreihe/differenz_ende_start.tif in QGIS. Verwenden Sie eine divergierende Farbskala mit null als Mitte und gleich großen positiven und negativen Darstellungsgrenzen.\n\nNegative Werte: niedrigerer NDVI am letzten gegenüber dem ersten Termin.\nPositive Werte: höherer NDVI am letzten gegenüber dem ersten Termin.\nNoData: keine gemeinsame gültige Beobachtung über die gesamte Reihe.\n\nAuftrag: Markieren Sie je eine Fläche mit Zu- und Abnahme und kontrollieren Sie beide in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.\n\n\n\nGeben Sie die größte Zu- und Abnahme mit Datumspaar, die vollständige Steigung und die Spannweite der Auslassungsprüfung an. Markieren Sie je eine räumliche Zu- und Abnahme in der Differenzkarte. Nennen Sie für eine vermutete Ursache eine zusätzliche Aufnahme, mit der sich diese prüfen lässt.\nSpeichern Sie den untersuchten Stand der data/auswahl.csv zusammen mit Ihrer Auswertung. Nach einer Änderung der Bildauswahl führen Sie zuerst Skript 03 und anschließend das Add-on erneut aus."
+    "objectID": "index.html#block-3-räumliche-vorhersagen-und-modellgültigkeit",
+    "href": "index.html#block-3-räumliche-vorhersagen-und-modellgültigkeit",
+    "title": "Advanced GI & Fernerkundung",
+    "section": "Block 3 · Räumliche Vorhersagen und Modellgültigkeit",
+    "text": "Block 3 · Räumliche Vorhersagen und Modellgültigkeit\nAm LAI-Beispiel aus den EON-Materialien verfolgen Sie den Weg von punktuellen Referenzwerten zur flächenhaften Schätzung. Sie prüfen den räumlichen und zeitlichen Bezug der Daten und vergleichen unterschiedliche Validierungsansätze. Mit der Area of Applicability untersuchen Sie anschließend, wo die Prädiktorbedingungen durch die Trainingsdaten abgedeckt sind.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n7 · Referenzdaten und Schätzung\nLAI-Referenzen und Satellitendaten zusammenführen; ein einfaches Modell anwenden und dessen Datengrundlage, Residuen und Voraussetzungen beurteilen.\nWorksheet 07\n\n\n8 · Räumlich validieren\nEinen Random Forest mit zufälligen und räumlichen Prüffaltungen vergleichen; bei gleichen Prädiktoren und Modelleinstellungen die Bedeutung der Prüfsituation erkennen.\nWorksheet 08\n\n\n9 · Anwendungsbereich prüfen\nVorhersage und AOA gemeinsam interpretieren; untersuchen, wie eine Änderung der Prädiktorauswahl Modellgüte und Anwendungsbereich beeinflusst.\nWorksheet 09",
+    "crumbs": [
+      "Start"
+    ]
   },
   {
-    "objectID": "pages/ws/ws-02-zusatz.html#abgabe-der-hausaufgabe",
-    "href": "pages/ws/ws-02-zusatz.html#abgabe-der-hausaufgabe",
-    "title": "Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe",
-    "section": "Abgabe der Hausaufgabe",
-    "text": "Abgabe der Hausaufgabe\nGeben Sie eine kurze Auswertung mit folgenden Bestandteilen ab:\n\nzwei vergleichbar dargestellte Karten: Anzahl gültiger und Anzahl bewölkter Beobachtungen;\nAnteil der Pixel, die an allen fünf Terminen gültig sind;\nZeitverlauf mit beschreibender Trendgerade und Sensitivitätsprüfung, soweit die gemeinsame Datenabdeckung dies erlaubt;\neine Differenzkarte zwischen letzter und erster Aufnahme;\neine halbe Seite Interpretation: Datenabdeckung, beobachtete Veränderungen und Grenzen Ihrer Aussage.\n\nLegen Sie die verwendete auswahl.csv und Ihre kommentierten Skripte bei. Falls Sie die Aufnahmekombination ändern, müssen die NDVI-Reihe und beide Exkurse mit derselben neuen Auswahl erneut berechnet werden."
+    "objectID": "index.html#block-4-veränderungen-werkzeugverknüpfung-und-transfer",
+    "href": "index.html#block-4-veränderungen-werkzeugverknüpfung-und-transfer",
+    "title": "Advanced GI & Fernerkundung",
+    "section": "Block 4 · Veränderungen, Werkzeugverknüpfung und Transfer",
+    "text": "Block 4 · Veränderungen, Werkzeugverknüpfung und Transfer\nSie greifen die Sentinel-Daten erneut auf und untersuchen zeitliche Veränderungen. Zusätzliche Beobachtungen helfen, auffällige Signale zu überprüfen. An einem begrenzten R–OTB-Beispiel lernen Sie, einen Verarbeitungsschritt über Werkzeuggrenzen hinweg nachzuvollziehen. Abschließend übertragen Sie einen erprobten Ansatz auf eine eigene räumliche Frage.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n10 · Veränderungen untersuchen\nSommeraufnahmen mehrerer Jahre vergleichen; Veränderungskandidaten anhand der Originalbilder und einer zusätzlichen Aufnahme prüfen.\nWorksheet 10\n\n\n11 · Werkzeuge verbinden\nEine bandweise Standardisierung über R, link2GI und OTB ausführen; Werte, Georeferenzierung und Übergabe zwischen den Werkzeugen kontrollieren.\nWorksheet 11\n\n\n12 · Eigenständig übertragen\nEine begrenzte Frage zu Landschaftsmustern, Klimaregionalisierung oder zeitlicher Veränderung für einen eigenen Ausschnitt bearbeiten und den Ablauf durch eine andere Gruppe nachvollziehen lassen.\nWorksheet 12",
+    "crumbs": [
+      "Start"
+    ]
+  },
+  {
+    "objectID": "index.html#was-sie-am-ende-können-sollen",
+    "href": "index.html#was-sie-am-ende-können-sollen",
+    "title": "Advanced GI & Fernerkundung",
+    "section": "Was Sie am Ende können sollen",
+    "text": "Was Sie am Ende können sollen\nSie können zu einer räumlichen Frage geeignete Daten beschaffen, einen vorhandenen Analyseweg anpassen und dessen Ergebnisse kritisch beurteilen. Sie begründen die Wahl von Parametern und Maßstäben, erkennen Grenzen von Validierung und Übertragbarkeit und dokumentieren Ihren Ablauf so, dass andere ihn erneut ausführen können.",
+    "crumbs": [
+      "Start"
+    ]
+  },
+  {
+    "objectID": "index.html#materialgrundlage",
+    "href": "index.html#materialgrundlage",
+    "title": "Advanced GI & Fernerkundung",
+    "section": "Materialgrundlage",
+    "text": "Materialgrundlage\n\nAdvanced GIS and Remote Sensing 2024 – Methoden, Reader und Worksheets\nAktuelle R-Workflows – LV-19-d19-006-25-R\nEON2026 – Machine Learning, räumliche Validierung und AOA",
+    "crumbs": [
+      "Start"
+    ]
   },
   {
     "objectID": "pages/microclimate_warmup_reader.html",
@@ -582,511 +860,332 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Advanced GI & Fernerkundung",
+    "objectID": "pages/ws/ws-02-zusatz.html",
+    "href": "pages/ws/ws-02-zusatz.html",
+    "title": "Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe",
     "section": "",
-    "text": "Wie beschreiben wir räumliche Muster? Wie bilden wir aus Klimadaten sinnvolle Teilräume? Wo sind räumliche Vorhersagen belastbar, und wann zeigt ein Satellitenbild tatsächlich eine Veränderung?\nIn diesem Kurs lernen Sie ausgewählte fortgeschrittene Grundlagen der Geoinformationswissenschaft und Fernerkundung anzuwenden. Sie arbeiten mit realen Daten aus Hessen und Nordrhein-Westfalen, beschaffen diese selbst und bearbeiten überschaubare anwendungsbezogene Fragen. Dabei verbinden Sie die räumliche Kontrolle in QGIS mit reproduzierbaren Auswertungen in R und ausgewählten externen Werkzeugen.\nSie lernen, vorhandene Skripte gezielt anzupassen, methodische Entscheidungen zu vergleichen und Ergebnisse fachlich zu prüfen. Räumliche Auflösung, Untersuchungsgebiet, zeitlicher Bezug und Übertragbarkeit begleiten alle Themen. Ziel ist, dass Sie einen Analyseweg selbstständig ausführen und seine Aussagekraft begründen können.",
-    "crumbs": [
-      "Start"
-    ]
+    "text": "Bearbeiten Sie nach Worksheet 02 die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.\nReihenfolge: zuerst die Pixelzählung mit Skript 05, dann die Zeitreihenanalyse mit Skript 04. Die Nummern der Skripte entsprechen ihrer Ergänzung zum Projekt; beide lesen ihre Eingaben selbst ein.\nGezählt und analysiert werden die fünf ausgewählten Sommertermine. Die Ergebnisse beschreiben diese Auswahl. Daraus ergibt sich keine allgemeine Wolkenhäufigkeit über den Burgwald.\n\n\n\n\n\n\nNoteExkurs 1 · Gültige, bewölkte und fehlende Beobachtungen zählen\n\n\n\n\n\nLaden Sie 05_pixel_counts.R in scripts/ und führen Sie es aus. Es verwendet die abgerufenen Bänder SCL und dataMask sowie die Rot-/NIR-Werte. Ein Pixel wird an jedem Termin genau einer der folgenden Kategorien zugeordnet:\n\n\n\n\n\n\n\nAusgabeband\nZählregel pro Termin\n\n\n\n\nn_valid\nVerfügbare Daten, SCL 4, 5, 6 oder 7 und ein positiver Rot-plus-NIR-Nenner: gültig nach der NDVI-Maske aus WS02.\n\n\nn_cloudy\nVerfügbare Daten und SCL 8, 9 oder 10: mittlere/hohe Wolkenwahrscheinlichkeit oder dünner Cirrus.\n\n\nn_shadow\nVerfügbare Daten und SCL 3: Wolkenschatten.\n\n\nn_other\nVerfügbare Daten, die in keine der obigen Kategorien fallen, etwa Schnee/Eis, dunkle Flächen oder weitere ungültige Werte.\n\n\nn_missing\nKeine verfügbaren Daten laut dataMask beziehungsweise SCL 0 oder fehlende SCL.\n\n\n\nWichtig: n_cloudy ist nicht gleich fünf minus n_valid. Auch Schatten, sonstige ausgeschlossene Werte und fehlende Daten können einen NDVI ausschließen. Die SCL ist eine automatische Klassifikation; die Zählung übernimmt deren Zuordnungen.\n\n\n\nÖffnen Sie output/pixel_counts/beobachtungs_counts.tif in QGIS. Stellen Sie zuerst Band 1 (n_valid), dann Band 2 (n_cloudy) jeweils mit festen Grenzen 0 bis 5 dar. Null ist ein gültiges Zählergebnis; außerhalb Ihrer Untersuchungsfläche bleibt NoData.\nVerwenden Sie das Werkzeug Objekte abfragen, um die Bandwerte an drei Stellen zu vergleichen: hohe Verfügbarkeit, niedrige Verfügbarkeit und möglichst hohe Wolkenzahl. Falls Ihre Auswahl keine bewölkten Pixel enthält, dokumentieren Sie genau diesen Befund.\nPrüfen Sie jeweils die Summe aller fünf Zähler: Sie muss fünf ergeben. Sehen Sie eine auffällige Stelle in den Tagesbildern und deren SCL-Band nach.\nBestimmen Sie mithilfe von haeufigkeit_valid.csv, welcher Anteil der AOI-Pixel an allen fünf Terminen gültig ist: Zellzahl bei Wert 5 geteilt durch die Summe der Zellzahlen. Fehlt die Kategorie 5, beträgt dieser Anteil null.\n\nZusätzlich erzeugt beobachtungs_anteile.tif zwei Prozentwerte mit unterschiedlichen Bezugsgrößen:\n\nGültigkeitsanteil: n_valid / 5 × 100.\nWolkenanteil unter verfügbaren Beobachtungen: n_cloudy / (5 − n_missing) × 100. Ohne verfügbare Beobachtungen bleibt der Wert NoData.\n\nAuswertung: Gemeinsame Datenabdeckung als Prozentwert angeben und die dominierende Ausschlussklasse an einer auffälligen Stelle im SCL-Band prüfen.\n\n\n\n\n\n\n\n\n\n\nNoteExkurs 2 · Die Sommerreihe analysieren\n\n\n\n\n\nAuswertung: Differenzen zwischen den Aufnahmen, lineare Steigung und Empfindlichkeit gegenüber einzelnen Terminen berechnen.\nNutzen Sie die bereits berechneten NDVI-Raster. Falls Exkurs 1 keine an allen Terminen gültigen Pixel ergibt, dokumentieren Sie diese Einschränkung; die gemeinsame Zeitreihenanalyse kann dann mit dieser Auswahl nicht berechnet werden. Die fünf geladenen Sommertage sind die Beobachtungen dieser Analyse. Die weiteren Treffer des STAC-Katalogs sind zunächst nur Metadaten und werden hier nicht als zusätzliche Beobachtungen verwendet.\nLaden Sie 04_zeitreihe_addon.R in Ihren Ordner scripts/. Das Skript liest die Ergebnisse aus Worksheet 02 selbst ein. Führen Sie es abschnittsweise aus.\n\n\nDas Skript verwendet ausschließlich Pixel, die an allen Terminen gültig sind. Öffnen Sie output/zeitreihe/zeitreihe_kennwerte.csv.\n\n\n\n\n\n\n\nSpalte\nBedeutung\n\n\n\n\ndatum, tag_im_jahr\nTatsächlicher Aufnahmetermin und seine Lage innerhalb des Jahres.\n\n\nndvi\nRäumlicher Mittelwert über die gemeinsamen gültigen Pixel.\n\n\ndelta_vorher\nNDVI des aktuellen Termins minus NDVI des vorherigen Termins.\n\n\ndelta_pro_jahr\nDiese Differenz geteilt durch den tatsächlichen Zeitabstand in Jahren.\n\n\nabweichung_start\nDifferenz zur ersten Aufnahme; diese ist eine Referenz, kein nachgewiesener Normalzustand.\n\n\ntrend, residuum\nWert der angepassten Geraden und Abweichung der Beobachtung davon.\n\n\n\nAuftrag: Bestimmen Sie den größten Rückgang und die größte Zunahme, sofern beide auftreten. Nennen Sie jeweils die beiden verglichenen Daten. Prüfen Sie anhand der Originalbilder und der Aufnahmetage, ob die Unterschiede plausibel sind. Differenzen werden in NDVI-Einheiten angegeben, nicht als prozentuale Änderung der Vegetation.\n\n\n\nDas Skript passt eine Gerade an die mittleren NDVI-Werte an. Die Zeitvariable berücksichtigt die tatsächlichen Abstände zwischen den Aufnahmen:\nmodell &lt;- lm(ndvi ~ jahre_seit_start, data = d)\nDie Steigung beschreibt die lineare Änderung in NDVI-Einheiten pro Jahr. Öffnen Sie output/zeitreihe/zeitreihenanalyse.png. Vergleichen Sie die Gerade mit den beobachteten Werten; geben Sie den Termin mit dem größten absoluten Residuum an.\nAnschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in sensitivitaet.csv mit der Steigung der vollständigen Reihe. Geben Sie an, ob das Vorzeichen bestehen bleibt, und nennen Sie den Termin mit dem größten Einfluss auf die Steigung.\nDiese Prüfung untersucht die Empfindlichkeit gegenüber einzelnen Beobachtungen. Sie ist keine unabhängige Validierung. Fünf ausgewählte Sommertage erlauben hier eine beschreibende Auswertung; saisonale Zerlegung, Bruchpunkterkennung und Zukunftsprognose sind nicht Gegenstand des Add-ons.\n\n\n\nÖffnen Sie output/zeitreihe/differenz_ende_start.tif in QGIS. Verwenden Sie eine divergierende Farbskala mit null als Mitte und gleich großen positiven und negativen Darstellungsgrenzen.\n\nNegative Werte: niedrigerer NDVI am letzten gegenüber dem ersten Termin.\nPositive Werte: höherer NDVI am letzten gegenüber dem ersten Termin.\nNoData: keine gemeinsame gültige Beobachtung über die gesamte Reihe.\n\nAuftrag: Markieren Sie je eine Fläche mit Zu- und Abnahme und kontrollieren Sie beide in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.\n\n\n\nGeben Sie die größte Zu- und Abnahme mit Datumspaar, die vollständige Steigung und die Spannweite der Auslassungsprüfung an. Markieren Sie je eine räumliche Zu- und Abnahme in der Differenzkarte. Nennen Sie für eine vermutete Ursache eine zusätzliche Aufnahme, mit der sich diese prüfen lässt.\nSpeichern Sie den untersuchten Stand der data/auswahl.csv zusammen mit Ihrer Auswertung. Nach einer Änderung der Bildauswahl führen Sie zuerst Skript 03 und anschließend das Add-on erneut aus."
   },
   {
-    "objectID": "index.html#zielsetzung",
-    "href": "index.html#zielsetzung",
-    "title": "Advanced GI & Fernerkundung",
+    "objectID": "pages/ws/ws-02-zusatz.html#hausaufgabe",
+    "href": "pages/ws/ws-02-zusatz.html#hausaufgabe",
+    "title": "Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe",
     "section": "",
-    "text": "Wie beschreiben wir räumliche Muster? Wie bilden wir aus Klimadaten sinnvolle Teilräume? Wo sind räumliche Vorhersagen belastbar, und wann zeigt ein Satellitenbild tatsächlich eine Veränderung?\nIn diesem Kurs lernen Sie ausgewählte fortgeschrittene Grundlagen der Geoinformationswissenschaft und Fernerkundung anzuwenden. Sie arbeiten mit realen Daten aus Hessen und Nordrhein-Westfalen, beschaffen diese selbst und bearbeiten überschaubare anwendungsbezogene Fragen. Dabei verbinden Sie die räumliche Kontrolle in QGIS mit reproduzierbaren Auswertungen in R und ausgewählten externen Werkzeugen.\nSie lernen, vorhandene Skripte gezielt anzupassen, methodische Entscheidungen zu vergleichen und Ergebnisse fachlich zu prüfen. Räumliche Auflösung, Untersuchungsgebiet, zeitlicher Bezug und Übertragbarkeit begleiten alle Themen. Ziel ist, dass Sie einen Analyseweg selbstständig ausführen und seine Aussagekraft begründen können.",
-    "crumbs": [
-      "Start"
-    ]
+    "text": "Bearbeiten Sie nach Worksheet 02 die beiden folgenden Exkurse. Verwenden Sie Ihr bestehendes Projekt und dieselbe Aufnahmekombination. Ein weiterer Download von Satellitendaten ist dafür nicht erforderlich.\nReihenfolge: zuerst die Pixelzählung mit Skript 05, dann die Zeitreihenanalyse mit Skript 04. Die Nummern der Skripte entsprechen ihrer Ergänzung zum Projekt; beide lesen ihre Eingaben selbst ein.\nGezählt und analysiert werden die fünf ausgewählten Sommertermine. Die Ergebnisse beschreiben diese Auswahl. Daraus ergibt sich keine allgemeine Wolkenhäufigkeit über den Burgwald.\n\n\n\n\n\n\nNoteExkurs 1 · Gültige, bewölkte und fehlende Beobachtungen zählen\n\n\n\n\n\nLaden Sie 05_pixel_counts.R in scripts/ und führen Sie es aus. Es verwendet die abgerufenen Bänder SCL und dataMask sowie die Rot-/NIR-Werte. Ein Pixel wird an jedem Termin genau einer der folgenden Kategorien zugeordnet:\n\n\n\n\n\n\n\nAusgabeband\nZählregel pro Termin\n\n\n\n\nn_valid\nVerfügbare Daten, SCL 4, 5, 6 oder 7 und ein positiver Rot-plus-NIR-Nenner: gültig nach der NDVI-Maske aus WS02.\n\n\nn_cloudy\nVerfügbare Daten und SCL 8, 9 oder 10: mittlere/hohe Wolkenwahrscheinlichkeit oder dünner Cirrus.\n\n\nn_shadow\nVerfügbare Daten und SCL 3: Wolkenschatten.\n\n\nn_other\nVerfügbare Daten, die in keine der obigen Kategorien fallen, etwa Schnee/Eis, dunkle Flächen oder weitere ungültige Werte.\n\n\nn_missing\nKeine verfügbaren Daten laut dataMask beziehungsweise SCL 0 oder fehlende SCL.\n\n\n\nWichtig: n_cloudy ist nicht gleich fünf minus n_valid. Auch Schatten, sonstige ausgeschlossene Werte und fehlende Daten können einen NDVI ausschließen. Die SCL ist eine automatische Klassifikation; die Zählung übernimmt deren Zuordnungen.\n\n\n\nÖffnen Sie output/pixel_counts/beobachtungs_counts.tif in QGIS. Stellen Sie zuerst Band 1 (n_valid), dann Band 2 (n_cloudy) jeweils mit festen Grenzen 0 bis 5 dar. Null ist ein gültiges Zählergebnis; außerhalb Ihrer Untersuchungsfläche bleibt NoData.\nVerwenden Sie das Werkzeug Objekte abfragen, um die Bandwerte an drei Stellen zu vergleichen: hohe Verfügbarkeit, niedrige Verfügbarkeit und möglichst hohe Wolkenzahl. Falls Ihre Auswahl keine bewölkten Pixel enthält, dokumentieren Sie genau diesen Befund.\nPrüfen Sie jeweils die Summe aller fünf Zähler: Sie muss fünf ergeben. Sehen Sie eine auffällige Stelle in den Tagesbildern und deren SCL-Band nach.\nBestimmen Sie mithilfe von haeufigkeit_valid.csv, welcher Anteil der AOI-Pixel an allen fünf Terminen gültig ist: Zellzahl bei Wert 5 geteilt durch die Summe der Zellzahlen. Fehlt die Kategorie 5, beträgt dieser Anteil null.\n\nZusätzlich erzeugt beobachtungs_anteile.tif zwei Prozentwerte mit unterschiedlichen Bezugsgrößen:\n\nGültigkeitsanteil: n_valid / 5 × 100.\nWolkenanteil unter verfügbaren Beobachtungen: n_cloudy / (5 − n_missing) × 100. Ohne verfügbare Beobachtungen bleibt der Wert NoData.\n\nAuswertung: Gemeinsame Datenabdeckung als Prozentwert angeben und die dominierende Ausschlussklasse an einer auffälligen Stelle im SCL-Band prüfen.\n\n\n\n\n\n\n\n\n\n\nNoteExkurs 2 · Die Sommerreihe analysieren\n\n\n\n\n\nAuswertung: Differenzen zwischen den Aufnahmen, lineare Steigung und Empfindlichkeit gegenüber einzelnen Terminen berechnen.\nNutzen Sie die bereits berechneten NDVI-Raster. Falls Exkurs 1 keine an allen Terminen gültigen Pixel ergibt, dokumentieren Sie diese Einschränkung; die gemeinsame Zeitreihenanalyse kann dann mit dieser Auswahl nicht berechnet werden. Die fünf geladenen Sommertage sind die Beobachtungen dieser Analyse. Die weiteren Treffer des STAC-Katalogs sind zunächst nur Metadaten und werden hier nicht als zusätzliche Beobachtungen verwendet.\nLaden Sie 04_zeitreihe_addon.R in Ihren Ordner scripts/. Das Skript liest die Ergebnisse aus Worksheet 02 selbst ein. Führen Sie es abschnittsweise aus.\n\n\nDas Skript verwendet ausschließlich Pixel, die an allen Terminen gültig sind. Öffnen Sie output/zeitreihe/zeitreihe_kennwerte.csv.\n\n\n\n\n\n\n\nSpalte\nBedeutung\n\n\n\n\ndatum, tag_im_jahr\nTatsächlicher Aufnahmetermin und seine Lage innerhalb des Jahres.\n\n\nndvi\nRäumlicher Mittelwert über die gemeinsamen gültigen Pixel.\n\n\ndelta_vorher\nNDVI des aktuellen Termins minus NDVI des vorherigen Termins.\n\n\ndelta_pro_jahr\nDiese Differenz geteilt durch den tatsächlichen Zeitabstand in Jahren.\n\n\nabweichung_start\nDifferenz zur ersten Aufnahme; diese ist eine Referenz, kein nachgewiesener Normalzustand.\n\n\ntrend, residuum\nWert der angepassten Geraden und Abweichung der Beobachtung davon.\n\n\n\nAuftrag: Bestimmen Sie den größten Rückgang und die größte Zunahme, sofern beide auftreten. Nennen Sie jeweils die beiden verglichenen Daten. Prüfen Sie anhand der Originalbilder und der Aufnahmetage, ob die Unterschiede plausibel sind. Differenzen werden in NDVI-Einheiten angegeben, nicht als prozentuale Änderung der Vegetation.\n\n\n\nDas Skript passt eine Gerade an die mittleren NDVI-Werte an. Die Zeitvariable berücksichtigt die tatsächlichen Abstände zwischen den Aufnahmen:\nmodell &lt;- lm(ndvi ~ jahre_seit_start, data = d)\nDie Steigung beschreibt die lineare Änderung in NDVI-Einheiten pro Jahr. Öffnen Sie output/zeitreihe/zeitreihenanalyse.png. Vergleichen Sie die Gerade mit den beobachteten Werten; geben Sie den Termin mit dem größten absoluten Residuum an.\nAnschließend wird jeweils ein Aufnahmetermin ausgelassen und die Steigung erneut berechnet. Vergleichen Sie die Werte in sensitivitaet.csv mit der Steigung der vollständigen Reihe. Geben Sie an, ob das Vorzeichen bestehen bleibt, und nennen Sie den Termin mit dem größten Einfluss auf die Steigung.\nDiese Prüfung untersucht die Empfindlichkeit gegenüber einzelnen Beobachtungen. Sie ist keine unabhängige Validierung. Fünf ausgewählte Sommertage erlauben hier eine beschreibende Auswertung; saisonale Zerlegung, Bruchpunkterkennung und Zukunftsprognose sind nicht Gegenstand des Add-ons.\n\n\n\nÖffnen Sie output/zeitreihe/differenz_ende_start.tif in QGIS. Verwenden Sie eine divergierende Farbskala mit null als Mitte und gleich großen positiven und negativen Darstellungsgrenzen.\n\nNegative Werte: niedrigerer NDVI am letzten gegenüber dem ersten Termin.\nPositive Werte: höherer NDVI am letzten gegenüber dem ersten Termin.\nNoData: keine gemeinsame gültige Beobachtung über die gesamte Reihe.\n\nAuftrag: Markieren Sie je eine Fläche mit Zu- und Abnahme und kontrollieren Sie beide in den ursprünglichen Aufnahmen. Die Differenzkarte vergleicht zwei Termine; sie ist keine Karte des Trends über alle fünf Beobachtungen.\n\n\n\nGeben Sie die größte Zu- und Abnahme mit Datumspaar, die vollständige Steigung und die Spannweite der Auslassungsprüfung an. Markieren Sie je eine räumliche Zu- und Abnahme in der Differenzkarte. Nennen Sie für eine vermutete Ursache eine zusätzliche Aufnahme, mit der sich diese prüfen lässt.\nSpeichern Sie den untersuchten Stand der data/auswahl.csv zusammen mit Ihrer Auswertung. Nach einer Änderung der Bildauswahl führen Sie zuerst Skript 03 und anschließend das Add-on erneut aus."
   },
   {
-    "objectID": "index.html#arbeitsweise",
-    "href": "index.html#arbeitsweise",
-    "title": "Advanced GI & Fernerkundung",
-    "section": "Arbeitsweise",
-    "text": "Arbeitsweise\nDas Mikroklima-Warmup bietet vorab einen Einstieg für Studierende ohne Programmiererfahrung: Projekt öffnen, vorhandenes Skript blockweise ausführen und Ergebnisse ansehen. Es setzt keine selbstständige Programmierung voraus.\nDie zwölf Sitzungen verbinden kurze fachliche Einführungen mit einem hohen Übungsanteil. Die Arbeitsaufträge finden Sie in den jeweils verlinkten Worksheets.\nSie nutzen Code aus den Kursmaterialien, Dokumentation und KI-Unterstützung. Dazu gehört, Eingaben und Parameter zu verstehen, Änderungen festzuhalten und Ausgaben zu kontrollieren. Sie müssen keine Algorithmen selbst entwickeln. Sie sollen jedoch erklären können, was Ihr Skript verarbeitet und woran Sie ein plausibles Ergebnis erkennen.\nIm Verlauf des Kurses entsteht ein Projektordner mit Datenquellen, Skripten, Parametern und ausgewählten Ergebnissen. Ihre Interpretationen unterscheiden zwischen Beobachtung, möglicher Erklärung und verbleibender Unsicherheit.",
-    "crumbs": [
-      "Start"
-    ]
+    "objectID": "pages/ws/ws-02-zusatz.html#abgabe-der-hausaufgabe",
+    "href": "pages/ws/ws-02-zusatz.html#abgabe-der-hausaufgabe",
+    "title": "Zusatz zu Worksheet 02 · Datenabdeckung und Zeitreihe",
+    "section": "Abgabe der Hausaufgabe",
+    "text": "Abgabe der Hausaufgabe\nGeben Sie eine kurze Auswertung mit folgenden Bestandteilen ab:\n\nzwei vergleichbar dargestellte Karten: Anzahl gültiger und Anzahl bewölkter Beobachtungen;\nAnteil der Pixel, die an allen fünf Terminen gültig sind;\nZeitverlauf mit beschreibender Trendgerade und Sensitivitätsprüfung, soweit die gemeinsame Datenabdeckung dies erlaubt;\neine Differenzkarte zwischen letzter und erster Aufnahme;\neine halbe Seite Interpretation: Datenabdeckung, beobachtete Veränderungen und Grenzen Ihrer Aussage.\n\nLegen Sie die verwendete auswahl.csv und Ihre kommentierten Skripte bei. Falls Sie die Aufnahmekombination ändern, müssen die NDVI-Reihe und beide Exkurse mit derselben neuen Auswahl erneut berechnet werden."
   },
   {
-    "objectID": "index.html#block-1-daten-beschaffen-und-skripte-nutzen",
-    "href": "index.html#block-1-daten-beschaffen-und-skripte-nutzen",
-    "title": "Advanced GI & Fernerkundung",
-    "section": "Block 1 · Daten beschaffen und Skripte nutzen",
-    "text": "Block 1 · Daten beschaffen und Skripte nutzen\nSie richten einen reproduzierbaren Arbeitsablauf ein und beschaffen Sentinel-2-Daten für den Burgwald. Sie lernen, eine automatisierte Bildauswahl zu kontrollieren und Vegetationsindizes anhand konkreter Flächen zu interpretieren. Der Vergleich unterschiedlicher Aufnahmetermine zeigt, wie stark Datenqualität und zeitlicher Bezug die Aussage beeinflussen.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n1 · Skripte handhaben\nEin vorhandenes Skript übernehmen, Pfade und Parameter anpassen, Fehler mit Dokumentation oder KI bearbeiten und den Ablauf erneut ausführen.\nWorksheet 01\n\n\n2 · Satellitendaten beschaffen\nSentinel-2-Aufnahmen über den CDSE-Workflow abrufen; Abdeckung, Wolken, Schatten und Aufnahmedaten prüfen.\nWorksheet 02\n\n\n3 · Vegetationssignale interpretieren\nNDVI und kNDVI an Wald-, Offenland- und auffälligen Vergleichsflächen untersuchen; Unterschiede zwischen Vegetationssignal und Aufnahmebedingungen erkennen.\nWorksheet 03",
-    "crumbs": [
-      "Start"
-    ]
-  },
-  {
-    "objectID": "index.html#block-2-räumliche-muster-und-klimaregionalisierung",
-    "href": "index.html#block-2-räumliche-muster-und-klimaregionalisierung",
-    "title": "Advanced GI & Fernerkundung",
-    "section": "Block 2 · Räumliche Muster und Klimaregionalisierung",
-    "text": "Block 2 · Räumliche Muster und Klimaregionalisierung\nSie vergleichen klassische Landschaftsmaße mit informationstheoretischen Ansätzen. Dabei untersuchen Sie, welche Informationen über Zusammensetzung und räumliche Anordnung tatsächlich erfasst werden. Anschließend wechseln Sie von kategorischer Landbedeckung zu kontinuierlichen Klimadaten: Sie segmentieren Temperaturjahresgänge und bewerten, wie Parameter und Rasterauflösung die entstehenden Regionen beeinflussen.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n4 · Muster quantitativ beschreiben\nSHDI und Aggregation Index mit Entropie und relativer gegenseitiger Information vergleichen; den Einfluss räumlicher Anordnung und Fenstergröße untersuchen.\nWorksheet 04\n\n\n5 · Klimadaten segmentieren\nMonatliche Klimadaten selbst beschaffen und mit supercells regionalisieren; Segmentzahl und Kompaktheit kontrolliert variieren.\nWorksheet 05\n\n\n6 · Regionalisierungen beurteilen\nHomogenität innerhalb der Segmente, Unterschiede benachbarter Jahresgänge und Empfindlichkeit gegenüber gröberer Rasterauflösung bewerten.\nWorksheet 06",
-    "crumbs": [
-      "Start"
-    ]
-  },
-  {
-    "objectID": "index.html#block-3-räumliche-vorhersagen-und-modellgültigkeit",
-    "href": "index.html#block-3-räumliche-vorhersagen-und-modellgültigkeit",
-    "title": "Advanced GI & Fernerkundung",
-    "section": "Block 3 · Räumliche Vorhersagen und Modellgültigkeit",
-    "text": "Block 3 · Räumliche Vorhersagen und Modellgültigkeit\nAm LAI-Beispiel aus den EON-Materialien verfolgen Sie den Weg von punktuellen Referenzwerten zur flächenhaften Schätzung. Sie prüfen den räumlichen und zeitlichen Bezug der Daten und vergleichen unterschiedliche Validierungsansätze. Mit der Area of Applicability untersuchen Sie anschließend, wo die Prädiktorbedingungen durch die Trainingsdaten abgedeckt sind.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n7 · Referenzdaten und Schätzung\nLAI-Referenzen und Satellitendaten zusammenführen; ein einfaches Modell anwenden und dessen Datengrundlage, Residuen und Voraussetzungen beurteilen.\nWorksheet 07\n\n\n8 · Räumlich validieren\nEinen Random Forest mit zufälligen und räumlichen Prüffaltungen vergleichen; bei gleichen Prädiktoren und Modelleinstellungen die Bedeutung der Prüfsituation erkennen.\nWorksheet 08\n\n\n9 · Anwendungsbereich prüfen\nVorhersage und AOA gemeinsam interpretieren; untersuchen, wie eine Änderung der Prädiktorauswahl Modellgüte und Anwendungsbereich beeinflusst.\nWorksheet 09",
-    "crumbs": [
-      "Start"
-    ]
-  },
-  {
-    "objectID": "index.html#block-4-veränderungen-werkzeugverknüpfung-und-transfer",
-    "href": "index.html#block-4-veränderungen-werkzeugverknüpfung-und-transfer",
-    "title": "Advanced GI & Fernerkundung",
-    "section": "Block 4 · Veränderungen, Werkzeugverknüpfung und Transfer",
-    "text": "Block 4 · Veränderungen, Werkzeugverknüpfung und Transfer\nSie greifen die Sentinel-Daten erneut auf und untersuchen zeitliche Veränderungen. Zusätzliche Beobachtungen helfen, auffällige Signale zu überprüfen. An einem begrenzten R–OTB-Beispiel lernen Sie, einen Verarbeitungsschritt über Werkzeuggrenzen hinweg nachzuvollziehen. Abschließend übertragen Sie einen erprobten Ansatz auf eine eigene räumliche Frage.\n\n\n\nSitzung\nInhalt und Lernziel\nArbeitsauftrag\n\n\n\n\n10 · Veränderungen untersuchen\nSommeraufnahmen mehrerer Jahre vergleichen; Veränderungskandidaten anhand der Originalbilder und einer zusätzlichen Aufnahme prüfen.\nWorksheet 10\n\n\n11 · Werkzeuge verbinden\nEine bandweise Standardisierung über R, link2GI und OTB ausführen; Werte, Georeferenzierung und Übergabe zwischen den Werkzeugen kontrollieren.\nWorksheet 11\n\n\n12 · Eigenständig übertragen\nEine begrenzte Frage zu Landschaftsmustern, Klimaregionalisierung oder zeitlicher Veränderung für einen eigenen Ausschnitt bearbeiten und den Ablauf durch eine andere Gruppe nachvollziehen lassen.\nWorksheet 12",
-    "crumbs": [
-      "Start"
-    ]
-  },
-  {
-    "objectID": "index.html#was-sie-am-ende-können-sollen",
-    "href": "index.html#was-sie-am-ende-können-sollen",
-    "title": "Advanced GI & Fernerkundung",
-    "section": "Was Sie am Ende können sollen",
-    "text": "Was Sie am Ende können sollen\nSie können zu einer räumlichen Frage geeignete Daten beschaffen, einen vorhandenen Analyseweg anpassen und dessen Ergebnisse kritisch beurteilen. Sie begründen die Wahl von Parametern und Maßstäben, erkennen Grenzen von Validierung und Übertragbarkeit und dokumentieren Ihren Ablauf so, dass andere ihn erneut ausführen können.",
-    "crumbs": [
-      "Start"
-    ]
-  },
-  {
-    "objectID": "index.html#materialgrundlage",
-    "href": "index.html#materialgrundlage",
-    "title": "Advanced GI & Fernerkundung",
-    "section": "Materialgrundlage",
-    "text": "Materialgrundlage\n\nAdvanced GIS and Remote Sensing 2024 – Methoden, Reader und Worksheets\nAktuelle R-Workflows – LV-19-d19-006-25-R\nEON2026 – Machine Learning, räumliche Validierung und AOA",
-    "crumbs": [
-      "Start"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-01.html",
-    "href": "pages/ws/ws-01.html",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "objectID": "pages/ws/ws-03.html",
+    "href": "pages/ws/ws-03.html",
+    "title": "Worksheet 03 · Vegetationssignale vergleichen",
     "section": "",
-    "text": "Sie richten ein kleines R-Projekt ein, trennen Eingangsdaten, Skripte und Ergebnisse und führen einen überschaubaren Analyseablauf aus. Anschließend verändern Sie einen Parameter und prüfen die Wirkung. Sie nutzen dabei relative Pfade, einen aussagekräftigen Skriptkopf und kurze Kommentare.\nBeispiel: Sie laden die Gebietsgrenze des Burgwalds, erzeugen einen Puffer und speichern eine Karte sowie die berechnete Geometrie. Die Daten stammen aus dem Kursrepository LV-19-d19-006-25-R. Die Pufferberechnung dient hier als einfache Übung zur Skriptnutzung.",
+    "text": "Verwenden Sie die fünf ausgewählten Sommeraufnahmen aus Worksheet 02, das RGB-Bild und die Qualitätsbänder. Wählen Sie innerhalb der AOI drei kleine, getrennte Vergleichsflächen: Wald, Offenland und eine im Bild auffällige Fläche. Der aktuelle Kartenhintergrund dient der Orientierung; die Landbedeckung am Aufnahmetag prüfen Sie im jeweiligen Sentinel-Bild.\nFalls Sie mit einer älteren Wald-AOI arbeiten, die kein Offenland enthält, legen Sie eine Kopie des Projekts an und erweitern Sie dort die AOI auf einen gemischten Ausschnitt mit höchstens 5 km Kantenlänge. Archivieren Sie den bisherigen Ordner data/sentinel/ und führen Sie Skript 02 und 03 für das neue Gebiet erneut aus.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 01"
+      "Worksheet 03"
     ]
   },
   {
-    "objectID": "pages/ws/ws-01.html#ziel",
-    "href": "pages/ws/ws-01.html#ziel",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "objectID": "pages/ws/ws-03.html#datengrundlage",
+    "href": "pages/ws/ws-03.html#datengrundlage",
+    "title": "Worksheet 03 · Vegetationssignale vergleichen",
     "section": "",
-    "text": "Sie richten ein kleines R-Projekt ein, trennen Eingangsdaten, Skripte und Ergebnisse und führen einen überschaubaren Analyseablauf aus. Anschließend verändern Sie einen Parameter und prüfen die Wirkung. Sie nutzen dabei relative Pfade, einen aussagekräftigen Skriptkopf und kurze Kommentare.\nBeispiel: Sie laden die Gebietsgrenze des Burgwalds, erzeugen einen Puffer und speichern eine Karte sowie die berechnete Geometrie. Die Daten stammen aus dem Kursrepository LV-19-d19-006-25-R. Die Pufferberechnung dient hier als einfache Übung zur Skriptnutzung.",
+    "text": "Verwenden Sie die fünf ausgewählten Sommeraufnahmen aus Worksheet 02, das RGB-Bild und die Qualitätsbänder. Wählen Sie innerhalb der AOI drei kleine, getrennte Vergleichsflächen: Wald, Offenland und eine im Bild auffällige Fläche. Der aktuelle Kartenhintergrund dient der Orientierung; die Landbedeckung am Aufnahmetag prüfen Sie im jeweiligen Sentinel-Bild.\nFalls Sie mit einer älteren Wald-AOI arbeiten, die kein Offenland enthält, legen Sie eine Kopie des Projekts an und erweitern Sie dort die AOI auf einen gemischten Ausschnitt mit höchstens 5 km Kantenlänge. Archivieren Sie den bisherigen Ordner data/sentinel/ und führen Sie Skript 02 und 03 für das neue Gebiet erneut aus.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 01"
+      "Worksheet 03"
     ]
   },
   {
-    "objectID": "pages/ws/ws-01.html#das-projekt-anlegen",
-    "href": "pages/ws/ws-01.html#das-projekt-anlegen",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
-    "section": "1 · Das Projekt anlegen",
-    "text": "1 · Das Projekt anlegen\nÖffnen Sie in RStudio File → New Project → New Directory → New Project. Nennen Sie das Projekt burgwald-mini und wählen Sie einen Speicherort. Öffnen Sie es künftig über burgwald-mini.Rproj.\nLegen Sie über den Reiter Files → New Folder drei Unterordner an:\n\n\n\n\n\n\n\nOrt im Projekt\nInhalt\n\n\n\n\nburgwald-mini.Rproj\nÖffnet das Projekt mit dem Projektordner als Arbeitsverzeichnis.\n\n\ndata/\nHeruntergeladene Eingangsdaten; diese werden nicht überschrieben.\n\n\nscripts/\nIhre R-Skripte.\n\n\noutput/\nBerechnete Daten und Abbildungen; diese lassen sich erneut erzeugen.\n\n\n\nPrüfen Sie in der Konsole:\n\ngetwd()\nlist.files()\n\nDas Arbeitsverzeichnis muss Ihr Ordner burgwald-mini sein. Die drei Unterordner und die Projektdatei sollten angezeigt werden. Alle folgenden Pfade beziehen sich auf diesen Projektordner, auch wenn das Skript in scripts/ liegt. Ein zusätzliches setwd() ist nicht erforderlich.\nInstallieren Sie das benötigte Paket einmalig in der Konsole, falls es noch fehlt:\n\ninstall.packages(\"sf\")",
+    "objectID": "pages/ws/ws-03.html#vergleich-ausführen",
+    "href": "pages/ws/ws-03.html#vergleich-ausführen",
+    "title": "Worksheet 03 · Vegetationssignale vergleichen",
+    "section": "Vergleich ausführen",
+    "text": "Vergleich ausführen\n\nZeichnen Sie in QGIS drei Polygonobjekte in data/vergleichsflaechen.gpkg. Das Textfeld typ enthält genau einmal wald, offenland und auffaellig. Die Polygone müssen innerhalb Ihrer AOI liegen und mehrere 10-m-Zellen umfassen.\nLaden Sie 06_indices_vergleichen.R nach scripts/ und führen Sie es aus. Es vergleicht pro Fläche dieselben, an allen fünf Terminen gültigen Zellen.\nÖffnen Sie output/indices/kndvi_reihe.tif und die NDVI-Reihe in QGIS. Verwenden Sie über alle Termine feste Skalen: NDVI −1 bis 1, kNDVI 0 bis 1. Vergleichen Sie für einen gemeinsamen Termin die Werte an denselben Zellpositionen.\n\nDie hier verwendete RBF-Variante lautet\n\\[kNDVI = \\tanh(NDVI^2).\\]\nSie ist eine nichtlineare Transformation derselben Rot-/NIR-Beobachtung. Sie fügt keine unabhängige Beobachtung hinzu. Durch das Quadrieren erhalten positive und negative NDVI-Werte gleichen Betrags denselben kNDVI. Prüfen Sie daher das Vorzeichen im NDVI, bevor Sie ein kNDVI-Signal als Vegetationssignal interpretieren. Das Skript transformiert zuerst die Einzelpixel und mittelt anschließend.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 01"
+      "Worksheet 03"
     ]
   },
   {
-    "objectID": "pages/ws/ws-01.html#ein-übersichtliches-skript-anlegen",
-    "href": "pages/ws/ws-01.html#ein-übersichtliches-skript-anlegen",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
-    "section": "2 · Ein übersichtliches Skript anlegen",
-    "text": "2 · Ein übersichtliches Skript anlegen\nErstellen Sie über File → New File → R Script ein Skript und speichern Sie es als scripts/01_burgwald_puffer.R. Übernehmen Sie den folgenden Code und ergänzen Sie Name und Datum im Kopf.\nDer Aufbau bleibt einfach: Header → Paket → Einstellungen → Daten → Verarbeitung → Ausgabe → Kontrolle. Änderungen an Pfaden oder Parametern erfolgen gesammelt im Abschnitt „Einstellungen“.\n\n# ------------------------------------------------------------\n# Titel:   Burgwald – Gebietsgrenze puffern\n# Autor:   Ihr Name\n# Datum:   JJJJ-MM-TT\n# Zweck:   Gebietsgrenze laden, puffern und Ergebnisse speichern\n# Quelle:  https://github.com/gisma/LV-19-d19-006-25-R\n# Eingabe: data/burgwald_hull.GPKG\n# Ausgabe: Puffer als GeoPackage und Karte unter output/\n# Start:   RStudio-Projekt burgwald-mini.Rproj öffnen\n# ------------------------------------------------------------\n\n# 1. Paket ---------------------------------------------------\nlibrary(sf)\n\n# 2. Einstellungen -------------------------------------------\npuffer_m &lt;- 100\n\ndaten_url &lt;- paste0(\n  \"https://raw.githubusercontent.com/\",\n  \"gisma/LV-19-d19-006-25-R/main/burgwald_hull.GPKG\"\n)\neingabe &lt;- file.path(\"data\", \"burgwald_hull.GPKG\")\nausgabe &lt;- file.path(\"output\", paste0(\"puffer_\", puffer_m, \"m\"))\n\n# 3. Daten laden ---------------------------------------------\n# Der Download erfolgt nur, wenn die Eingabedatei noch fehlt.\nif (!file.exists(eingabe)) {\n  download.file(daten_url, destfile = eingabe, mode = \"wb\")\n}\ngebiet &lt;- st_read(eingabe, quiet = TRUE)\n\n# 4. Verarbeiten ---------------------------------------------\n# UTM 32N verwendet Meter: Der Pufferabstand ist damit eindeutig.\ngebiet &lt;- st_transform(gebiet, 25832)\npuffer &lt;- st_buffer(gebiet, dist = puffer_m)\n\n# 5. Ergebnisse speichern ------------------------------------\n# Nur die gleichnamige Ergebnisdatei wird beim Wiederholen ersetzt.\nst_write(puffer, paste0(ausgabe, \".gpkg\"),\n         delete_dsn = TRUE, quiet = TRUE)\n\npng(paste0(ausgabe, \".png\"), width = 1000, height = 800)\nplot(st_geometry(puffer), col = \"lightblue\",\n     main = paste(\"Burgwald – Puffer\", puffer_m, \"m\"))\nplot(st_geometry(gebiet), col = \"darkgreen\", add = TRUE)\nlegend(\"topright\", legend = c(\"Gebiet\", \"Puffer\"),\n       fill = c(\"darkgreen\", \"lightblue\"), bty = \"n\")\ndev.off()\n\n# 6. Kontrollieren -------------------------------------------\nprint(st_crs(gebiet)$epsg)\nprint(data.frame(\n  gebiet_km2 = as.numeric(st_area(gebiet)) / 1e6,\n  puffer_km2 = as.numeric(st_area(puffer)) / 1e6\n))\nprint(list.files(\"output\"))\n\nFühren Sie das Skript zunächst abschnittsweise mit Ctrl+Enter aus. Prüfen Sie anschließend die PNG-Datei im Ordner output. Öffnen Sie das erzeugte GeoPackage in QGIS und vergleichen Sie es mit der Eingabedatei.\nKontrolle: Vergleichen Sie Gebiets- und Pufferfläche in der Konsole. Prüfen Sie in QGIS, dass der Puffer die Gebietsgrenze vollständig umschließt und die Ausgabedateien unter output/ liegen.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 01"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-01.html#einen-parameter-gezielt-ändern",
-    "href": "pages/ws/ws-01.html#einen-parameter-gezielt-ändern",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
-    "section": "3 · Einen Parameter gezielt ändern",
-    "text": "3 · Einen Parameter gezielt ändern\nÄndern Sie ausschließlich puffer_m &lt;- 100 zu puffer_m &lt;- 500. Schreiben Sie davor einen kurzen Kommentar, warum Sie den Parameter verändern. Führen Sie das gesamte Skript mit Source erneut aus.\nVergleichen Sie die beiden Karten und die ausgegebenen Flächen. Prüfen Sie außerdem, ob beide Ergebnisvarianten unter output/ liegen und die Eingabedatei unter data/ unverändert geblieben ist.\nDokumentieren Sie: Pufferabstand in Metern, beide berechneten Flächen und die Dateinamen der 100-m- und 500-m-Variante.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 01"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-01.html#einen-pfadfehler-verstehen",
-    "href": "pages/ws/ws-01.html#einen-pfadfehler-verstehen",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
-    "section": "4 · Einen Pfadfehler verstehen",
-    "text": "4 · Einen Pfadfehler verstehen\nÄndern Sie vorübergehend die Definition von eingabe zu:\n\neingabe &lt;- file.path(\"daten\", \"burgwald_hull.GPKG\")\n\nFühren Sie das Skript erneut aus. Lesen Sie die Fehlermeldung und prüfen Sie mit getwd() und dir.exists(\"daten\"), worauf der Pfad verweist. Stellen Sie anschließend den richtigen Pfad wieder her.\nNutzen Sie bei Bedarf die Dokumentation oder KI. Ein passender Auftrag lautet:\n\nMein RStudio-Projekt enthält die Ordner data, scripts und output. Erkläre diese Fehlermeldung und nenne die kleinste notwendige Korrektur. Ändere keine weiteren Teile des Skripts: [Fehlermeldung und betroffene Codezeilen einfügen].\n\nHalten Sie in einem Kommentar fest, was falsch war und wie Sie die Korrektur geprüft haben. Kommentare sollen den Zweck oder eine Entscheidung erklären, beispielsweise die Wahl eines metrischen Koordinatensystems.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 01"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-01.html#ohne-gespeicherte-objekte-erneut-ausführen",
-    "href": "pages/ws/ws-01.html#ohne-gespeicherte-objekte-erneut-ausführen",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
-    "section": "5 · Ohne gespeicherte Objekte erneut ausführen",
-    "text": "5 · Ohne gespeicherte Objekte erneut ausführen\nStarten Sie R über Session → Restart R neu. Führen Sie das Skript anschließend vollständig mit Source aus. Es muss seine Daten selbst einlesen und alle benötigten Objekte erneut erzeugen können.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 01"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-01.html#ergebnis",
-    "href": "pages/ws/ws-01.html#ergebnis",
-    "title": "Worksheet 01 · Ein kleines R-Projekt",
+    "objectID": "pages/ws/ws-03.html#ergebnis",
+    "href": "pages/ws/ws-03.html#ergebnis",
+    "title": "Worksheet 03 · Vegetationssignale vergleichen",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie Ihren Projektordner mit dem kommentierten Skript und den beiden Ergebnisvarianten weiter. Ergänzen Sie eine kurze Datei README.md im Projektordner mit vier Angaben:\n\nProjektdatei öffnen und anschließend scripts/01_burgwald_puffer.R ausführen.\nBenötigtes Paket: sf; Internetzugang für den ersten Datenabruf.\nDatenquelle und eigenes Abrufdatum.\nIhre Änderung, deren beobachtete Wirkung und gegebenenfalls verwendete KI-Hilfe.\n\nErfolgskriterium: Eine andere Person erkennt, welche Dateien Eingangsdaten, Skripte und Ergebnisse sind, und kann den Ablauf aus einer frischen R-Sitzung erneut ausführen.",
+    "text": "Ergebnis\nGeben Sie flaechenvergleich.csv, die Verlaufsgrafik mit beiden Indizes und eine RGB-Karte mit den drei Polygonen ab. Nennen Sie pro Fläche den größten Unterschied zwischen zwei ausgewählten Terminen, die zugehörigen Werte beider Indizes und die Zahl gemeinsamer Pixel. Prüfen Sie die auffällige Fläche in RGB und SCL für beide Termine. Halten Sie fest, ob der Unterschied trotz vergleichbarer Bildqualität besteht und ob die Aufnahmetage in derselben Sommerphase liegen. Eine Ursache wird erst mit zusätzlichen Beobachtungen geprüft; damit arbeiten Sie in Worksheet 10 weiter.\nMethodengrundlage: Camps-Valls et al. (2021), A unified vegetation index for quantifying the terrestrial biosphere.\nDie Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe ergänzt diesen Vergleich.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 01"
+      "Worksheet 03"
     ]
   },
   {
-    "objectID": "pages/ws/ws-02.html",
-    "href": "pages/ws/ws-02.html",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "objectID": "pages/ws/ws-03.html#abschluss-von-block-1",
+    "href": "pages/ws/ws-03.html#abschluss-von-block-1",
+    "title": "Worksheet 03 · Vegetationssignale vergleichen",
+    "section": "Abschluss von Block 1",
+    "text": "Abschluss von Block 1\nSie haben einen wiederholbaren Projektablauf eingerichtet, Satellitenaufnahmen selbst ausgewählt und Qualitätsmasken angewendet. Ihr Flächenvergleich nennt Aufnahmetage, gültige Pixel und Indexwerte. Eine Signaldifferenz ist belegt; ihre Ursache benötigt weitere Beobachtungen.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 03"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-03.html#weiter-mit-block-2",
+    "href": "pages/ws/ws-03.html#weiter-mit-block-2",
+    "title": "Worksheet 03 · Vegetationssignale vergleichen",
+    "section": "Weiter mit Block 2",
+    "text": "Weiter mit Block 2\nEin Flächenmittel fasst Werte zusammen, verliert aber deren räumliche Anordnung. In Worksheet 04 vergleichen Sie deshalb Gebiete mit gleichen Klassenanteilen und unterschiedlicher Anordnung. Danach bilden Sie aus zwölf monatlichen Temperaturmitteln zusammenhängende Regionen und prüfen deren innere Streuung, Grenzen und Abhängigkeit von Parametern und Rasterweite.\nRückblick und Übergang als Folien.",
+    "crumbs": [
+      "Worksheets",
+      "Worksheet 03"
+    ]
+  },
+  {
+    "objectID": "pages/ws/ws-05.html",
+    "href": "pages/ws/ws-05.html",
+    "title": "Worksheet 05 · Klimadaten segmentieren",
     "section": "",
-    "text": "Wie verändert sich das sommerliche Vegetationssignal einer selbst gewählten Waldfläche im Burgwald zwischen 2018 und 2022?\nSie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.\nAus Worksheet 01 kennen Sie Projektordner, relative Pfade und blockweises Ausführen. Das optionale Mikroklima-Warmup bietet zusätzliche Übung mit Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.\nAm Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus einer ausgewählten Sommerbeobachtung pro Jahr. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.",
+    "text": "Installation: 00_install_packages.R.\nLegen Sie in QGIS data/klima_aoi.gpkg mit einem Polygon in Hessen oder Nordrhein-Westfalen an. Wählen Sie einen zusammenhängenden Ausschnitt mit ungefähr 100 km Kantenlänge. Dieses Gebiet ist größer als die Sentinel-AOI aus Block 1; verwenden Sie eine eigene Datei.\nLaden Sie 08_klima_segmentieren.R nach scripts/. Die Pakete installieren Sie mit block &lt;- 2 in 00_install_packages.R. Führen Sie das Skript abschnittsweise aus:\n\nGebiet: Die AOI wird nach EPSG:25832 transformiert. Das Zielgitter hat 1 km Rasterweite.\nDaten: geodata lädt die zwölf monatlichen Temperaturmittel aus WorldClim 2.1. Sie gelten für 1970–2000 und sind in Grad Celsius angegeben. Die Bänder werden nach Monatsnummer geordnet, gemeinsam bilinear auf das Zielgitter projiziert und auf die AOI begrenzt. Ausgewertet werden nur Zellen mit zwölf gültigen Werten.\nSegmente: supercells berechnet die drei unten angegebenen Varianten. Eine eindeutige segment_id wird ergänzt.\n\nDie Monatsmittel sind ein klimatischer Jahresgang, keine Folge von Aufnahmen eines einzelnen Jahres. Die Reprojektion erzeugt keine zusätzliche räumliche Information. data/temperatur_monate.tif enthält Januar bis Dezember; Datenbezug und Abrufdatum stehen in output/klima/datenbezug.csv.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 02"
+      "Worksheet 05"
     ]
   },
   {
-    "objectID": "pages/ws/ws-02.html#auftrag",
-    "href": "pages/ws/ws-02.html#auftrag",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
+    "objectID": "pages/ws/ws-05.html#gebiet-und-klimadaten",
+    "href": "pages/ws/ws-05.html#gebiet-und-klimadaten",
+    "title": "Worksheet 05 · Klimadaten segmentieren",
     "section": "",
-    "text": "Wie verändert sich das sommerliche Vegetationssignal einer selbst gewählten Waldfläche im Burgwald zwischen 2018 und 2022?\nSie beschaffen die Satellitendaten selbst, berechnen eine NDVI-Reihe und prüfen, ob die Aufnahmen für einen Vergleich geeignet sind. Sie treffen die Entscheidungen über Untersuchungsfläche und Bildauswahl. Die Skripte stellen den technischen Ablauf bereit.\nAus Worksheet 01 kennen Sie Projektordner, relative Pfade und blockweises Ausführen. Das optionale Mikroklima-Warmup bietet zusätzliche Übung mit Ergebnisrastern. Arbeiten Sie im vorhandenen Projekt weiter. Die bisherige Gebietsgrenze hilft Ihnen bei der räumlichen Orientierung.\nAm Ende liegen fünf datierte Sentinel-Aufnahmen, die daraus berechneten NDVI-Raster sowie eine Verlaufsgrafik mit Angaben zur Datenabdeckung vor. Die Reihe besteht aus einer ausgewählten Sommerbeobachtung pro Jahr. Sie bildet weder die vollständige Vegetationsperiode noch einen kontinuierlichen Verlauf ab.",
+    "text": "Installation: 00_install_packages.R.\nLegen Sie in QGIS data/klima_aoi.gpkg mit einem Polygon in Hessen oder Nordrhein-Westfalen an. Wählen Sie einen zusammenhängenden Ausschnitt mit ungefähr 100 km Kantenlänge. Dieses Gebiet ist größer als die Sentinel-AOI aus Block 1; verwenden Sie eine eigene Datei.\nLaden Sie 08_klima_segmentieren.R nach scripts/. Die Pakete installieren Sie mit block &lt;- 2 in 00_install_packages.R. Führen Sie das Skript abschnittsweise aus:\n\nGebiet: Die AOI wird nach EPSG:25832 transformiert. Das Zielgitter hat 1 km Rasterweite.\nDaten: geodata lädt die zwölf monatlichen Temperaturmittel aus WorldClim 2.1. Sie gelten für 1970–2000 und sind in Grad Celsius angegeben. Die Bänder werden nach Monatsnummer geordnet, gemeinsam bilinear auf das Zielgitter projiziert und auf die AOI begrenzt. Ausgewertet werden nur Zellen mit zwölf gültigen Werten.\nSegmente: supercells berechnet die drei unten angegebenen Varianten. Eine eindeutige segment_id wird ergänzt.\n\nDie Monatsmittel sind ein klimatischer Jahresgang, keine Folge von Aufnahmen eines einzelnen Jahres. Die Reprojektion erzeugt keine zusätzliche räumliche Information. data/temperatur_monate.tif enthält Januar bis Dezember; Datenbezug und Abrufdatum stehen in output/klima/datenbezug.csv.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 02"
+      "Worksheet 05"
     ]
   },
   {
-    "objectID": "pages/ws/ws-02.html#material-und-vorbereitung",
-    "href": "pages/ws/ws-02.html#material-und-vorbereitung",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "Material und Vorbereitung",
-    "text": "Material und Vorbereitung\nDie technische Grundlage ist der CDSE-Abruf aus dem aktuellen Kursrepository. Die Lehrfassung übernimmt STAC-Suche und CDSE-Abruf, verwendet Ihr eigenes Gebiet und berechnet den NDVI anschließend lokal. Der große Projekt-Setup des Repositories wird dafür nicht benötigt.\nLaden Sie beide Skripte in den Ordner scripts/ Ihres bestehenden RStudio-Projekts:\n\n02_sentinel_abruf.R\n03_ndvi_reihe.R\n\nBenötigt werden QGIS, RStudio und die R-Pakete sf, terra, rstac, dplyr und CDSE. Installieren Sie fehlende Pakete vor der Sitzung über die Konsole:\ninstall.packages(c(\"sf\", \"terra\", \"rstac\", \"dplyr\", \"CDSE\"))\nFür den Rasterabruf richten Sie einmalig Ihren persönlichen CDSE-Zugang und die Anmeldung des R-Skripts ein. Die einzelnen Schritte stehen im folgenden Exkurs.\n\n\n\n\n\n\nNoteExkurs · CDSE-Konto, OAuth-Client und Zugang in R einrichten\n\n\n\n\n\n\nZugangsdaten\nIhr CDSE-Konto dient zur Anmeldung im Browser. Ein OAuth-Client ermöglicht dem Skript den Zugriff: Er besitzt eine Client-ID und ein Client-Secret. Diese sind nicht Ihre E-Mail-Adresse und Ihr Kontopasswort. Aus den beiden Werten kann das R-Paket einen zeitlich begrenzten Zugriffstoken beziehen.\n\n\n1. Konto anlegen und anmelden\nÖffnen Sie Copernicus Data Space, registrieren Sie sich und schließen Sie die Bestätigung Ihrer E-Mail-Adresse ab. Falls Sie bereits ein Konto besitzen, verwenden Sie dieses. Öffnen Sie anschließend das Sentinel-Hub-Dashboard für CDSE und melden Sie sich mit diesem Konto an.\n\n\n2. OAuth-Client erstellen\n\nÖffnen Sie im Dashboard User Settings.\nSuchen Sie den Bereich OAuth clients und klicken Sie auf Create.\nVergeben Sie einen Namen, beispielsweise GI-Kurs-Sentinel.\nWählen Sie ein Ablaufdatum nach dem vorgesehenen Kursende.\nLassen Sie die Option für eine Single-page application (SPA) ausgeschaltet: Wir verwenden ein lokales R-Skript.\nBestätigen Sie mit Create.\nKopieren Sie Client ID und Client Secret direkt in die im nächsten Schritt beschriebene Datei. Das Secret ist nach dem Schließen des Dialogs nicht erneut abrufbar. Falls es verloren geht, erstellen Sie einen neuen Client.\n\n\n\n3. Werte in R hinterlegen\nÖffnen Sie in der RStudio-Konsole Ihre persönliche Umgebungsdatei:\nfile.edit(path.expand(\"~/.Renviron\"))\nErgänzen Sie die folgenden beiden Zeilen. Ersetzen Sie die Platzhalter durch die kopierten Werte; vorhandene andere Einträge bleiben erhalten.\nCDSE_ID=Ihre_Client_ID\nCDSE_SECRET=Ihr_Client_Secret\nDiese Zeilen gehören in die Datei, nicht in die R-Konsole. Speichern Sie die Datei als .Renviron, ohne zusätzliche Endung .txt. Fügen Sie nach der letzten Zeile einen Zeilenumbruch ein. Starten Sie R anschließend über Session → Restart R neu.\n\n\n4. Prüfen, ob R die Werte eingelesen hat\nnzchar(Sys.getenv(\"CDSE_ID\"))\nnzchar(Sys.getenv(\"CDSE_SECRET\"))\nBeide Ausgaben müssen TRUE lauten. Damit ist zunächst nur geprüft, ob Werte vorhanden sind. Ihre Gültigkeit wird beim authentifizierten Zugriff geprüft.\nFalls FALSE erscheint, kontrollieren Sie Dateiname, Schreibweise der Variablen und Speicherung. Sie können die persönliche Datei auch ausdrücklich einlesen und die Prüfung wiederholen:\nreadRenviron(path.expand(\"~/.Renviron\"))\n\n\n5. Verbindung im Abrufskript verwenden\nDer folgende Abschnitt ist bereits in 02_sentinel_abruf.R enthalten:\nclient &lt;- CDSE::GetOAuthClient(\n  id = Sys.getenv(\"CDSE_ID\"),\n  secret = Sys.getenv(\"CDSE_SECRET\")\n)\nDas Objekt client wird anschließend an CDSE::GetImage() übergeben. Führen Sie zunächst den vorgesehenen Einzelabruf aus. Bei einer Meldung wie invalid_client prüfen Sie, ob ID und Secret zum selben aktiven Client gehören und vollständig kopiert wurden.\nVertraulich behandeln: Geben Sie Secret, Zugriffstoken und persönliche .Renviron nicht weiter. Sie gehören nicht in das Projektarchiv, ein Git-Repository, Screenshots oder KI-Prompts.\nDie Menüfolge und die Hinweise zum Secret sind in der offiziellen CDSE-Anleitung zur OAuth-Registrierung beschrieben.",
+    "objectID": "pages/ws/ws-05.html#parameter-vergleichen",
+    "href": "pages/ws/ws-05.html#parameter-vergleichen",
+    "title": "Worksheet 05 · Klimadaten segmentieren",
+    "section": "Parameter vergleichen",
+    "text": "Parameter vergleichen\n\n\n\nVariante\nAngestrebte Segmentzahl\nKompaktheit\n\n\n\n\nk50_c1\n50\n1\n\n\nk100_c1\n100\n1\n\n\nk50_c5\n50\n5\n\n\n\nAlle Varianten verwenden dieselben zwölf unstandardisierten Temperaturbänder und euklidische Distanz. Die Kompaktheit hängt von der Skalierung dieser Werte ab. Zwischen zwei Vergleichsläufen wird jeweils nur ein Parameter geändert. Die tatsächliche Segmentzahl kann von der angestrebten Zahl abweichen.\nÖffnen Sie die drei GeoPackages unter output/klima/ in QGIS. Legen Sie ihre Grenzen über dieselbe Monatskarte. Die Tabelle parameter.csv enthält Segmentzahl und minimale, mediane sowie maximale Fläche.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 02"
+      "Worksheet 05"
     ]
   },
   {
-    "objectID": "pages/ws/ws-02.html#eine-eigene-untersuchungsfläche-festlegen",
-    "href": "pages/ws/ws-02.html#eine-eigene-untersuchungsfläche-festlegen",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "1 · Eine eigene Untersuchungsfläche festlegen",
-    "text": "1 · Eine eigene Untersuchungsfläche festlegen\nÖffnen Sie die Burgwald-Gebietsgrenze aus Worksheet 01 in QGIS. Wählen Sie anhand einer Hintergrundkarte eine kleine Waldfläche, für die Sie den sommerlichen Verlauf untersuchen möchten. Ein Gebiet mit ungefähr 1–2 km Kantenlänge reicht; die maximale Kantenlänge dieser Übung beträgt 5 km.\n\n\n\n\n\n\nNoteLegen Sie einen neuen GeoPackage-Layer an:\n\n\n\n\n\nErstellen Sie die Untersuchungsfläche in QGIS:\n\nÖffnen Sie Layer → Layer erstellen → Neuer GeoPackage-Layer.\nWählen Sie als Datei data/aoi.gpkg in Ihrem RStudio-Projekt, als Tabellennamen aoi, als Geometrietyp Polygon und als Koordinatensystem EPSG:32632 – WGS 84 / UTM zone 32N.\nBestätigen Sie mit OK und markieren Sie den neuen Layer.\nAktivieren Sie den Bearbeitungsmodus über das Stiftsymbol. Wählen Sie Polygonobjekt hinzufügen.\nSetzen Sie mit Linksklicks die Eckpunkte Ihrer Untersuchungsfläche. Ein Rechtsklick schließt die Erfassung ab; bestätigen Sie den Attributdialog mit OK.\nSpeichern Sie die Layeränderungen und beenden Sie den Bearbeitungsmodus.\n\nZeichnen Sie genau ein Polygon. Diese Fläche wird für alle Aufnahmetermine verwendet.\n\n\n\n\nDatei: data/aoi.gpkg im RStudio-Projekt;\nGeometrietyp: Polygon;\nKoordinatensystem: EPSG:32632;\ngenau ein Polygon als Untersuchungsfläche.\n\nZeichnen Sie das Polygon, speichern Sie die Bearbeitung und beenden Sie den Bearbeitungsmodus. Verwenden Sie über die gesamte Reihe dieselbe Fläche.\nDokumentation: Halten Sie in README.md Lage, Größe und erkennbare Landbedeckung der gewählten Fläche fest.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 02"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-02.html#aufnahmen-suchen-und-eine-auswahl-treffen",
-    "href": "pages/ws/ws-02.html#aufnahmen-suchen-und-eine-auswahl-treffen",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "2 · Aufnahmen suchen und eine Auswahl treffen",
-    "text": "2 · Aufnahmen suchen und eine Auswahl treffen\nÖffnen Sie 02_sentinel_abruf.R. Ergänzen Sie den Skriptkopf. Führen Sie zunächst nur die Abschnitte 1–3 aus.\nDie Einstellungen lauten:\njahre &lt;- 2018:2022\nmonate &lt;- 6:8\nanzahl_abrufe &lt;- 1\nDie Suche liefert Metadaten der Sentinel-2-L2A-Aufnahmen, die Ihr Gebiet schneiden. Sie erzeugt:\n\n\n\n\n\n\n\nDatei\nBedeutung\n\n\n\n\ndata/stac_treffer.rds\nGespeicherte Antwort des Katalogs.\n\n\noutput/aufnahmekandidaten.csv\nVerfügbare Sommertage mit Szenenzahl und mittlerer Szenenbewölkung.\n\n\ndata/auswahl.csv\nIhr Arbeitsstand: ein ausgewählter Aufnahmetag je Jahr.\n\n\n\nDer erste Vorschlag wählt pro Jahr den Tag mit der geringsten mittleren Szenenbewölkung. Diese Prozentangabe bezieht sich auf die gefundenen Szenen, nicht auf Ihre kleine Untersuchungsfläche. Ein solcher Tag kann über Ihrem Gebiet trotzdem bewölkt sein.\nVergleichen Sie die fünf vorgeschlagenen Aufnahmetage nach ihrer Lage innerhalb des Sommers. Sehen Sie die Aufnahmen bei Bedarf im Copernicus Browser an. Wenn Sie einen anderen Tag auswählen, übernehmen Sie die vollständige zugehörige Zeile aus der Kandidatentabelle in data/auswahl.csv.\nDie Auswahl-Datei wird beim erneuten Ausführen nicht überschrieben. Für eine neue Suche mit geändertem Gebiet oder Zeitraum archivieren Sie die alte Auswahl und lassen eine neue erzeugen.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 02"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-02.html#einen-abruf-prüfen-dann-die-reihe-laden",
-    "href": "pages/ws/ws-02.html#einen-abruf-prüfen-dann-die-reihe-laden",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "3 · Einen Abruf prüfen, dann die Reihe laden",
-    "text": "3 · Einen Abruf prüfen, dann die Reihe laden\nFühren Sie im Abrufskript die Abschnitte 4–6 aus. Mit anzahl_abrufe &lt;- 1 wird zunächst nur der erste ausgewählte Tag geladen.\nÖffnen Sie die erzeugte TIFF-Datei aus data/sentinel/ in QGIS. Die Bänder sind fest angeordnet:\n\n\n\n\n\n\n\n\nBand\nInhalt\nVerwendung\n\n\n\n\n1–3\nB02, B03, B04\nBlau, Grün, Rot; Echtfarbdarstellung mit Rot = Band 3, Grün = Band 2, Blau = Band 1.\n\n\n4\nB08\nNahes Infrarot; zusammen mit B04 für NDVI.\n\n\n5\nSCL\nSzenenklassifikation zur Qualitätsmaskierung.\n\n\n6\ndataMask\nKennzeichnet verfügbare Bilddaten.\n\n\n\nKontrollieren Sie Lage, Abdeckung, 10-m-Rasterweite sowie erkennbare Wolken und Schatten. Alle Termine liegen auf demselben 10-m-UTM-Gitter. Reflexionen werden bilinear, SCL und dataMask mit dem nächsten Nachbarn übertragen. Die SCL besitzt dadurch keine zusätzliche ursprüngliche Detailinformation. Für die AOI-Auswertung zählen Zellen, deren Mittelpunkt innerhalb des Polygons liegt.\nWenn der erste Abruf stimmt, setzen Sie anzahl_abrufe &lt;- Inf und führen Sie Abschnitt 6 erneut aus. Vorhandene Tagesdateien werden nur bei passender AOI und passenden Abrufeinstellungen übersprungen. Zu jedem TIFF wird ein Abrufmanifest .tif.rds gespeichert. Ältere TIFFs ohne Manifest oder mit geänderten Einstellungen archivieren Sie zusammen mit dem bisherigen Ordner data/sentinel/ und laden die ausgewählten Tage erneut. Kontrollieren Sie auch die übrigen Aufnahmen.\nZwischenergebnis: Für jedes ausgewählte Datum existiert eine lokale TIFF-Datei. Ungeeignete Tage ersetzen Sie durch einen anderen Kandidaten und rufen diesen nach. Alte Dateien dürfen zur Dokumentation liegen bleiben; die Auswertung verwendet ausschließlich die aktuelle Auswahl-Datei.\nDer Abruf verwendet jeweils einen Tag. Überlappende Kacheln können dabei zu einem Bild mosaikiert werden; eine einzelne Produkt-ID wird damit nicht festgeschrieben.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 02"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-02.html#aus-den-aufnahmen-eine-ndvi-reihe-berechnen",
-    "href": "pages/ws/ws-02.html#aus-den-aufnahmen-eine-ndvi-reihe-berechnen",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "4 · Aus den Aufnahmen eine NDVI-Reihe berechnen",
-    "text": "4 · Aus den Aufnahmen eine NDVI-Reihe berechnen\nÖffnen Sie 03_ndvi_reihe.R. Führen Sie die Abschnitte 1 und 2 aus. Das Skript prüft, ob alle ausgewählten Aufnahmen vorhanden sind und dasselbe Rastergitter besitzen.\nDie Berechnung lautet:\n\\[\nNDVI = \\frac{B08-B04}{B08+B04}\n\\]\nVor der Auswertung werden ungültige Daten und bestimmte SCL-Klassen ausgeschlossen. In der Vorlage bleiben Vegetation, unbewachsene Flächen, Wasser und unklassifizierte Pixel erhalten; Wolken, Wolkenschatten, Schnee und weitere ausgeschlossene Klassen werden zu NA. Diese Maske ist eine dokumentierte Arbeitsentscheidung und ersetzt die visuelle Prüfung nicht.\nscl_behalten &lt;- c(4, 5, 6, 7)\nDas Skript berechnet einen NDVI pro Datum, begrenzt ihn auf Ihr Polygon und schreibt die Ergebnisse nach output/ndvi/. Zusätzlich entstehen output/ndvi_reihe.tif und output/ndvi_banddaten.csv. Die CSV ordnet jedem Band sein tatsächliches Aufnahmedatum zu.\nPrüfung: Öffnen Sie zwei NDVI-Raster in QGIS. Verwenden Sie dieselbe Farbskala von −1 bis 1. Prüfen Sie auffällige Stellen im ursprünglichen RGB-Bild. Fehlende Werte sind keine NDVI-Werte von null.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 02"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-02.html#einen-belastbaren-verlauf-darstellen",
-    "href": "pages/ws/ws-02.html#einen-belastbaren-verlauf-darstellen",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "5 · Einen belastbaren Verlauf darstellen",
-    "text": "5 · Einen belastbaren Verlauf darstellen\nFühren Sie die Abschnitte 3 und 4 aus. Das Skript erzeugt eine Tabelle und eine Grafik mit:\n\nmittlerem NDVI über die an jedem Termin gültigen Pixel;\nAnteil gültiger Pixel innerhalb Ihrer Untersuchungsfläche;\neinem zweiten Verlauf ausschließlich für die Pixel, die an allen ausgewählten Terminen gültig sind.\n\nDer zweite Verlauf macht sichtbar, ob wechselnde räumliche Abdeckung den Vergleich beeinflusst. Bleiben nur sehr wenige gemeinsame Pixel, ist auch dieser Vergleich räumlich schwach gestützt. Prüfen Sie dann die Bildauswahl. Die Grafik verbindet einzelne Beobachtungstage; über den Verlauf zwischen ihnen liegen keine Aussagen vor.\nErgebnis: Nennen Sie das Datumspaar mit dem größten Unterschied und geben Sie die NDVI-Differenz für beide räumlichen Bezugsflächen an. Legen Sie einen zusätzlichen Aufnahmetermin fest, mit dem Sie Vegetationsveränderung, sommerliche Entwicklung oder Bildstörungen unterscheiden können.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 02"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-02.html#eine-entscheidung-überprüfen",
-    "href": "pages/ws/ws-02.html#eine-entscheidung-überprüfen",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "6 · Eine Entscheidung überprüfen",
-    "text": "6 · Eine Entscheidung überprüfen\nWählen Sie für ein Jahr einen zweiten geeigneten Sommertag aus der Kandidatentabelle. Sichern Sie die bisherigen Ergebnisdateien in einem Unterordner output/vergleich_1/. Ersetzen Sie den entsprechenden Eintrag in data/auswahl.csv, laden Sie den neuen Tag und berechnen Sie die Reihe erneut.\nVergleichen Sie den betroffenen NDVI-Wert, die Datenabdeckung und Ihre ursprüngliche Interpretation. Dokumentieren Sie, welche Tagesauswahl Sie für die weitere Arbeit verwenden und warum.\nBei technischen Problemen können Sie Dokumentation oder KI nutzen. Geben Sie den betroffenen Abschnitt und die Fehlermeldung an, verlangen Sie eine begrenzte Korrektur und überprüfen Sie danach Datum, Rastergitter und Werte. Halten Sie wesentliche Änderungen im Skript fest.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 02"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-02.html#ergebnis-der-sitzung",
-    "href": "pages/ws/ws-02.html#ergebnis-der-sitzung",
-    "title": "Worksheet 02 · Sentinel-Daten beschaffen und eine NDVI-Reihe berechnen",
-    "section": "Ergebnis der Sitzung",
-    "text": "Ergebnis der Sitzung\nIhr Projekt enthält die selbst gewählte Fläche, die Aufnahmekandidaten, Ihre dokumentierte Auswahl, die abgerufenen Raster und die berechnete NDVI-Reihe. Ergänzen Sie in README.md:\n\nFragestellung und Begründung der Untersuchungsfläche;\ngewählte Aufnahmetage, Auswahlgründe und Abrufdatum;\nverwendete Qualitätsmaske;\nbeobachteten Unterschied und Ergebnis des zweiten Tagesvergleichs;\nAusführungsreihenfolge der beiden Skripte.\n\nAbgabe: eine Verlaufsgrafik, die zugehörige CSV und fünf bis acht Sätze zur Aussagekraft der Reihe. Eine beobachtete Abnahme wird zunächst als verändertes Vegetationssignal beschrieben. Ihre Ursache muss anhand weiterer Beobachtungen geprüft werden.\nIn Worksheet 03 vergleichen Sie NDVI und kNDVI auf Wald-, Offenland- und auffälligen Vergleichsflächen. Die Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe bleibt als Zusatz zu dieser Sitzung verfügbar; ihre Ergebnisse werden in Worksheet 10 weiterverwendet.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 02"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-04.html",
-    "href": "pages/ws/ws-04.html",
-    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
-    "section": "",
-    "text": "Verwenden Sie einen kategorischen Landbedeckungsausschnitt aus Hessen oder Nordrhein-Westfalen, beispielsweise CORINE Land Cover 2018. Laden Sie die Rasterdaten beim Anbieter, schneiden Sie in QGIS einen begrenzten Ausschnitt zu und speichern Sie ihn als data/landbedeckung.tif. Verwenden Sie ein metrisches CRS und ganzzahlige Klassenwerte; NoData ist keine zusätzliche Landbedeckungsklasse. Notieren Sie Produkt, Bezugsjahr, Rasterweite und Klassensystem.\nBerechnen Sie mit landscapemetrics auf demselben Ausschnitt:\nlibrary(terra)\nlibrary(landscapemetrics)\nlc &lt;- rast(\"data/landbedeckung.tif\")\nlsm_l_shdi(lc)\nlsm_l_ai(lc, directions = 4)\nlsm_l_ent(lc)\nlsm_l_relmutinf(lc)\nDie Funktionsdokumentation legt Nachbarschaft und Logarithmusbasis fest: SHDI, AI, Entropie, relative gegenseitige Information. SHDI und Entropie messen die Klassenzusammensetzung; vergleichen Sie ihre Zahlenwerte erst nach Angleichung der Logarithmusbasis.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 04"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-04.html#daten-und-methode",
-    "href": "pages/ws/ws-04.html#daten-und-methode",
-    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
-    "section": "",
-    "text": "Verwenden Sie einen kategorischen Landbedeckungsausschnitt aus Hessen oder Nordrhein-Westfalen, beispielsweise CORINE Land Cover 2018. Laden Sie die Rasterdaten beim Anbieter, schneiden Sie in QGIS einen begrenzten Ausschnitt zu und speichern Sie ihn als data/landbedeckung.tif. Verwenden Sie ein metrisches CRS und ganzzahlige Klassenwerte; NoData ist keine zusätzliche Landbedeckungsklasse. Notieren Sie Produkt, Bezugsjahr, Rasterweite und Klassensystem.\nBerechnen Sie mit landscapemetrics auf demselben Ausschnitt:\nlibrary(terra)\nlibrary(landscapemetrics)\nlc &lt;- rast(\"data/landbedeckung.tif\")\nlsm_l_shdi(lc)\nlsm_l_ai(lc, directions = 4)\nlsm_l_ent(lc)\nlsm_l_relmutinf(lc)\nDie Funktionsdokumentation legt Nachbarschaft und Logarithmusbasis fest: SHDI, AI, Entropie, relative gegenseitige Information. SHDI und Entropie messen die Klassenzusammensetzung; vergleichen Sie ihre Zahlenwerte erst nach Angleichung der Logarithmusbasis.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 04"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-04.html#kontrollierter-vergleich",
-    "href": "pages/ws/ws-04.html#kontrollierter-vergleich",
-    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
-    "section": "Kontrollierter Vergleich",
-    "text": "Kontrollierter Vergleich\n\nErzeugen Sie mit set.seed(42) eine zweite Rastervariante, indem Sie nur die gültigen Zellwerte zufällig umordnen. Rastergitter, NoData-Maske und Klassenhäufigkeiten bleiben gleich. Berechnen Sie alle vier Maße erneut.\nVergleichen Sie Original und Umordnung: SHDI und Entropie müssen bei gleicher Zusammensetzung gleich bleiben; AI und relative gegenseitige Information können sich verändern. Tragen Sie tatsächliche Werte und Differenzen in eine Tabelle ein.\nSchneiden Sie um denselben Mittelpunkt quadratische Fenster mit 2, 4 und 8 km Kantenlänge aus dem Original. Halten Sie Rasterweite, Klassen und Nachbarschaft konstant. Berechnen Sie pro Fenster Klassenanteile und dieselben vier Maße.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 04"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-04.html#ergebnis",
-    "href": "pages/ws/ws-04.html#ergebnis",
-    "title": "Worksheet 04 · Räumliche Muster quantitativ beschreiben",
+    "objectID": "pages/ws/ws-05.html#ergebnis",
+    "href": "pages/ws/ws-05.html#ergebnis",
+    "title": "Worksheet 05 · Klimadaten segmentieren",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie zwei Karten mit gemeinsamer Klassenlegende und eine Tabelle mit Variante, Fenstergröße, Zellzahl, Klassenanteilen und vier Maßwerten ab. Belegen Sie die Wirkung räumlicher Umordnung und die Wirkung der Fenstergröße jeweils mit einem Zahlenpaar. Fenstervergleiche können Zusammensetzung und Anordnung zugleich verändern; die Umordnung isoliert dagegen die Anordnung.",
+    "text": "Ergebnis\nGeben Sie drei vergleichbare Grenzkarten und die Parametertabelle ab. Markieren Sie einen Bereich mit deutlich verschobenen Grenzen. In Worksheet 06 prüfen Sie, ob die Segmente intern ähnliche Jahresgänge aufweisen und sich benachbarte Segmente unterscheiden.\nMethode: supercells.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 04"
+      "Worksheet 05"
     ]
   },
   {
-    "objectID": "pages/ws/ws-06.html",
-    "href": "pages/ws/ws-06.html",
-    "title": "Worksheet 06 · Regionalisierungen beurteilen",
+    "objectID": "pages/ws/ws-07.html",
+    "href": "pages/ws/ws-07.html",
+    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
     "section": "",
-    "text": "Verwenden Sie die drei Segmentierungen und genau dieselben zwölf Temperaturbänder. Rasterisieren Sie jede Segmentierung auf deren Gitter mit einer eindeutigen Segment-ID. Für jede Rasterzelle gilt genau eine ID; verwenden Sie die Zellmittelpunkte für die Zuordnung.\n\nBerechnen Sie je Segment und Monat den Mittelwert und die Standardabweichung der Temperatur. Zeichnen Sie die zwölf Monatsmittel für drei benachbarte Segmente. Geben Sie für diese Segmente Zellzahl und innere Standardabweichung an.\nFassen Sie pro Variante die monatlichen Varianzen innerhalb der Segmente zu einem nach gültiger Zellzahl gewichteten Mittel zusammen. Berichten Sie diesen Wert zusammen mit der Segmentzahl; mehr Segmente können die innere Streuung allein durch kleinere Flächen reduzieren.\nBestimmen Sie für die drei benachbarten Segmente die mittlere absolute Differenz ihrer zwölf Monatsmittel. Prüfen Sie an einer Karte, ob eine deutliche Grenze im Temperaturjahresgang oder vor allem eine geometrische Unterteilung vorliegt.",
+    "text": "Laden Sie den Datenordner der EON2026-Materialien zu Machine Learning und verwenden Sie aus ML_AOA.qmd den Abschnitt Case Study 2: Modelling the Leaf Area Index. Benötigt werden trainingsites_LAI.gpkg sowie sentinel_uniwald.grd einschließlich der zugehörigen Rasterdatendatei. Übernehmen Sie die Eingangsdaten in Ihr Projekt. Das Beispiel liegt im Marburger Universitätswald.\nLesen Sie die LAI-Referenzen mit sf, den Prädiktorstack mit terra. Prüfen Sie CRS, räumliche Überdeckung, Zahl der Referenzen und verfügbare Prädiktorbänder. Halten Sie Mess- und Aufnahmezeitpunkt sowie die Messmethode fest, soweit sie im Quelldatensatz dokumentiert sind. Fehlende Angaben werden als fehlend ausgewiesen.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 06"
+      "Worksheet 07"
     ]
   },
   {
-    "objectID": "pages/ws/ws-06.html#varianten-aus-worksheet-05-auswerten",
-    "href": "pages/ws/ws-06.html#varianten-aus-worksheet-05-auswerten",
-    "title": "Worksheet 06 · Regionalisierungen beurteilen",
+    "objectID": "pages/ws/ws-07.html#daten-übernehmen",
+    "href": "pages/ws/ws-07.html#daten-übernehmen",
+    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
     "section": "",
-    "text": "Verwenden Sie die drei Segmentierungen und genau dieselben zwölf Temperaturbänder. Rasterisieren Sie jede Segmentierung auf deren Gitter mit einer eindeutigen Segment-ID. Für jede Rasterzelle gilt genau eine ID; verwenden Sie die Zellmittelpunkte für die Zuordnung.\n\nBerechnen Sie je Segment und Monat den Mittelwert und die Standardabweichung der Temperatur. Zeichnen Sie die zwölf Monatsmittel für drei benachbarte Segmente. Geben Sie für diese Segmente Zellzahl und innere Standardabweichung an.\nFassen Sie pro Variante die monatlichen Varianzen innerhalb der Segmente zu einem nach gültiger Zellzahl gewichteten Mittel zusammen. Berichten Sie diesen Wert zusammen mit der Segmentzahl; mehr Segmente können die innere Streuung allein durch kleinere Flächen reduzieren.\nBestimmen Sie für die drei benachbarten Segmente die mittlere absolute Differenz ihrer zwölf Monatsmittel. Prüfen Sie an einer Karte, ob eine deutliche Grenze im Temperaturjahresgang oder vor allem eine geometrische Unterteilung vorliegt.",
+    "text": "Laden Sie den Datenordner der EON2026-Materialien zu Machine Learning und verwenden Sie aus ML_AOA.qmd den Abschnitt Case Study 2: Modelling the Leaf Area Index. Benötigt werden trainingsites_LAI.gpkg sowie sentinel_uniwald.grd einschließlich der zugehörigen Rasterdatendatei. Übernehmen Sie die Eingangsdaten in Ihr Projekt. Das Beispiel liegt im Marburger Universitätswald.\nLesen Sie die LAI-Referenzen mit sf, den Prädiktorstack mit terra. Prüfen Sie CRS, räumliche Überdeckung, Zahl der Referenzen und verfügbare Prädiktorbänder. Halten Sie Mess- und Aufnahmezeitpunkt sowie die Messmethode fest, soweit sie im Quelldatensatz dokumentiert sind. Fehlende Angaben werden als fehlend ausgewiesen.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 06"
+      "Worksheet 07"
     ]
   },
   {
-    "objectID": "pages/ws/ws-06.html#rasterauflösung-kontrolliert-ändern",
-    "href": "pages/ws/ws-06.html#rasterauflösung-kontrolliert-ändern",
-    "title": "Worksheet 06 · Regionalisierungen beurteilen",
-    "section": "Rasterauflösung kontrolliert ändern",
-    "text": "Rasterauflösung kontrolliert ändern\nAggregieren Sie die zwölf 1-km-Bänder mit terra::aggregate(x, fact = 2, fun = mean, na.rm = TRUE) auf 2 km. Segmentieren Sie erneut mit k = 50 und compactness = 1. Verwenden Sie dieselbe AOI, Bandreihenfolge und Skalierung. Für den Vergleich werden Segmentmittel und Streuungen beider Grenzvarianten auf den ursprünglichen 1-km-Klimadaten berechnet. So stammen die Bewertungswerte aus derselben Datenbasis.",
+    "objectID": "pages/ws/ws-07.html#lineares-modell-ausführen",
+    "href": "pages/ws/ws-07.html#lineares-modell-ausführen",
+    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
+    "section": "Lineares Modell ausführen",
+    "text": "Lineares Modell ausführen\n\nTransformieren Sie die Referenzgeometrien in das Raster-CRS. Extrahieren Sie die Prädiktoren an den Referenzen. Die ID-Spalte aus terra::extract() dient der Zuordnung zur Referenz; sie ist kein Prädiktor.\nSchließen Sie unvollständige NDVI-/LAI-Paare aus und protokollieren Sie deren Anzahl. Berechnen Sie lm(LAI ~ NDVI, data = trainDat) und erzeugen Sie die flächenhafte Schätzung mit dem Modellobjekt. Übernehmen Sie keine fest eingetragenen Regressionskoeffizienten aus der Vorlage.\nSpeichern Sie die beobachteten und angepassten LAI-Werte sowie die Residuen. Zeichnen Sie Residuen gegen angepasste Werte und stellen Sie ihre Vorzeichen an den Referenzorten kartografisch dar.\nMarkieren Sie Zellen, deren NDVI außerhalb des Trainingsbereichs liegt, und prüfen Sie die Karte auf negative LAI-Schätzungen.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 06"
+      "Worksheet 07"
     ]
   },
   {
-    "objectID": "pages/ws/ws-06.html#ergebnis",
-    "href": "pages/ws/ws-06.html#ergebnis",
-    "title": "Worksheet 06 · Regionalisierungen beurteilen",
+    "objectID": "pages/ws/ws-07.html#ergebnis",
+    "href": "pages/ws/ws-07.html#ergebnis",
+    "title": "Worksheet 07 · Referenzdaten und LAI-Schätzung",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie eine Tabelle mit Segmentzahl, flächengewichteter innerer Streuung und Nachbarschaftsdifferenzen sowie die drei Jahresgangkurven und eine Grenzvergleichskarte ab. Wählen Sie anhand dieser Werte eine Regionalisierung für den Ausschnitt. Benennen Sie eine Grenze, die gegenüber der Rastervergröberung stabil bleibt, und eine, die sich verschiebt. Die Regionen beschreiben die verwendeten Temperaturklimanormalwerte; Niederschlag, Extremereignisse und aktuelle Klimaveränderungen wurden nicht regionalisiert.",
+    "text": "Ergebnis\nGeben Sie eine Datenübersicht, die Regressionsgleichung, ein Streudiagramm und eine LAI-Karte mit Referenzpunkten ab. Nennen Sie Zahl und Wertebereich der verwendeten Referenzen sowie erkennbare Residuenmuster. Der Fehler an den zum Fit verwendeten Punkten ist ein Anpassungsfehler; die Prüfung an ausgelassenen Referenzen folgt in Worksheet 08.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 06"
+      "Worksheet 07"
     ]
   },
   {
-    "objectID": "pages/ws/ws-08.html",
-    "href": "pages/ws/ws-08.html",
-    "title": "Worksheet 08 · Räumlich validieren",
+    "objectID": "pages/ws/ws-09.html",
+    "href": "pages/ws/ws-09.html",
+    "title": "Worksheet 09 · Anwendungsbereich prüfen",
     "section": "",
-    "text": "Verwenden Sie die vollständigen LAI-/Prädiktorpaare aus Worksheet 07 und den Abschnitt The machine learning way der EON-Vorlage. Übernehmen Sie daraus die räumliche Faltung mit CAST::knndm(). Die Zahl der Faltungen beträgt in beiden Prüfungen drei.\nFür diesen Vergleich wird keine Variablenauswahl ausgeführt: Ersetzen Sie die ffs()-Modellierung der Vorlage durch caret::train(..., method = \"rf\"). Legen Sie die Prädiktornamen ausdrücklich fest; ID, Koordinatenkennungen und LAI dürfen nicht versehentlich in den Prädiktorsatz gelangen.",
+    "text": "Verwenden Sie das räumlich geprüfte Random-Forest-Modell aus Worksheet 08, seine gespeicherten Faltungen und denselben Prädiktorstack. Der AOA-Abschnitt der EON-Vorlage verwendet CAST::aoa().\n\nErzeugen Sie die LAI-Vorhersage und die AOA mit genau den beim Training verwendeten Prädiktoren. Speichern Sie Vorhersage, Dissimilarity Index und binäre AOA.\nStellen Sie LAI und AOA gemeinsam dar. Berechnen Sie den Flächenanteil innerhalb der AOA bezogen auf Zellen mit vollständigen Eingabeprädiktoren. NoData wird nicht als außerhalb der AOA gezählt.\nEntfernen Sie genau einen benannten Prädiktor. Trainieren Sie erneut mit denselben räumlichen Faltungen und unveränderten übrigen Einstellungen. Falls mtry die verbleibende Prädiktorzahl überschreiten würde, wählen Sie vor beiden Trainings einen zulässigen gemeinsamen Wert.\nBerechnen Sie Vorhersage und AOA erneut. Vergleichen Sie räumlichen CV-RMSE, AOA-Flächenanteil und die neu hinzugekommenen beziehungsweise entfallenen AOA-Bereiche auf derselben vollständigen Zellmenge.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 08"
+      "Worksheet 09"
     ]
   },
   {
-    "objectID": "pages/ws/ws-08.html#vergleich-vorbereiten",
-    "href": "pages/ws/ws-08.html#vergleich-vorbereiten",
-    "title": "Worksheet 08 · Räumlich validieren",
+    "objectID": "pages/ws/ws-09.html#aoa-zum-räumlich-geprüften-modell-berechnen",
+    "href": "pages/ws/ws-09.html#aoa-zum-räumlich-geprüften-modell-berechnen",
+    "title": "Worksheet 09 · Anwendungsbereich prüfen",
     "section": "",
-    "text": "Verwenden Sie die vollständigen LAI-/Prädiktorpaare aus Worksheet 07 und den Abschnitt The machine learning way der EON-Vorlage. Übernehmen Sie daraus die räumliche Faltung mit CAST::knndm(). Die Zahl der Faltungen beträgt in beiden Prüfungen drei.\nFür diesen Vergleich wird keine Variablenauswahl ausgeführt: Ersetzen Sie die ffs()-Modellierung der Vorlage durch caret::train(..., method = \"rf\"). Legen Sie die Prädiktornamen ausdrücklich fest; ID, Koordinatenkennungen und LAI dürfen nicht versehentlich in den Prädiktorsatz gelangen.",
+    "text": "Verwenden Sie das räumlich geprüfte Random-Forest-Modell aus Worksheet 08, seine gespeicherten Faltungen und denselben Prädiktorstack. Der AOA-Abschnitt der EON-Vorlage verwendet CAST::aoa().\n\nErzeugen Sie die LAI-Vorhersage und die AOA mit genau den beim Training verwendeten Prädiktoren. Speichern Sie Vorhersage, Dissimilarity Index und binäre AOA.\nStellen Sie LAI und AOA gemeinsam dar. Berechnen Sie den Flächenanteil innerhalb der AOA bezogen auf Zellen mit vollständigen Eingabeprädiktoren. NoData wird nicht als außerhalb der AOA gezählt.\nEntfernen Sie genau einen benannten Prädiktor. Trainieren Sie erneut mit denselben räumlichen Faltungen und unveränderten übrigen Einstellungen. Falls mtry die verbleibende Prädiktorzahl überschreiten würde, wählen Sie vor beiden Trainings einen zulässigen gemeinsamen Wert.\nBerechnen Sie Vorhersage und AOA erneut. Vergleichen Sie räumlichen CV-RMSE, AOA-Flächenanteil und die neu hinzugekommenen beziehungsweise entfallenen AOA-Bereiche auf derselben vollständigen Zellmenge.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 08"
+      "Worksheet 09"
     ]
   },
   {
-    "objectID": "pages/ws/ws-08.html#zwei-prüfungen-ausführen",
-    "href": "pages/ws/ws-08.html#zwei-prüfungen-ausführen",
-    "title": "Worksheet 08 · Räumlich validieren",
-    "section": "Zwei Prüfungen ausführen",
-    "text": "Zwei Prüfungen ausführen\n\nErzeugen Sie mit set.seed(42) drei zufällige Faltungen, beispielsweise mit caret::createFolds(), und die drei räumlichen Faltungen mit CAST::knndm(). Speichern Sie die jeweiligen Trainings- und Testindizes und stellen Sie die Testzuordnung an den Referenzorten dar.\nTrainieren Sie mit beiden Faltungssätzen denselben Random Forest: gleiche Prädiktoren, ntree = 500, genau ein festes mtry und dieselben sonstigen Einstellungen. Verwenden Sie trainControl(index = ..., indexOut = ..., savePredictions = \"final\", method = \"cv\") und ein einzeiliges tuneGrid. Setzen Sie den Zufallsstart vor jedem Training erneut.\nBerechnen Sie aus den zurückgehaltenen Vorhersagen RMSE, MAE und mittleren Fehler als mean(pred - obs). Jede Referenz soll pro Prüfverfahren genau einmal getestet werden. Berechnen Sie zusätzlich Kennwerte pro Faltung.\nVergleichen Sie die Trainings-Test-Abstände anhand von CAST::geodist() und stellen Sie die räumliche Prüfsituation den Abständen zwischen Trainingspunkten und Vorhersagegebiet gegenüber.",
-    "crumbs": [
-      "Worksheets",
-      "Worksheet 08"
-    ]
-  },
-  {
-    "objectID": "pages/ws/ws-08.html#ergebnis",
-    "href": "pages/ws/ws-08.html#ergebnis",
-    "title": "Worksheet 08 · Räumlich validieren",
+    "objectID": "pages/ws/ws-09.html#ergebnis",
+    "href": "pages/ws/ws-09.html#ergebnis",
+    "title": "Worksheet 09 · Anwendungsbereich prüfen",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie Faltungskarten, die Tabelle der zurückgehaltenen Vorhersagen und einen Kennwertvergleich ab. Geben Sie an, für welche räumliche Entfernungssituation die jeweiligen Fehler stehen. Nennen Sie die zahlenmäßige Fehlerdifferenz; ein größerer räumlicher Fehler wird nicht vorausgesetzt. Bewahren Sie das räumlich geprüfte Modell mit seinen Faltungen für Worksheet 09 auf.",
+    "text": "Ergebnis\nGeben Sie eine Tabelle für beide Prädiktorsätze und eine Karte der AOA-Änderung ab. Prüfen Sie einen neu ausgeschlossenen Bereich anhand seiner Prädiktorwerte und der Wertebereiche im Training. Ein größerer AOA-Anteil bedeutet nicht automatisch ein genaueres Modell. Die AOA beschreibt die Abdeckung im verwendeten Prädiktorraum; sie weist weder die korrekte LAI-Messung noch die zeitliche Übertragbarkeit nach.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 08"
+      "Worksheet 09"
     ]
   },
   {
-    "objectID": "pages/ws/ws-10.html",
-    "href": "pages/ws/ws-10.html",
-    "title": "Worksheet 10 · Veränderungen untersuchen",
+    "objectID": "pages/ws/ws-11.html",
+    "href": "pages/ws/ws-11.html",
+    "title": "Worksheet 11 · R und OTB verbinden",
     "section": "",
-    "text": "Verwenden Sie die selbst abgerufenen Sentinel-Aufnahmen aus Worksheet 02 und den Flächenvergleich aus Worksheet 03. Die Hausaufgabe zu Datenabdeckung und Zeitreihe enthält Skripte für Pixelzählung, gemeinsame Datenabdeckung, Differenzkarte und beschreibende Trendprüfung. Führen Sie diese für die dokumentierte Auswahl aus, sofern die Ergebnisse noch nicht vorliegen.",
+    "text": "Verwenden Sie eine Sentinel-Aufnahme aus Worksheet 02. Installieren Sie OTB und das R-Paket link2GI. Prüfen Sie mit link2GI::linkOTB(), ob die Installation gefunden wird. Verwenden Sie die vier Reflexionsbänder; SCL und dataMask werden nicht standardisiert.\nMaskieren Sie in R NoData und die in Worksheet 02 ausgeschlossenen SCL-Klassen. Schreiben Sie für diese Übung nur einen kleinen rechteckigen Ausschnitt, in dem alle Zellen der vier Reflexionsbänder gültig sind, als output/otb/eingabe.tif. So benötigt die folgende Übergabe keine zusätzliche NoData-Konvention. Verwenden Sie dieselbe Zellmenge für alle Bandstatistiken.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 10"
+      "Worksheet 11"
     ]
   },
   {
-    "objectID": "pages/ws/ws-10.html#zeitliche-veränderungen-eingrenzen",
-    "href": "pages/ws/ws-10.html#zeitliche-veränderungen-eingrenzen",
-    "title": "Worksheet 10 · Veränderungen untersuchen",
+    "objectID": "pages/ws/ws-11.html#verarbeitung-vorbereiten",
+    "href": "pages/ws/ws-11.html#verarbeitung-vorbereiten",
+    "title": "Worksheet 11 · R und OTB verbinden",
     "section": "",
-    "text": "Verwenden Sie die selbst abgerufenen Sentinel-Aufnahmen aus Worksheet 02 und den Flächenvergleich aus Worksheet 03. Die Hausaufgabe zu Datenabdeckung und Zeitreihe enthält Skripte für Pixelzählung, gemeinsame Datenabdeckung, Differenzkarte und beschreibende Trendprüfung. Führen Sie diese für die dokumentierte Auswahl aus, sofern die Ergebnisse noch nicht vorliegen.",
+    "text": "Verwenden Sie eine Sentinel-Aufnahme aus Worksheet 02. Installieren Sie OTB und das R-Paket link2GI. Prüfen Sie mit link2GI::linkOTB(), ob die Installation gefunden wird. Verwenden Sie die vier Reflexionsbänder; SCL und dataMask werden nicht standardisiert.\nMaskieren Sie in R NoData und die in Worksheet 02 ausgeschlossenen SCL-Klassen. Schreiben Sie für diese Übung nur einen kleinen rechteckigen Ausschnitt, in dem alle Zellen der vier Reflexionsbänder gültig sind, als output/otb/eingabe.tif. So benötigt die folgende Übergabe keine zusätzliche NoData-Konvention. Verwenden Sie dieselbe Zellmenge für alle Bandstatistiken.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 10"
+      "Worksheet 11"
     ]
   },
   {
-    "objectID": "pages/ws/ws-10.html#einen-veränderungskandidaten-prüfen",
-    "href": "pages/ws/ws-10.html#einen-veränderungskandidaten-prüfen",
-    "title": "Worksheet 10 · Veränderungen untersuchen",
-    "section": "Einen Veränderungskandidaten prüfen",
-    "text": "Einen Veränderungskandidaten prüfen\n\nWählen Sie in der Differenzkarte eine zusammenhängende Fläche mit auffälliger NDVI-Änderung. Speichern Sie das Polygon und das Datumspaar. Geben Sie die mittlere Änderung auf gemeinsamen gültigen Pixeln und deren Zellzahl an.\nPrüfen Sie dieselbe Fläche in RGB, SCL und NDVI an beiden Terminen. Dokumentieren Sie Wolken, Schatten, fehlende Daten und den Tag im Jahr. Verwerfen Sie Kandidaten, die bereits durch Bildstörungen erklärt werden.\nLaden Sie einen zusätzlichen, möglichst wolkenarmen Sommertag aus einem der beiden Vergleichsjahre. Die reguläre auswahl.csv bleibt bei genau einem Datum pro Jahr: Verwenden Sie dafür eine Projektkopie und ersetzen Sie dort die betreffende Jahreszeile durch den zusätzlichen Termin. Führen Sie Skript 02, 03 und die Auswertung erneut aus.\nVergleichen Sie die beiden Datumskombinationen auf exakt derselben Schnittmenge gültiger Pixel aller drei Beobachtungen. Berechnen Sie die Flächenmittel aus den Einzelrastern erneut auf dieser gemeinsamen Maske. Sonst könnten eine neue Bildauswahl und eine geänderte Bezugsfläche gleichzeitig wirken.",
+    "objectID": "pages/ws/ws-11.html#standardisierung-ausführen",
+    "href": "pages/ws/ws-11.html#standardisierung-ausführen",
+    "title": "Worksheet 11 · R und OTB verbinden",
+    "section": "Standardisierung ausführen",
+    "text": "Standardisierung ausführen\nBerechnen Sie pro Band Mittelwert und Stichprobenstandardabweichung. Für jedes Band gilt z = (x - mittelwert) / standardabweichung; konstante Bänder werden vor der Übergabe ausgeschlossen. Erzeugen Sie in R eine Referenzausgabe.\nlibrary(terra)\nlibrary(link2GI)\nx &lt;- rast(\"output/otb/eingabe.tif\")\nstopifnot(nlyr(x) == 4, all(is.finite(values(x))))\nmu &lt;- global(x, \"mean\")[, 1]\ns &lt;- global(x, \"sd\")[, 1]\nstopifnot(all(is.finite(s) & s &gt; 0))\nz_r &lt;- (x - mu) / s\nwriteRaster(z_r, \"output/otb/referenz_r.tif\", overwrite = TRUE)\n# OTB-Ausdrücke verwenden einen Dezimalpunkt unabhängig von R-Ländereinstellungen.\nzahl &lt;- function(v) format(v, digits = 17, scientific = TRUE, trim = TRUE, decimal.mark = \".\")\nterme &lt;- paste0(\"(im1b\", seq_len(nlyr(x)), \"-\", zahl(mu), \")/\", zahl(s))\nexpr &lt;- paste0(\"{\", paste(terme, collapse = \",\"), \"}\")\ngili &lt;- linkOTB()\nstopifnot(isTRUE(gili$exist))\ncmd &lt;- parseOTBFunction(algo = \"BandMathX\", gili = gili)\ncmd$help &lt;- NULL\ncmd$il &lt;- normalizePath(\"output/otb/eingabe.tif\")\ncmd$out &lt;- c(file.path(normalizePath(\"output/otb\"), \"standardisiert.tif\"), \"float\")\ncmd$exp &lt;- expr\nrunOTB(cmd, gili = gili)\nz_otb &lt;- rast(\"output/otb/standardisiert.tif\")\nstopifnot(compareGeom(z_r, z_otb))\nglobal(abs(z_r - z_otb), \"max\", na.rm = TRUE)\nWerkzeugreferenzen: BandMathX, link2GI.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 10"
+      "Worksheet 11"
     ]
   },
   {
-    "objectID": "pages/ws/ws-10.html#ergebnis",
-    "href": "pages/ws/ws-10.html#ergebnis",
-    "title": "Worksheet 10 · Veränderungen untersuchen",
+    "objectID": "pages/ws/ws-11.html#ergebnis",
+    "href": "pages/ws/ws-11.html#ergebnis",
+    "title": "Worksheet 11 · R und OTB verbinden",
     "section": "Ergebnis",
-    "text": "Ergebnis\nGeben Sie drei gleich skalierte Bildausschnitte mit Datum, eine Differenzkarte sowie eine Tabelle mit drei Flächenmitteln, Datenabdeckung und beiden Änderungswerten ab. Formulieren Sie anhand der Werte, ob das Signal mit der zusätzlichen Aufnahme bestehen bleibt. Beschreiben Sie eine mögliche Ursache getrennt vom beobachteten Signal und nennen Sie die dafür noch fehlende Information. Die Gerade aus fünf Sommerterminen ist eine beschreibende Zusammenfassung; sie ersetzt diese Bildprüfung nicht.",
+    "text": "Ergebnis\nSpeichern Sie Eingabedatei, Bandstatistiken, OTB-Ausdruck und die beiden Ausgaben. Vergleichen Sie CRS, Ausdehnung, Rasterweite, Bandzahl sowie den maximalen absoluten Wertunterschied pro Band. Die standardisierten Bänder sollen näherungsweise Mittelwert null und Standardabweichung eins haben. Kleine Unterschiede durch die Float-Ausgabe sind möglich; dokumentieren Sie die tatsächlich gemessene Abweichung.",
     "crumbs": [
       "Worksheets",
-      "Worksheet 10"
+      "Worksheet 11"
     ]
   },
   {
-    "objectID": "pages/ws/ws-12.html",
-    "href": "pages/ws/ws-12.html",
-    "title": "Worksheet 12 · Einen Ansatz übertragen",
-    "section": "",
-    "text": "Ansatz\nRäumliche Aufgabe\nVergleich\n\n\n\n\nLandschaftsmuster\nZwei Ausschnitte in Hessen oder Nordrhein-Westfalen vergleichen.\nGleiche Klassen, Rasterweite, Fenstergröße und Nachbarschaft; SHDI, AI, Entropie und relative gegenseitige Information.\n\n\nKlimaregionalisierung\nEinen neuen Klimaausschnitt segmentieren.\nZwei Parameterstände und eine Prüfung innerer Streuung sowie benachbarter Jahresgänge.\n\n\nZeitliche Veränderung\nEinen Veränderungskandidaten in einer eigenen Sentinel-AOI prüfen.\nVergleichbare Sommertermine, gemeinsame gültige Pixel und eine zusätzliche Aufnahme.\n\n\n\nFormulieren Sie eine räumlich und zeitlich abgegrenzte Frage. Verwenden Sie den zugehörigen Ablauf aus Worksheet 04, 05–06 oder 02–03 und 10. Passen Sie Gebiet und Parameter an; ein neu entwickelter Algorithmus wird nicht verlangt.",
+    "objectID": "slides/block1_recap_revealjs.html#der-arbeitsablauf",
+    "href": "slides/block1_recap_revealjs.html#der-arbeitsablauf",
+    "title": "Block 1 · Rückblick und Anschluss",
+    "section": "Der Arbeitsablauf",
+    "text": "Der Arbeitsablauf\nProjekt öffnen → AOI festlegen → Aufnahmen auswählen → Daten abrufen → Qualität prüfen → Indizes berechnen → Flächen vergleichen.\nDie Skripte lesen ihre Eingaben selbst ein. Relative Pfade beziehen sich auf das RStudio-Projekt.",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 12"
+      "Materials",
+      "Block 1 · Rückblick und Anschluss"
     ]
   },
   {
-    "objectID": "pages/ws/ws-12.html#einen-der-erprobten-ansätze-wählen",
-    "href": "pages/ws/ws-12.html#einen-der-erprobten-ansätze-wählen",
-    "title": "Worksheet 12 · Einen Ansatz übertragen",
-    "section": "",
-    "text": "Ansatz\nRäumliche Aufgabe\nVergleich\n\n\n\n\nLandschaftsmuster\nZwei Ausschnitte in Hessen oder Nordrhein-Westfalen vergleichen.\nGleiche Klassen, Rasterweite, Fenstergröße und Nachbarschaft; SHDI, AI, Entropie und relative gegenseitige Information.\n\n\nKlimaregionalisierung\nEinen neuen Klimaausschnitt segmentieren.\nZwei Parameterstände und eine Prüfung innerer Streuung sowie benachbarter Jahresgänge.\n\n\nZeitliche Veränderung\nEinen Veränderungskandidaten in einer eigenen Sentinel-AOI prüfen.\nVergleichbare Sommertermine, gemeinsame gültige Pixel und eine zusätzliche Aufnahme.\n\n\n\nFormulieren Sie eine räumlich und zeitlich abgegrenzte Frage. Verwenden Sie den zugehörigen Ablauf aus Worksheet 04, 05–06 oder 02–03 und 10. Passen Sie Gebiet und Parameter an; ein neu entwickelter Algorithmus wird nicht verlangt.",
+    "objectID": "slides/block1_recap_revealjs.html#was-abgegeben-wird",
+    "href": "slides/block1_recap_revealjs.html#was-abgegeben-wird",
+    "title": "Block 1 · Rückblick und Anschluss",
+    "section": "Was abgegeben wird",
+    "text": "Was abgegeben wird\n\nWS01: kommentiertes Pufferskript, zwei Parameterstände, GeoPackages und Karten.\nWS02: Aufnahmetage, RGB-/Qualitätsbänder, NDVI-Reihe, Datenabdeckung und Verlauf.\nWS03: drei Vergleichsflächen, NDVI/kNDVI-Tabelle und gemeinsame Pixelzahlen.\nZusatz: Beobachtungszähler, Differenzkarte und beschreibende Trendprüfung.",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 12"
+      "Materials",
+      "Block 1 · Rückblick und Anschluss"
     ]
   },
   {
-    "objectID": "pages/ws/ws-12.html#projekt-ausführen-und-weitergeben",
-    "href": "pages/ws/ws-12.html#projekt-ausführen-und-weitergeben",
-    "title": "Worksheet 12 · Einen Ansatz übertragen",
-    "section": "Projekt ausführen und weitergeben",
-    "text": "Projekt ausführen und weitergeben\n\nBeschaffen Sie die Eingangsdaten selbst. Speichern Sie Quelle, Produktstand, Abrufdatum, CRS, Rasterweite und zeitlichen Bezug in einer kurzen Datentabelle.\nFühren Sie den gewählten Ablauf aus. Vergleichen Sie zwei ausdrücklich benannte Varianten und halten Sie die übrigen Einstellungen konstant. Speichern Sie Parameter und die zugehörigen Ergebnisse getrennt.\nGeben Sie Projekt, Skripte und eine README.md mit Ausführungsreihenfolge an eine andere Gruppe. Zugangsdaten bleiben außerhalb des Projekts. Die andere Gruppe startet R neu und führt den Ablauf mit lokalen Eingangsdaten erneut aus.\nProtokollieren Sie Ausführungsfehler und korrigieren Sie Pfade oder fehlende Schritte. Vergleichen Sie mindestens einen Tabellenwert und Rastergitter beziehungsweise Segmentzahl mit dem ursprünglichen Ergebnis.",
+    "objectID": "slides/block1_recap_revealjs.html#ein-vergleich-braucht-dieselbe-grundlage",
+    "href": "slides/block1_recap_revealjs.html#ein-vergleich-braucht-dieselbe-grundlage",
+    "title": "Block 1 · Rückblick und Anschluss",
+    "section": "Ein Vergleich braucht dieselbe Grundlage",
+    "text": "Ein Vergleich braucht dieselbe Grundlage\nAufnahmetage, Sommerphase, Wolkenmaske und gültige Pixel gehören zum Ergebnis.\ndata/auswahl.csv legt die Termine fest. data/qualitaetsmaske.csv enthält die zugelassenen SCL-Klassen.\nNach Änderungen: Abruf bei Bedarf wiederholen, dann NDVI und Folgeauswertungen neu berechnen.",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 12"
+      "Materials",
+      "Block 1 · Rückblick und Anschluss"
     ]
   },
   {
-    "objectID": "pages/ws/ws-12.html#abgabe",
-    "href": "pages/ws/ws-12.html#abgabe",
-    "title": "Worksheet 12 · Einen Ansatz übertragen",
-    "section": "Abgabe",
-    "text": "Abgabe\nGeben Sie den erneut ausführbaren Projektordner, eine Vergleichstabelle, höchstens drei Karten und eine Seite Ergebnistext ab. Der Text enthält die abgegrenzte Frage, den zahlenmäßig belegten Variantenvergleich und die Grenze der räumlichen beziehungsweise zeitlichen Aussage. Die gewählte Datenbasis und die dokumentierten Parameter müssen zu den abgegebenen Karten und Tabellen passen.",
+    "objectID": "slides/block1_recap_revealjs.html#ndvi-und-kndvi",
+    "href": "slides/block1_recap_revealjs.html#ndvi-und-kndvi",
+    "title": "Block 1 · Rückblick und Anschluss",
+    "section": "NDVI und kNDVI",
+    "text": "NDVI und kNDVI\n\\[NDVI = \\frac{NIR-Rot}{NIR+Rot}, \\qquad kNDVI = \\tanh(NDVI^2).\\]\nBeide verwenden dieselbe Beobachtung. kNDVI transformiert das Signal nichtlinear und verliert durch das Quadrieren das Vorzeichen.\nErst Einzelpixel transformieren, dann mitteln.",
     "crumbs": [
-      "Worksheets",
-      "Worksheet 12"
+      "Materials",
+      "Block 1 · Rückblick und Anschluss"
+    ]
+  },
+  {
+    "objectID": "slides/block1_recap_revealjs.html#was-die-fünf-termine-aussagen",
+    "href": "slides/block1_recap_revealjs.html#was-die-fünf-termine-aussagen",
+    "title": "Block 1 · Rückblick und Anschluss",
+    "section": "Was die fünf Termine aussagen",
+    "text": "Was die fünf Termine aussagen\nDie Reihe beschreibt fünf ausgewählte Sommerbeobachtungen von 2018 bis 2022.\nEine Differenz ist ein verändertes Vegetationssignal. Ihre Ursache wird anhand der Originalbilder und zusätzlicher Beobachtungen geprüft.\nDie Auslassungsprüfung beschreibt die Empfindlichkeit der Trendgeraden. Sie ist keine unabhängige Validierung.",
+    "crumbs": [
+      "Materials",
+      "Block 1 · Rückblick und Anschluss"
+    ]
+  },
+  {
+    "objectID": "slides/block1_recap_revealjs.html#vom-flächenmittel-zum-muster",
+    "href": "slides/block1_recap_revealjs.html#vom-flächenmittel-zum-muster",
+    "title": "Block 1 · Rückblick und Anschluss",
+    "section": "Vom Flächenmittel zum Muster",
+    "text": "Vom Flächenmittel zum Muster\nEin Mittelwert enthält keine Information darüber, wo hohe und niedrige Werte liegen.\nAuch gleiche Landbedeckungsanteile können unterschiedlich angeordnet sein.\nWS04 hält die Klassenhäufigkeiten konstant und verändert nur die Anordnung. Danach wird die Fenstergröße variiert.",
+    "crumbs": [
+      "Materials",
+      "Block 1 · Rückblick und Anschluss"
+    ]
+  },
+  {
+    "objectID": "slides/block1_recap_revealjs.html#regionen-aus-kontinuierlichen-daten",
+    "href": "slides/block1_recap_revealjs.html#regionen-aus-kontinuierlichen-daten",
+    "title": "Block 1 · Rückblick und Anschluss",
+    "section": "Regionen aus kontinuierlichen Daten",
+    "text": "Regionen aus kontinuierlichen Daten\nWS05 gruppiert Zellen anhand von zwölf monatlichen Temperaturmitteln zu zusammenhängenden Regionen.\nWS06 prüft innere Streuung, Unterschiede benachbarter Jahresgänge und verschobene Grenzen bei gröberem Raster.\nDie Temperaturwerte sind Klimanormalwerte für 1970–2000. Sie bilden keine aktuelle Beobachtungsreihe ab.",
+    "crumbs": [
+      "Materials",
+      "Block 1 · Rückblick und Anschluss"
     ]
   }
 ]

@@ -10,6 +10,13 @@ library(terra)
 r <- rast("output/ndvi_reihe.tif")
 b <- read.csv("output/ndvi_banddaten.csv")
 b$datum <- as.Date(b$datum)
+# Veraltete Ergebnisse nach einer geänderten Bildauswahl oder Maske abweisen.
+aktuell <- sort(as.Date(read.csv("data/auswahl.csv")$datum))
+if (!identical(sort(b$datum), aktuell) ||
+    !identical(read.csv("data/qualitaetsmaske.csv")$scl,
+               read.csv("output/ndvi_qualitaetsmaske.csv")$scl)) {
+  stop("Auswahl oder Qualitätsmaske geändert: zuerst Skript 03 erneut ausführen.")
+}
 stopifnot(nrow(b) == nlyr(r), all(b$band == seq_len(nlyr(r))),
           !anyNA(b$datum), !anyDuplicated(b$datum), nlyr(r) >= 3)
 o <- order(b$datum)

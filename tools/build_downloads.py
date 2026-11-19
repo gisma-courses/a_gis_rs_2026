@@ -56,7 +56,7 @@ with zipfile.ZipFile(ROOT/'assets/advanced_gi_kursueberblick.zip', 'w', zipfile.
     write_member(z, 'README.txt', 'Quellmaterialien des Kurses. Für Website-Build und Datenpakete das vollständige Repository verwenden.\n')
 
 sentinel_paths = [ROOT/'pages/ws'/n for n in ('ws-02.qmd','ws-03.qmd','ws-02-zusatz.qmd','ws-10.qmd')]
-sentinel_paths += [ROOT/'scripts'/n for n in ('02_sentinel_abruf.R','03_ndvi_reihe.R',
+sentinel_paths += [ROOT/'scripts'/n for n in ('00_install_packages.R','02_sentinel_abruf.R','03_ndvi_reihe.R',
                    '04_zeitreihe_addon.R','05_pixel_counts.R','06_indices_vergleichen.R')]
 buffer = io.BytesIO()
 with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as z:

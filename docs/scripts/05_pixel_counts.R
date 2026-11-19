@@ -13,7 +13,14 @@ dateien <- file.path("data/sentinel", paste0("s2_", daten, ".tif"))
 if (!all(file.exists(dateien))) stop("Ausgewählte Tagesdateien fehlen.")
 z <- "output/pixel_counts"
 dir.create(z, recursive = TRUE, showWarnings = FALSE)
-scl_behalten <- c(4, 5, 6, 7) # Identisch zu Skript 03 halten.
+# Gemeinsame Qualitätsmaske für NDVI und Pixelzählung.
+maske_datei <- "data/qualitaetsmaske.csv"
+if (!file.exists(maske_datei)) {
+  write.csv(data.frame(scl = c(4, 5, 6, 7)), maske_datei, row.names = FALSE)
+}
+scl_behalten <- read.csv(maske_datei)$scl
+stopifnot(length(scl_behalten) > 0, !anyNA(scl_behalten),
+          !anyDuplicated(scl_behalten), all(scl_behalten %in% 1:11))
 
 # NA in einer Bedingung wird als FALSE behandelt.
 null_eins <- function(x) ifel(is.na(x), 0, ifel(x, 1, 0))

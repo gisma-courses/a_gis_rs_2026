@@ -15,18 +15,29 @@ execute:
   echo: true
 ---
 
-## Varianten aus Worksheet 05 auswerten
+## Segmentierungen prüfen
 
-Verwenden Sie die drei Segmentierungen und genau dieselben zwölf Temperaturbänder. Rasterisieren Sie jede Segmentierung auf deren Gitter mit einer eindeutigen Segment-ID. Für jede Rasterzelle gilt genau eine ID; verwenden Sie die Zellmittelpunkte für die Zuordnung.
+Verwenden Sie die Ergebnisse aus Worksheet 05. Laden Sie [09_klima_pruefen.R](../../scripts/09_klima_pruefen.R) nach `scripts/` und führen Sie es aus. Es berechnet eine zusätzliche Segmentierung auf einem 2-km-Gitter und bewertet alle vier Grenzvarianten auf denselben vollständigen 1-km-Klimazellen.
 
-1. Berechnen Sie je Segment und Monat den Mittelwert und die Standardabweichung der Temperatur. Zeichnen Sie die zwölf Monatsmittel für drei benachbarte Segmente. Geben Sie für diese Segmente Zellzahl und innere Standardabweichung an.
-2. Fassen Sie pro Variante die monatlichen Varianzen innerhalb der Segmente zu einem nach gültiger Zellzahl gewichteten Mittel zusammen. Berichten Sie diesen Wert zusammen mit der Segmentzahl; mehr Segmente können die innere Streuung allein durch kleinere Flächen reduzieren.
-3. Bestimmen Sie für die drei benachbarten Segmente die mittlere absolute Differenz ihrer zwölf Monatsmittel. Prüfen Sie an einer Karte, ob eine deutliche Grenze im Temperaturjahresgang oder vor allem eine geometrische Unterteilung vorliegt.
+Die Ergebnisse stehen unter `output/klima/pruefung/`:
 
-## Rasterauflösung kontrolliert ändern
+| Datei | Inhalt |
+|---|---|
+| `segment_monate.csv` | Segment-ID, Monat, Zellzahl, Temperaturmittel, Stichprobenstandardabweichung und Populationsvarianz. |
+| `variantenvergleich.csv` | Segmentzahl und nach Zellzahl gewichtete innere Varianz, gemittelt über zwölf Monate. |
+| `nachbarschaft.csv` | Benachbarte Segmentpaare und mittlere absolute Differenz ihrer zwölf Monatsmittel. Reine Eckkontakte zählen nicht. |
+| `*_ids.tif` | Segmentzuordnung auf dem gemeinsamen 1-km-Gitter. |
+| `k50_c1_2km.gpkg` | Segmentierung aus den gröberen Eingangsdaten. |
+| `*_jahresgaenge.png` | Jahresgänge einer automatisch gewählten Gruppe aus drei benachbarten Segmenten; die IDs stehen in der Legende. |
 
-Aggregieren Sie die zwölf 1-km-Bänder mit `terra::aggregate(x, fact = 2, fun = mean, na.rm = TRUE)` auf 2 km. Segmentieren Sie erneut mit `k = 50` und `compactness = 1`. Verwenden Sie dieselbe AOI, Bandreihenfolge und Skalierung. Für den Vergleich werden Segmentmittel und Streuungen beider Grenzvarianten auf den ursprünglichen 1-km-Klimadaten berechnet. So stammen die Bewertungswerte aus derselben Datenbasis.
+Die Standardabweichung ist bei einem einzelnen Pixel nicht bestimmbar. Seine Populationsvarianz beträgt null. Alle Bewertungszellen haben dieselbe Fläche. Mehr Segmente können die innere Streuung schon durch kleinere Flächen verringern; vergleichen Sie die Streuung deshalb stets zusammen mit der Segmentzahl.
+
+## Drei Vergleiche
+
+1. Vergleichen Sie die drei Parameterstände aus Worksheet 05 anhand von Segmentzahl und innerer Varianz. Geben Sie die gemessenen Unterschiede an.
+2. Prüfen Sie die dargestellten Jahresgänge und die zugehörigen Einträge in `nachbarschaft.csv`. Markieren Sie eine Grenze mit deutlichem und eine mit geringem Unterschied zwischen den benachbarten Jahresgängen.
+3. Vergleichen Sie `k50_c1` mit `k50_c1_2km`. Die gröberen Eingangsdaten entstehen durch Mittelung von jeweils 2 × 2 Zellen; Segmentzahlvorgabe und Kompaktheit bleiben gleich. Legen Sie die Grenzen in QGIS übereinander und markieren Sie eine stabile und eine verschobene Grenze.
 
 ## Ergebnis
 
-Geben Sie eine Tabelle mit Segmentzahl, flächengewichteter innerer Streuung und Nachbarschaftsdifferenzen sowie die drei Jahresgangkurven und eine Grenzvergleichskarte ab. Wählen Sie anhand dieser Werte eine Regionalisierung für den Ausschnitt. Benennen Sie eine Grenze, die gegenüber der Rastervergröberung stabil bleibt, und eine, die sich verschiebt. Die Regionen beschreiben die verwendeten Temperaturklimanormalwerte; Niederschlag, Extremereignisse und aktuelle Klimaveränderungen wurden nicht regionalisiert.
+Geben Sie die Vergleichstabelle, Jahresgangkurven und eine Grenzvergleichskarte ab. Wählen Sie anhand der Werte eine Regionalisierung für Ihren Ausschnitt. Sie beschreibt Temperaturklimanormalwerte; Niederschlag, Extremereignisse und aktuelle Klimaveränderungen wurden nicht untersucht.

@@ -77,7 +77,7 @@ if (!file.exists("data/auswahl.csv")) {
 }
 auswahl <- read.csv("data/auswahl.csv")
 auswahl$datum <- as.Date(auswahl$datum)
-auswahl <- auswahl[order(auswahl$datum), ]
+auswahl <- auswahl[order(auswahl$datum), , drop = FALSE]
 stopifnot(nrow(auswahl) == length(jahre), !anyNA(auswahl$datum),
           !anyDuplicated(auswahl$datum),
           setequal(as.integer(format(auswahl$datum, "%Y")), jahre),
@@ -124,6 +124,14 @@ auf_gitter <- function(rohdaten, vorlage) {
 }
 
 # 6. Erst ein Datum, anschließend die gewählte Reihe --------------------
+# Bei jedem Abruf den aktuellen Stand der Auswahl-Datei einlesen.
+auswahl <- read.csv("data/auswahl.csv")
+auswahl$datum <- as.Date(auswahl$datum)
+auswahl <- auswahl[order(auswahl$datum), , drop = FALSE]
+stopifnot(nrow(auswahl) == length(jahre), !anyNA(auswahl$datum),
+          !anyDuplicated(auswahl$datum),
+          setequal(as.integer(format(auswahl$datum, "%Y")), jahre),
+          all(auswahl$datum %in% kandidaten$datum))
 for (i in seq_len(min(nrow(auswahl), anzahl_abrufe))) {
   tag <- as.character(auswahl$datum[i])
   datei <- file.path(ordner, paste0("s2_", tag, ".tif"))

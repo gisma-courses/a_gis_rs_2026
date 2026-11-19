@@ -1,6 +1,6 @@
 suppressPackageStartupMessages({library(sf);library(terra)})
 repo <- normalizePath('.')
-for (f in list.files(file.path(repo,'scripts'), pattern='\\.[Rr]$',full.names=TRUE)) parse(f)
+for (f in list.files(file.path(repo, "scripts"), pattern = "[.][Rr]$", full.names = TRUE)) parse(f)
 # Reprojection keeps categorical values, uses a fixed metric grid.
 p <- parse(file.path(repo,'scripts/02_sentinel_abruf.R'))
 for (e in p) if (is.call(e) && identical(e[[1]],as.name('<-')) && identical(e[[2]],as.name('auf_gitter'))) eval(e)
@@ -60,5 +60,18 @@ stopifnot(inherits(e, "try-error"), grepl("Vorhandener Abruf passt nicht", as.ch
 unlink(manifest_datei)
 e <- try(eval(loop), silent=TRUE)
 stopifnot(inherits(e, "try-error"), grepl("Vorhandener Abruf passt nicht", as.character(e)))
+# Editing the CSV must replace a stale in-memory selection before a download.
+jahre <- 2018:2022
+kandidaten <- data.frame(datum = dates)
+auswahl <- data.frame(datum = dates[1])
+loop_index <- which(vapply(p, function(e) is.call(e) && identical(e[[1]], as.name("for")), logical(1)))
+for (e in p[(loop_index - 4):(loop_index - 1)]) eval(e)
+stopifnot(identical(auswahl$datum, dates))
+# Changed masks invalidate downstream NDVI outputs until script 03 is rerun.
+write.csv(data.frame(scl = c(4, 5)), "data/qualitaetsmaske.csv", row.names = FALSE)
+for (name in c("04_zeitreihe_addon.R", "06_indices_vergleichen.R")) {
+  e <- try(source(file.path(repo, "scripts", name)), silent = TRUE)
+  stopifnot(inherits(e, "try-error"), grepl("zuerst Skript 03", as.character(e)))
+}
 cat('PASS: syntax, fixed grid, categorical resampling, AOI coverage, counts, trend, kNDVI, corrupt-SCL rejection, AOI cache isolation\n')
 cat('Test outputs:',tmp,'\n')

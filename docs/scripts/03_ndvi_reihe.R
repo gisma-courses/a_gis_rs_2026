@@ -19,7 +19,14 @@ dir.create("output/ndvi", recursive = TRUE, showWarnings = FALSE)
 # Arbeitsentscheidung: SCL 4 Vegetation, 5 unbewachsen, 6 Wasser,
 # 7 unklassifiziert bleiben erhalten. Schatten, Wolken, Schnee usw. entfallen.
 # SCL ist ursprünglich gröber als die 10-m-Bänder und keine perfekte Maske.
-scl_behalten <- c(4, 5, 6, 7)
+# Gemeinsame Qualitätsmaske für NDVI und Pixelzählung.
+maske_datei <- "data/qualitaetsmaske.csv"
+if (!file.exists(maske_datei)) {
+  write.csv(data.frame(scl = c(4, 5, 6, 7)), maske_datei, row.names = FALSE)
+}
+scl_behalten <- read.csv(maske_datei)$scl
+stopifnot(length(scl_behalten) > 0, !anyNA(scl_behalten),
+          !anyDuplicated(scl_behalten), all(scl_behalten %in% 1:11))
 ndvi_liste <- list()
 
 # 2. Einheitliches Gitter prüfen; pro Tag maskieren und NDVI rechnen -----
@@ -77,6 +84,7 @@ verlauf <- data.frame(
 )
 stopifnot(all(verlauf$gueltig_prozent >= 0 & verlauf$gueltig_prozent <= 100))
 write.csv(verlauf, "output/ndvi_verlauf.csv", row.names = FALSE)
+write.csv(data.frame(scl = scl_behalten), "output/ndvi_qualitaetsmaske.csv", row.names = FALSE)
 print(verlauf)
 cat("An allen Terminen gültige Pixel:", n_gemeinsam, "von", n_gebiet, "\n")
 

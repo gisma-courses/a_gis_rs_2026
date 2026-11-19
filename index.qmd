@@ -49,7 +49,7 @@ Sie richten einen reproduzierbaren Arbeitsablauf ein und beschaffen Sentinel-2-D
 
 ## Block 2 · Räumliche Muster und Klimaregionalisierung
 
-Sie vergleichen klassische Landschaftsmaße mit informationstheoretischen Ansätzen. Dabei untersuchen Sie, welche Informationen über Zusammensetzung und räumliche Anordnung tatsächlich erfasst werden. Anschließend wechseln Sie von kategorischer Landbedeckung zu kontinuierlichen Klimadaten: Sie segmentieren Temperaturjahresgänge und bewerten, wie Parameter und Rasterauflösung die entstehenden Regionen beeinflussen.
+Block 1 hat gezeigt, wie Aufnahmetag, Maske und Bezugsfläche einen Indexvergleich beeinflussen. Nun untersuchen Sie, welche räumlichen Unterschiede eine Flächenzusammenfassung verdeckt. Sie vergleichen klassische Landschaftsmaße mit informationstheoretischen Ansätzen. Dabei untersuchen Sie, welche Informationen über Zusammensetzung und räumliche Anordnung tatsächlich erfasst werden. Anschließend wechseln Sie von kategorischer Landbedeckung zu kontinuierlichen Klimadaten: Sie segmentieren Temperaturjahresgänge und bewerten, wie Parameter und Rasterauflösung die entstehenden Regionen beeinflussen.
 
 | Sitzung | Inhalt und Lernziel | Arbeitsauftrag |
 |---|---|---|

@@ -19,7 +19,7 @@ execute:
 
 Verwenden Sie die fünf ausgewählten Sommeraufnahmen aus [Worksheet 02](ws-02.qmd), das RGB-Bild und die Qualitätsbänder. Wählen Sie innerhalb der AOI drei kleine, getrennte Vergleichsflächen: Wald, Offenland und eine im Bild auffällige Fläche. Der aktuelle Kartenhintergrund dient der Orientierung; die Landbedeckung am Aufnahmetag prüfen Sie im jeweiligen Sentinel-Bild.
 
-Falls Ihre bisherige Wald-AOI kein Offenland enthält, legen Sie eine Kopie des Projekts an und erweitern Sie dort die AOI auf einen gemischten Ausschnitt mit höchstens 5 km Kantenlänge. Archivieren Sie den bisherigen Ordner `data/sentinel/` und führen Sie Skript 02 und 03 für das neue Gebiet erneut aus.
+Falls Sie mit einer älteren Wald-AOI arbeiten, die kein Offenland enthält, legen Sie eine Kopie des Projekts an und erweitern Sie dort die AOI auf einen gemischten Ausschnitt mit höchstens 5 km Kantenlänge. Archivieren Sie den bisherigen Ordner `data/sentinel/` und führen Sie Skript 02 und 03 für das neue Gebiet erneut aus.
 
 ## Vergleich ausführen
 
@@ -40,3 +40,13 @@ Geben Sie `flaechenvergleich.csv`, die Verlaufsgrafik mit beiden Indizes und ein
 **Methodengrundlage:** [Camps-Valls et al. (2021), A unified vegetation index for quantifying the terrestrial biosphere](https://doi.org/10.1126/sciadv.abc7447).
 
 Die [Hausaufgabe zu Pixelverfügbarkeit und Zeitreihe](ws-02-zusatz.qmd) ergänzt diesen Vergleich.
+
+## Abschluss von Block 1
+
+Sie haben einen wiederholbaren Projektablauf eingerichtet, Satellitenaufnahmen selbst ausgewählt und Qualitätsmasken angewendet. Ihr Flächenvergleich nennt Aufnahmetage, gültige Pixel und Indexwerte. Eine Signaldifferenz ist belegt; ihre Ursache benötigt weitere Beobachtungen.
+
+## Weiter mit Block 2
+
+Ein Flächenmittel fasst Werte zusammen, verliert aber deren räumliche Anordnung. In [Worksheet 04](ws-04.qmd) vergleichen Sie deshalb Gebiete mit gleichen Klassenanteilen und unterschiedlicher Anordnung. Danach bilden Sie aus zwölf monatlichen Temperaturmitteln zusammenhängende Regionen und prüfen deren innere Streuung, Grenzen und Abhängigkeit von Parametern und Rasterweite.
+
+[Rückblick und Übergang als Folien](../../slides/block1_recap_revealjs.qmd).

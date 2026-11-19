@@ -15,30 +15,28 @@ execute:
   echo: true
 ---
 
-## Daten und Methode
+## Daten vorbereiten
 
-Verwenden Sie einen kategorischen Landbedeckungsausschnitt aus Hessen oder Nordrhein-Westfalen, beispielsweise [CORINE Land Cover 2018](https://land.copernicus.eu/en/products/corine-land-cover/clc2018). Laden Sie die Rasterdaten beim Anbieter, schneiden Sie in QGIS einen begrenzten Ausschnitt zu und speichern Sie ihn als `data/landbedeckung.tif`. Verwenden Sie ein metrisches CRS und ganzzahlige Klassenwerte; NoData ist keine zusätzliche Landbedeckungsklasse. Notieren Sie Produkt, Bezugsjahr, Rasterweite und Klassensystem.
+Installation: [00_install_packages.R](../../scripts/00_install_packages.R).
 
-Berechnen Sie mit `landscapemetrics` auf demselben Ausschnitt:
+Verwenden Sie einen kategorischen Landbedeckungsausschnitt aus Hessen oder Nordrhein-Westfalen, etwa [CORINE Land Cover 2018](https://land.copernicus.eu/en/products/corine-land-cover/clc2018). Schneiden Sie in QGIS einen Ausschnitt mit mindestens 8 km Kantenlänge zu. Speichern Sie ihn in einem metrischen CRS als `data/landbedeckung.tif`. Klassenwerte bleiben ganzzahlig; verwenden Sie beim Umprojizieren den nächsten Nachbarn. Prüfen Sie den NoData-Wert anhand der Produktlegende. Halten Sie Produkt, Bezugsjahr, Rasterweite und Klassensystem fest.
 
-```r
-library(terra)
-library(landscapemetrics)
-lc <- rast("data/landbedeckung.tif")
-lsm_l_shdi(lc)
-lsm_l_ai(lc, directions = 4)
-lsm_l_ent(lc)
-lsm_l_relmutinf(lc)
-```
+Öffnen Sie `scripts/00_install_packages.R`, setzen Sie `block <- 2` und installieren Sie die zusätzlichen Pakete. Laden Sie [07_landschaftsmuster.R](../../scripts/07_landschaftsmuster.R) nach `scripts/` und führen Sie es aus.
 
-Die Funktionsdokumentation legt Nachbarschaft und Logarithmusbasis fest: [SHDI](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_shdi.html), [AI](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_ai.html), [Entropie](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_ent.html), [relative gegenseitige Information](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_relmutinf.html). SHDI und Entropie messen die Klassenzusammensetzung; vergleichen Sie ihre Zahlenwerte erst nach Angleichung der Logarithmusbasis.
+## Zusammensetzung und Anordnung vergleichen
 
-## Kontrollierter Vergleich
+Das Skript erzeugt unter `output/muster/` das Original und eine zufällig umgeordnete Variante. Dabei bleiben Gitter, NoData und Klassenhäufigkeiten gleich. Zusätzlich werden um denselben Mittelpunkt Fenster mit 2, 4 und 8 km Kantenlänge ausgeschnitten. Die tatsächlich verwendeten Maße stehen in `kennwerte.csv`; Fenster werden nach innen auf das Zellgitter gerundet.
 
-1. Erzeugen Sie mit `set.seed(42)` eine zweite Rastervariante, indem Sie nur die gültigen Zellwerte zufällig umordnen. Rastergitter, NoData-Maske und Klassenhäufigkeiten bleiben gleich. Berechnen Sie alle vier Maße erneut.
-2. Vergleichen Sie Original und Umordnung: SHDI und Entropie müssen bei gleicher Zusammensetzung gleich bleiben; AI und relative gegenseitige Information können sich verändern. Tragen Sie tatsächliche Werte und Differenzen in eine Tabelle ein.
-3. Schneiden Sie um denselben Mittelpunkt quadratische Fenster mit 2, 4 und 8 km Kantenlänge aus dem Original. Halten Sie Rasterweite, Klassen und Nachbarschaft konstant. Berechnen Sie pro Fenster Klassenanteile und dieselben vier Maße.
+Die Tabelle enthält SHDI, Aggregation Index, zellbasierte Shannon-Entropie in Bits, marginale Entropie aus Nachbarschaftspaaren und relative gegenseitige Information. Für Nachbarschaften werden vier Richtungen verwendet. SHDI nutzt den natürlichen Logarithmus; die zellbasierte Entropie in Bits entspricht `SHDI / log(2)`.
 
-## Ergebnis
+`lsm_l_ent()` bestimmt Randhäufigkeiten aus Zellpaaren. An Gebietsrändern und NoData-Lücken werden Zellen deshalb anders gewichtet als bei einer einfachen Zählung aller Zellen. Gleiche Klassenanteile garantieren hier keine exakt gleiche marginale Entropie. Bei nur einer Klasse kann die normierte gegenseitige Information undefiniert sein; kennzeichnen Sie solche Werte als nicht auswertbar.
 
-Geben Sie zwei Karten mit gemeinsamer Klassenlegende und eine Tabelle mit Variante, Fenstergröße, Zellzahl, Klassenanteilen und vier Maßwerten ab. Belegen Sie die Wirkung räumlicher Umordnung und die Wirkung der Fenstergröße jeweils mit einem Zahlenpaar. Fenstervergleiche können Zusammensetzung und Anordnung zugleich verändern; die Umordnung isoliert dagegen die Anordnung.
+1. Prüfen Sie in `klassenanteile.csv`, dass Original und Umordnung dieselben Klassenhäufigkeiten haben. SHDI und zellbasierte Entropie müssen übereinstimmen.
+2. Vergleichen Sie AI, marginale Entropie und relative gegenseitige Information. Stellen Sie Original und Umordnung in QGIS mit derselben Klassenlegende dar.
+3. Vergleichen Sie die drei Fenster anhand der Klassenanteile und Maßwerte. Die Umordnung verändert nur die Anordnung; ein anderer Ausschnitt kann zusätzlich die Zusammensetzung verändern.
+
+## Ergebnis und Anschluss
+
+Geben Sie die beiden Karten und die Kennwerttabelle ab. Belegen Sie die Wirkung der Umordnung und der Fenstergröße jeweils mit einem Zahlenpaar. In [Worksheet 05](ws-05.qmd) wechseln Sie von vorgegebenen Landbedeckungsklassen zu kontinuierlichen Temperaturdaten und bilden daraus räumliche Regionen.
+
+**Methoden:** [SHDI](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_shdi.html), [AI](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_ai.html), [marginale Entropie](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_ent.html), [relative gegenseitige Information](https://r-spatialecology.github.io/landscapemetrics/reference/lsm_l_relmutinf.html).

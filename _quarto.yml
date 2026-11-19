@@ -92,6 +92,8 @@ website:
           contents:
             - href: slides/microclimate_warmup_models_revealjs.qmd
               text: Mikroklima-Warmup Foliensatz
+            - href: slides/block1_recap_revealjs.qmd
+              text: Block 1 · Rückblick und Anschluss
 
 execute:
   freeze: auto

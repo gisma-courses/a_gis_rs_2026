@@ -15,33 +15,34 @@ execute:
   echo: true
 ---
 
-## Klimadaten beschaffen
+## Gebiet und Klimadaten
 
-Verwenden Sie zwölf monatliche Temperaturmittel aus [WorldClim 2.1](https://www.worldclim.org/data/worldclim21.html). Diese beschreiben Klimanormalwerte für 1970–2000, keine zwölf Beobachtungen eines einzelnen Jahres. Laden Sie die Deutschlanddaten mit `geodata::worldclim_country(country = "DEU", var = "tavg", path = "data")`. Prüfen Sie Einheiten und Skalierung anhand der Produktangaben und der Metadaten; halten Sie das Abrufdatum fest.
+Installation: [00_install_packages.R](../../scripts/00_install_packages.R).
 
-Schneiden Sie in QGIS oder R einen zusammenhängenden Ausschnitt in Hessen oder Nordrhein-Westfalen mit ungefähr 100 km Kantenlänge aus. Projizieren Sie die zwölf Bänder gemeinsam auf ein metrisches Gitter mit 1 km Rasterweite, bilinearer Interpolation und identischer Ausdehnung. Speichern Sie `data/temperatur_monate.tif`; die Bandreihenfolge muss Januar bis Dezember sein. Die Reprojektion erzeugt keine zusätzliche Klimainformation.
+Legen Sie in QGIS `data/klima_aoi.gpkg` mit einem Polygon in Hessen oder Nordrhein-Westfalen an. Wählen Sie einen zusammenhängenden Ausschnitt mit ungefähr 100 km Kantenlänge. Dieses Gebiet ist größer als die Sentinel-AOI aus Block 1; verwenden Sie eine eigene Datei.
 
-## Drei Segmentierungen berechnen
+Laden Sie [08_klima_segmentieren.R](../../scripts/08_klima_segmentieren.R) nach `scripts/`. Die Pakete installieren Sie mit `block <- 2` in `00_install_packages.R`. Führen Sie das Skript abschnittsweise aus:
 
-```r
-library(terra)
-library(supercells)
-library(sf)
-x <- rast("data/temperatur_monate.tif")
-stopifnot(nlyr(x) == 12, !is.lonlat(x))
-a <- supercells(x, k = 50, compactness = 1)
-b <- supercells(x, k = 100, compactness = 1)
-c <- supercells(x, k = 50, compactness = 5)
-dir.create("output/klima", recursive = TRUE, showWarnings = FALSE)
-st_write(a, "output/klima/k50_c1.gpkg", delete_dsn = TRUE)
-st_write(b, "output/klima/k100_c1.gpkg", delete_dsn = TRUE)
-st_write(c, "output/klima/k50_c5.gpkg", delete_dsn = TRUE)
-```
+1. **Gebiet:** Die AOI wird nach EPSG:25832 transformiert. Das Zielgitter hat 1 km Rasterweite.
+2. **Daten:** `geodata` lädt die zwölf monatlichen Temperaturmittel aus [WorldClim 2.1](https://www.worldclim.org/data/worldclim21.html). Sie gelten für 1970–2000 und sind in Grad Celsius angegeben. Die Bänder werden nach Monatsnummer geordnet, gemeinsam bilinear auf das Zielgitter projiziert und auf die AOI begrenzt. Ausgewertet werden nur Zellen mit zwölf gültigen Werten.
+3. **Segmente:** `supercells` berechnet die drei unten angegebenen Varianten. Eine eindeutige `segment_id` wird ergänzt.
 
-Alle Varianten verwenden dieselben zwölf unstandardisierten Temperaturbänder und dieselbe Distanzfunktion. `k` ist die angestrebte Segmentzahl; zählen Sie auch die tatsächlich erzeugten Segmente. Kompaktheitswerte sind von der Skalierung der Eingabewerte abhängig. Ändern Sie zwischen den Varianten keine weiteren Einstellungen.
+Die Monatsmittel sind ein klimatischer Jahresgang, keine Folge von Aufnahmen eines einzelnen Jahres. Die Reprojektion erzeugt keine zusätzliche räumliche Information. `data/temperatur_monate.tif` enthält Januar bis Dezember; Datenbezug und Abrufdatum stehen in `output/klima/datenbezug.csv`.
+
+## Parameter vergleichen
+
+| Variante | Angestrebte Segmentzahl | Kompaktheit |
+|---|---:|---:|
+| `k50_c1` | 50 | 1 |
+| `k100_c1` | 100 | 1 |
+| `k50_c5` | 50 | 5 |
+
+Alle Varianten verwenden dieselben zwölf unstandardisierten Temperaturbänder und euklidische Distanz. Die Kompaktheit hängt von der Skalierung dieser Werte ab. Zwischen zwei Vergleichsläufen wird jeweils nur ein Parameter geändert. Die tatsächliche Segmentzahl kann von der angestrebten Zahl abweichen.
+
+Öffnen Sie die drei GeoPackages unter `output/klima/` in QGIS. Legen Sie ihre Grenzen über dieselbe Monatskarte. Die Tabelle `parameter.csv` enthält Segmentzahl und minimale, mediane sowie maximale Fläche.
 
 ## Ergebnis
 
-Geben Sie drei Grenzkarten auf derselben Temperaturkarte und eine Parametertabelle mit `k`, Kompaktheit, tatsächlicher Segmentzahl sowie minimaler, medianer und maximaler Segmentfläche ab. Markieren Sie einen Bereich, in dem eine Parameteränderung Grenzen deutlich verschiebt. Speichern Sie die zwölf Eingangsbänder und Segmentierungen für [Worksheet 06](ws-06.qmd).
+Geben Sie drei vergleichbare Grenzkarten und die Parametertabelle ab. Markieren Sie einen Bereich mit deutlich verschobenen Grenzen. In [Worksheet 06](ws-06.qmd) prüfen Sie, ob die Segmente intern ähnliche Jahresgänge aufweisen und sich benachbarte Segmente unterscheiden.
 
-**Methode:** [supercells – multiband raster segmentation](https://jakubnowosad.com/supercells/).
+**Methode:** [supercells](https://jakubnowosad.com/supercells/).
